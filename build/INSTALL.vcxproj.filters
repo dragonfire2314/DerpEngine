@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="F:\Programming\GitPlayground\temp\DerpEngine\build\CMakeFiles\3620f57c451a5d9074fe991bdc618a0a\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{114F537D-24AB-3EDF-9A97-0EA77C5DBFD9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
