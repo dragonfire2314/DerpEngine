@@ -1,4 +1,0 @@
-
-[submodule "external"]
-	path = external
-	url = https://github.com/glfw/glfw
