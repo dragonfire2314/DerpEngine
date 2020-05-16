@@ -7,7 +7,9 @@ namespace DERP {
 
 	Application::Application()
 	{
-		printf("Test\n");
+		printf("App Started\n");
+
+		ComponentManager::getInstance();
 	}
 
 	Application::~Application()

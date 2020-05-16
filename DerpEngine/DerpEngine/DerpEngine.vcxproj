@@ -146,12 +146,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\EntityManager.cpp" />
+    <ClCompile Include="src\core\ComponentManager.cpp" />
+    <ClCompile Include="src\core\Component.cpp" />
+    <ClCompile Include="src\core\Entity.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
+    <ClCompile Include="src\core\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\ComponentStructs.h" />
+    <ClInclude Include="src\core\EntityManager.h" />
+    <ClInclude Include="src\core\Components.h" />
+    <ClInclude Include="src\core\ComponentManager.h" />
+    <ClInclude Include="src\core\Component.h" />
+    <ClInclude Include="src\core\Entity.h" />
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\DerpEngine.h" />
     <ClInclude Include="src\core\core.h" />
+    <ClInclude Include="src\core\Transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

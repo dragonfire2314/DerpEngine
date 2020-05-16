@@ -1,11 +1,13 @@
 #include <DerpEngine.h>
 #include <stdio.h>
 
+using namespace DERP;
+
 int main() 
 {
-	DERP::Application* app = new DERP::Application();
+	Entity* ent = EntityManager.createEntity();
 
-	app->test();
-	
+	Application app;
+
 	return 0;
 }
