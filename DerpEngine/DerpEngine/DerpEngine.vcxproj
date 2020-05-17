@@ -148,7 +148,7 @@
   <ItemGroup>
     <ClCompile Include="external\objLoader\OBJ_Loader.cpp" />
     <ClCompile Include="src\core\ecs\components\ComponentMesh.cpp" />
-    <ClCompile Include="src\core\meshManager.cpp" />
+    <ClCompile Include="src\core\MeshManager.cpp" />
     <ClCompile Include="src\renderer\OpenGL.cpp" />
     <ClCompile Include="src\renderer\RenderAPI.cpp" />
     <ClCompile Include="src\core\ecs\components\ComponentStructs.cpp" />
@@ -164,7 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\ecs\components\ComponentMesh.h" />
-    <ClInclude Include="src\core\meshManager.h" />
+    <ClInclude Include="src\core\MeshManager.h" />
     <ClInclude Include="src\renderer\OpenGL.h" />
     <ClInclude Include="src\renderer\RenderAPI.h" />
     <ClInclude Include="src\Debug\ApplicationDebug.h" />

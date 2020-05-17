@@ -5,6 +5,8 @@
 
 namespace DERP {
 
+	GLFWwindow* window;
+
 	Application::Application()
 	{
 		printf("App Started\n");
@@ -20,6 +22,8 @@ namespace DERP {
 		//Engine setup
 		getCS()->startComponent();
 
+		start();
+
 		//Engine loop
 		do {
 			//Run physics
@@ -29,15 +33,16 @@ namespace DERP {
 
 			//Render
 
+			// Swap buffers
+			glfwSwapBuffers(window);
+			glfwPollEvents();
 
-
-		} while (1);
+		} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+			glfwWindowShouldClose(window) == 0);
 	}
 
-	void Application::test()
+	void Application::start()
 	{
-		printf("Working\n");
-
 		// Initialise GLFW
 		glewExperimental = true; // Needed for core profile
 		if (!glfwInit())
@@ -52,7 +57,7 @@ namespace DERP {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
 
 		// Open a window and create its OpenGL context
-		GLFWwindow* window; // (In the accompanying source code, this variable is global for simplicity)
+		// (In the accompanying source code, this variable is global for simplicity)
 		window = glfwCreateWindow(1024, 768, "Tutorial 01", NULL, NULL);
 		if (window == NULL) {
 			fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
@@ -66,19 +71,5 @@ namespace DERP {
 
 		// Ensure we can capture the escape key being pressed below
 		glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
-		do {
-			// Clear the screen. It's not mentioned before Tutorial 02, but it can cause flickering, so it's there nonetheless.
-			//glClear(GL_COLOR_BUFFER_BIT);
-
-			// Draw nothing, see you in tutorial 2 !
-
-			// Swap buffers
-			glfwSwapBuffers(window);
-			glfwPollEvents();
-
-		} // Check if the ESC key was pressed or the window was closed
-		while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-			glfwWindowShouldClose(window) == 0);
 	}
 }

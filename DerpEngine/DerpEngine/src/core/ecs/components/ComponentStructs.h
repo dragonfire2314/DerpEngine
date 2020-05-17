@@ -15,6 +15,7 @@ namespace DERP {
 	public:
 		glm::vec3 position;
 		glm::quat rotation;
+		glm::vec3 scale;
 	};
 
 	class DERP_API Mesh 

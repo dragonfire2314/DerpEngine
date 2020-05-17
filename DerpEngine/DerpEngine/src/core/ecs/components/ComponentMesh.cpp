@@ -8,9 +8,14 @@ namespace DERP {
 		return 0;
 	}
 
-	size_t* DERP::ComponentMesh::getData(uint32_t entityID)
+	size_t* ComponentMesh::getData(uint32_t entityID)
 	{
 		return (size_t*)(&(data[entityID]));
+	}
+
+	std::unordered_map<uint32_t, Mesh*> ComponentMesh::getDataMap()
+	{
+		return data;
 	}
 
 }

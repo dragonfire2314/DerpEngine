@@ -30,8 +30,12 @@ namespace DERP {
 		ComponentMesh() {}
 		~ComponentMesh() {}
 
+		//Overrides
 		uint32_t addComponent(uint32_t entityID);
 		size_t* getData(uint32_t entityID);
+
+		//Custom
+		std::unordered_map<uint32_t, Mesh*> getDataMap();
 	};
 
 }

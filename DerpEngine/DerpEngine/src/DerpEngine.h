@@ -3,11 +3,11 @@
 //Only included by the user software
 
 //Includes Application
-#include "Debug/ApplicationDebug.h"
+//#include "Debug/ApplicationDebug.h"
 
 //Core
-//#include "core/Application.h"
-#include "core/meshManager.h"
+#include "core/Application.h"
+#include "core/MeshManager.h"
 
 //Entity Component System
 #include "core/ecs/Component.h"

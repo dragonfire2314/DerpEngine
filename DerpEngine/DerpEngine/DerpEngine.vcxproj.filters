@@ -57,7 +57,7 @@
     <ClCompile Include="external\objLoader\OBJ_Loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\meshManager.cpp">
+    <ClCompile Include="src\core\MeshManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,7 +107,7 @@
     <ClInclude Include="src\core\ecs\components\ComponentMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\meshManager.h">
+    <ClInclude Include="src\core\MeshManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

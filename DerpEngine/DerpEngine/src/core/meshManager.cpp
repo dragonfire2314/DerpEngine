@@ -1,25 +1,49 @@
-#include "meshManager.h"
+#include "MeshManager.h"
 
 namespace DERP {
 
-	bool meshManager::loadMeshes(std::string filePath)
+	MeshManager::MeshManager() 
+	{
+
+	}
+
+	MeshManager::~MeshManager() 
+	{
+
+	}
+
+	int MeshManager::loadMeshes(std::string filePath)
 	{
 		//Generate new Loader
-		loader = new objl::Loader();
+		objl::Loader* loader = new objl::Loader();
 
 		bool isLoaded = loader->LoadFile(filePath);
 
 		if (!isLoaded)
-			return false;
+			return -1;
 
-		for (int i = 0; i < loader->LoadedMeshes.size(); i++) 
-		{
-			meshes.insert({ counter, loader->LoadedMeshes[i] });
-			counter++;
-		}
+		meshes.insert({ counter, loader });
+		counter++;
 
 		//Delete Loader
-		delete loader;
+		//delete loader;
+
+		return counter - 1;
 	}
 
+	objl::Mesh* MeshManager::getMesh(uint32_t fileID, uint32_t meshID)
+	{
+		return nullptr;
+	}
+
+	//Debug
+	void MeshManager::debug_print_mesh(uint32_t key) 
+	{
+		for (int i = 0; i < meshes[key]->LoadedMeshes.size(); i++) 
+		{
+			objl::Mesh curMesh = meshes[key]->LoadedMeshes[i];
+
+			printf("%i :Mesh name: %s", i, curMesh.MeshName.c_str());
+		}
+	}
 }

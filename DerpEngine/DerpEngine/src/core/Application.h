@@ -3,18 +3,27 @@
 
 #include <stdio.h>
 
+#ifdef DERP_DLL
+	
+#endif
+
 namespace DERP {
 
 	class DERP_API Application
 	{
+	private:
+#ifdef DERP_DLL
+		
+#endif
 	protected:
 		inline ComponentScript* getCS() { return ComponentScript::getInstance(); }
+		void start();
 	public:
 
 		Application();
 		~Application();
 
-		void test();
+		
 
 		//Starts the application and takes control of the program
 		//Main game loop

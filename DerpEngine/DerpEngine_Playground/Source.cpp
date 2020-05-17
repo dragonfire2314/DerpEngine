@@ -10,8 +10,17 @@ int main()
 	Entity* ent = EntityManager::getInstance().createEntity();
 	Entity* ent2 = EntityManager::getInstance().createEntity();
 
-	ApplicationDebug app;
+	Application app;
 	ComponentManager componentManager;
+
+	MeshManager meshManage;
+
+	int temp = meshManage.loadMeshes("../models/monkey/monkey.obj");
+
+	if (temp == -1) 
+	{
+		printf("Bad Dir");
+	}
 
 	componentManager.addComponent(ComponentTransform::getInstance(), ent);
 	componentManager.addComponent(ComponentTransform::getInstance(), ent2);
@@ -21,7 +30,8 @@ int main()
 
 	componentManager.addComponent(ComponentMesh::getInstance(), ent);
 
-	//ent->getComponent<Mesh>(ComponentMesh::getInstance())->mesh = ;
+	Mesh* m = ent->getComponent<Mesh>(ComponentMesh::getInstance());
+	m->mesh = meshManage.getMesh(0,0);
 
 	app.Run();
 
