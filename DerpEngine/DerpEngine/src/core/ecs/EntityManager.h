@@ -1,5 +1,5 @@
 #pragma once
-#include "core.h"
+#include "../core.h"
 
 #include "Entity.h"
 
@@ -27,6 +27,8 @@ namespace DERP {
 
 		EntityManager();
 		~EntityManager();
+
+		Entity* getEntity(uint32_t ID);
 
 		DERP_API Entity* createEntity();
 	};

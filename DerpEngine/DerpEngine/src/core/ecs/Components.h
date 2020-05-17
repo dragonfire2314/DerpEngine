@@ -16,14 +16,14 @@ The areas that should be updated are as follows
 	-Component vector must be added (Component Manger)
 	-Component count should be incramented
 */
-
-#define COMPONENT_COUNT = 5;
-
-//DO NOT ASSIGN VALUES TO ENTRIES, ONLY ZERO SHOULD BE ASSIGNED
-enum DERP_API Components {
-	TRANSFORM = 0,
-	MESH,
-	MATERIAL,
-	RIGIDBODY,
-	SCRIPT
-};
+//
+//#define COMPONENT_COUNT = 5;
+//
+////DO NOT ASSIGN VALUES TO ENTRIES, ONLY ZERO SHOULD BE ASSIGNED
+//enum DERP_API Components {
+//	TRANSFORM = 0,
+//	MESH,
+//	MATERIAL,
+//	RIGIDBODY,
+//	SCRIPT
+//};

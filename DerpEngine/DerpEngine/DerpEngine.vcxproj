@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/include;$(SolutionDir)/../externals/glew-2.1.0/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/include;$(SolutionDir)/DerpEngine/external;$(SolutionDir)/../externals/glew-2.1.0/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)/../externals/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -78,7 +78,7 @@
     <LibraryPath>$(SolutionDir)/../externals/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/include;$(SolutionDir)/../externals/glew-2.1.0/include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/include;$(SolutionDir)/DerpEngine/external;$(SolutionDir)/../externals/glew-2.1.0/include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)/../externals/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -146,24 +146,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\core\EntityManager.cpp" />
-    <ClCompile Include="src\core\ComponentManager.cpp" />
-    <ClCompile Include="src\core\Component.cpp" />
-    <ClCompile Include="src\core\Entity.cpp" />
+    <ClCompile Include="external\objLoader\OBJ_Loader.cpp" />
+    <ClCompile Include="src\core\ecs\components\ComponentMesh.cpp" />
+    <ClCompile Include="src\core\meshManager.cpp" />
+    <ClCompile Include="src\renderer\OpenGL.cpp" />
+    <ClCompile Include="src\renderer\RenderAPI.cpp" />
+    <ClCompile Include="src\core\ecs\components\ComponentStructs.cpp" />
+    <ClCompile Include="src\Debug\ApplicationDebug.cpp" />
+    <ClCompile Include="src\core\ecs\components\ComponentScript.cpp" />
+    <ClCompile Include="src\core\ecs\components\Script.cpp" />
+    <ClCompile Include="src\core\ecs\EntityManager.cpp" />
+    <ClCompile Include="src\core\ecs\ComponentManager.cpp" />
+    <ClCompile Include="src\core\ecs\Component.cpp" />
+    <ClCompile Include="src\core\ecs\Entity.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
-    <ClCompile Include="src\core\Transform.cpp" />
+    <ClCompile Include="src\core\ecs\components\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\core\ComponentStructs.h" />
-    <ClInclude Include="src\core\EntityManager.h" />
-    <ClInclude Include="src\core\Components.h" />
-    <ClInclude Include="src\core\ComponentManager.h" />
-    <ClInclude Include="src\core\Component.h" />
-    <ClInclude Include="src\core\Entity.h" />
+    <ClInclude Include="src\core\ecs\components\ComponentMesh.h" />
+    <ClInclude Include="src\core\meshManager.h" />
+    <ClInclude Include="src\renderer\OpenGL.h" />
+    <ClInclude Include="src\renderer\RenderAPI.h" />
+    <ClInclude Include="src\Debug\ApplicationDebug.h" />
+    <ClInclude Include="src\core\ecs\components\ComponentScript.h" />
+    <ClInclude Include="src\core\ecs\components\Script.h" />
+    <ClInclude Include="src\core\ecs\components\ComponentStructs.h" />
+    <ClInclude Include="src\core\ecs\EntityManager.h" />
+    <ClInclude Include="src\core\ecs\Components.h" />
+    <ClInclude Include="src\core\ecs\ComponentManager.h" />
+    <ClInclude Include="src\core\ecs\Component.h" />
+    <ClInclude Include="src\core\ecs\Entity.h" />
     <ClInclude Include="src\core\Application.h" />
-    <ClInclude Include="src\DerpEngine.h" />
     <ClInclude Include="src\core\core.h" />
-    <ClInclude Include="src\core\Transform.h" />
+    <ClInclude Include="src\core\ecs\components\Transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

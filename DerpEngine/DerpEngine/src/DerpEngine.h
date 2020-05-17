@@ -2,13 +2,28 @@
 
 //Only included by the user software
 
-//Core includes
-#include "core/Application.h"
-#include "core/Component.h"
-#include "core/ComponentManager.h"
-#include "core/Entity.h"
-#include "core/EntityManager.h"
+//Includes Application
+#include "Debug/ApplicationDebug.h"
+
+//Core
+//#include "core/Application.h"
+#include "core/meshManager.h"
+
+//Entity Component System
+#include "core/ecs/Component.h"
+#include "core/ecs/ComponentManager.h"
+#include "core/ecs/Entity.h"
+#include "core/ecs/EntityManager.h"
+
+//Components
+#include "core/ecs/components/Transform.h"
+#include "core/ecs/components/Script.h"
+#include "core/ecs/components/ComponentMesh.h"
+
+//Debug Includes
+
 
 //Defines
-#define EntityManager EntityManager::getInstance()
+//#define EntityManager EntityManager::getInstance()
 //#define ComponentManager ComponentManager::getInstance()
+//#define Transform Transform::getInstance()

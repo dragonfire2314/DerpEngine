@@ -1,0 +1,5 @@
+Components are internally described as integers, this is the map for intager to componets.
+
+
+1 - Transform
+2 - 

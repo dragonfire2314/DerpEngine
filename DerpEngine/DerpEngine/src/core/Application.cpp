@@ -8,13 +8,30 @@ namespace DERP {
 	Application::Application()
 	{
 		printf("App Started\n");
-
-		ComponentManager::getInstance();
 	}
 
 	Application::~Application()
 	{
 
+	}
+
+	void Application::Run()
+	{
+		//Engine setup
+		getCS()->startComponent();
+
+		//Engine loop
+		do {
+			//Run physics
+
+			//Run scripts
+			getCS()->updateComponent();
+
+			//Render
+
+
+
+		} while (1);
 	}
 
 	void Application::test()
