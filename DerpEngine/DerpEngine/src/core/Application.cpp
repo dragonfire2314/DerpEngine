@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "../renderer/OpenGL/OpenGL.h"
+
 namespace DERP {
 
 	GLFWwindow* window;
@@ -10,6 +12,10 @@ namespace DERP {
 	Application::Application()
 	{
 		printf("App Started\n");
+
+		//Choose Renderer to use
+		//Set to openGL for now
+		renderer = new OpenGL();
 	}
 
 	Application::~Application()
@@ -24,14 +30,21 @@ namespace DERP {
 
 		start();
 
+		//Loader temp shader
+		renderer->LoadShader();
+		//glUseProgram(renderer->LoadShader("vertex.v", "pixel.p"));
+
 		//Engine loop
 		do {
+			//Clear screen
+			renderer->ClearScreen(); 
 			//Run physics
 
 			//Run scripts
 			getCS()->updateComponent();
 
 			//Render
+			renderer->Render();
 
 			// Swap buffers
 			glfwSwapBuffers(window);

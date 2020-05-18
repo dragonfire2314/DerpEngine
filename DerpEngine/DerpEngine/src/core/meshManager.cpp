@@ -33,7 +33,12 @@ namespace DERP {
 
 	objl::Mesh* MeshManager::getMesh(uint32_t fileID, uint32_t meshID)
 	{
-		return nullptr;
+		if (meshes.find(fileID) == meshes.end()) {
+			return nullptr;
+		}
+		else {
+			return &(meshes[fileID]->LoadedMeshes[meshID]);
+		}
 	}
 
 	//Debug

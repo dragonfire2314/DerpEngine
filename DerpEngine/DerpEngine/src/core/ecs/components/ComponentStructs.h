@@ -21,10 +21,28 @@ namespace DERP {
 	class DERP_API Mesh 
 	{
 	public:
+		uint32_t VertexID;
+
 		Mesh(objl::Mesh* _mesh);
 		Mesh();
 
 		objl::Mesh* mesh;
+	};
+
+	class DERP_API Material 
+	{
+	public:
+		uint32_t ShaderID;
+
+		//Shader
+		std::string vertexShader = "Teal";
+		std::string pixelShader;
+
+		//Material
+		objl::Material* mat;
+
+		//Functions
+		void setShader(std::string _vertexShader, std::string _pixleShader);
 	};
 
 }

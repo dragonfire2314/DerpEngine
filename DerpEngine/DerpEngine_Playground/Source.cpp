@@ -7,31 +7,39 @@ using namespace DERP;
 
 int main() 
 {
+	//Creating entites
 	Entity* ent = EntityManager::getInstance().createEntity();
 	Entity* ent2 = EntityManager::getInstance().createEntity();
 
+	//Interfaces
 	Application app;
 	ComponentManager componentManager;
 
 	MeshManager meshManage;
 
-	int temp = meshManage.loadMeshes("../models/monkey/monkey.obj");
+	//Loading a mesh
+	int temp = meshManage.loadMeshes("../models/handmade/triangle.obj");
 
 	if (temp == -1) 
 	{
 		printf("Bad Dir");
 	}
 
+	//Adding transforms
 	componentManager.addComponent(ComponentTransform::getInstance(), ent);
-	componentManager.addComponent(ComponentTransform::getInstance(), ent2);
-
+	//Adding scripts
 	componentManager.addScript(new Movement(), ent);
-	componentManager.addScript(new Movement(), ent2);
 
+	//Adding a mesh
 	componentManager.addComponent(ComponentMesh::getInstance(), ent);
-
 	Mesh* m = ent->getComponent<Mesh>(ComponentMesh::getInstance());
 	m->mesh = meshManage.getMesh(0,0);
+
+	//Adding a material
+	componentManager.addComponent(ComponentMaterial::getInstance(), ent);
+	Material* mat = ent->getComponent<Material>(ComponentMaterial::getInstance());
+	mat->setShader("vertex.v", "pixel.p");
+
 
 	app.Run();
 

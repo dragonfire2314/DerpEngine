@@ -95,7 +95,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -108,7 +108,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,9 +147,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="external\objLoader\OBJ_Loader.cpp" />
+    <ClCompile Include="src\renderer\OpenGL\Shader.cpp" />
+    <ClCompile Include="src\core\ecs\components\ComponentMaterial.cpp" />
     <ClCompile Include="src\core\ecs\components\ComponentMesh.cpp" />
     <ClCompile Include="src\core\MeshManager.cpp" />
-    <ClCompile Include="src\renderer\OpenGL.cpp" />
+    <ClCompile Include="src\renderer\OpenGL\OpenGL.cpp" />
     <ClCompile Include="src\renderer\RenderAPI.cpp" />
     <ClCompile Include="src\core\ecs\components\ComponentStructs.cpp" />
     <ClCompile Include="src\Debug\ApplicationDebug.cpp" />
@@ -161,11 +163,14 @@
     <ClCompile Include="src\core\ecs\Entity.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\ecs\components\Transform.cpp" />
+    <ClCompile Include="src\renderer\OpenGL\VertexBufferManger.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\renderer\OpenGL\Shader.h" />
+    <ClInclude Include="src\core\ecs\components\ComponentMaterial.h" />
     <ClInclude Include="src\core\ecs\components\ComponentMesh.h" />
     <ClInclude Include="src\core\MeshManager.h" />
-    <ClInclude Include="src\renderer\OpenGL.h" />
+    <ClInclude Include="src\renderer\OpenGL\OpenGL.h" />
     <ClInclude Include="src\renderer\RenderAPI.h" />
     <ClInclude Include="src\Debug\ApplicationDebug.h" />
     <ClInclude Include="src\core\ecs\components\ComponentScript.h" />
@@ -179,6 +184,7 @@
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\core\core.h" />
     <ClInclude Include="src\core\ecs\components\Transform.h" />
+    <ClInclude Include="src\renderer\OpenGL\VertexBufferManger.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

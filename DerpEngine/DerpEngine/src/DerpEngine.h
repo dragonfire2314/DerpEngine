@@ -19,6 +19,7 @@
 #include "core/ecs/components/Transform.h"
 #include "core/ecs/components/Script.h"
 #include "core/ecs/components/ComponentMesh.h"
+#include "core/ecs/components/ComponentMaterial.h"
 
 //Debug Includes
 

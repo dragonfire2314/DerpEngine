@@ -1,20 +1,16 @@
 #include "core.h"
 #include "ecs/ComponentManager.h"
 
-#include <stdio.h>
+#include "../renderer/RenderAPI.h"
 
-#ifdef DERP_DLL
-	
-#endif
+#include <stdio.h>
 
 namespace DERP {
 
 	class DERP_API Application
 	{
 	private:
-#ifdef DERP_DLL
-		
-#endif
+		RenderAPI *renderer;
 	protected:
 		inline ComponentScript* getCS() { return ComponentScript::getInstance(); }
 		void start();
