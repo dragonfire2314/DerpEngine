@@ -12,7 +12,7 @@ namespace DERP {
 	public:
 		virtual void Render() = 0;
 		virtual void ClearScreen() = 0;
-		virtual void LoadShader() = 0;
+		virtual void SetUp() = 0;
 	};
 
 }

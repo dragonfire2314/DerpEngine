@@ -13,6 +13,13 @@ namespace DERP {
 	private:
 
 	public:
+		//Basic singleton method
+		static ComponentManager* getInstance()
+		{
+			static ComponentManager instance;
+			return &instance;
+		}
+
 		ComponentManager();
 		~ComponentManager();
 
