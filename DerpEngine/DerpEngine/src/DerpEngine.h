@@ -3,7 +3,8 @@
 //Only included by the user software
 
 //Includes Application
-//#include "Debug/ApplicationDebug.h"
+#include "Debug/ApplicationDebug.h"
+#include "Debug/ApplicationEditor.h"
 
 //Core
 #include "core/Application.h"

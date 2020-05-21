@@ -3,6 +3,8 @@
 #include "../../core/ecs/components/ComponentMaterial.h"
 #include "../../core/ecs/ComponentManager.h"
 
+#include "../../core/ecs/EntityManager.h"
+
 #include <GL/glew.h>
 #include <sstream>
 #include <fstream>
@@ -15,9 +17,9 @@ namespace DERP
 		//Look through all materials and compile shaders
 		//TODO - Dont recompile shaders when the same files are being used
 
-		std::unordered_map<uint32_t, Material*>* data = ComponentMaterial::getInstance()->getDataMap();
+		std::unordered_map<uint32_t, Material*> data = ComponentMaterial::getInstance()->getDataMap();
 
-		for (auto x : *data) 
+		for (auto x : data) 
 		{
 			//Compile every shader
 			//Store it in a map
@@ -25,6 +27,23 @@ namespace DERP
 			
 		}
 
+	}
+
+	void Shader::updateShader(uint32_t entityID) 
+	{
+		Material* m = EntityManager::getInstance().getEntity(entityID)->getComponent<Material>(ComponentMaterial::getInstance());
+
+		//Check if shder exisits
+		if (programs.find(entityID) == programs.end()) {
+			//Create a new one
+			programs.insert({ entityID, 0 });
+		}
+		else {
+			//Destory the current
+			glDeleteProgram(programs[entityID]);
+		}
+
+		programs[entityID] = compileShaders(m->vertexShader.c_str(), m->pixelShader.c_str());
 	}
 
 	unsigned int Shader::getShader(uint32_t entityID)

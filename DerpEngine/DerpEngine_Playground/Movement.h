@@ -36,10 +36,13 @@ public:
 
 		t = getComponent<Transform>(ComponentTransform::getInstance());
 
-		t->position = glm::vec3(0, 0, 0);
+		t->position = glm::vec3(0, 0, -2);
 
-		t->rotation = glm::angleAxis(glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		//t->rotation = glm::angleAxis(glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	}
+
+	float counter = 0;
+	float counter2 = 0;
 
 	void Update() 
 	{
@@ -50,7 +53,12 @@ public:
 		fsec fs = t1 - t0;
 		ms d = std::chrono::duration_cast<ms>(fs);
 
-		t->rotation = glm::angleAxis((float)glm::sin(glm::radians((float)d.count())) * 0.05f, glm::vec3(0.0f, 0.0f, 1.0f));
+		//t->rotation = glm::angleAxis((float)glm::sin(glm::radians((float)d.count())) * 0.05f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		counter += 0.5f;
+		counter2 += 0.3f;
+
+		t->rotation = glm::angleAxis(glm::radians(counter), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::angleAxis(glm::radians(counter2), glm::vec3(1.0f, 0.0f, 0.0f));
 
 		//printf("Test Position %f, %f, %f\n",
 		//	t->position.x,

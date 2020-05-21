@@ -34,7 +34,7 @@ namespace DERP {
 		size_t* getData(uint32_t entityID);
 
 		//Custom
-		std::unordered_map<uint32_t, Material*>* getDataMap();
+		std::unordered_map<uint32_t, Material*> getDataMap();
 	};
 
 }

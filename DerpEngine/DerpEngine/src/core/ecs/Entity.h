@@ -9,16 +9,21 @@ namespace DERP {
 	class DERP_API Entity
 	{
 	friend class ComponentManager;
+	friend class EntityManager;
 
 	private:
 		//Unique ID for the entity
 		uint32_t ID;
+		//Entity Name
+		std::string name = "New Entity";
 
 		//Components as a key, index to the location in the component array as value
 		std::unordered_map<Component*, bool> componentList;
 
-		//Add the comment specified to the entitys component list
-		
+		//Entity Parent
+		Entity* parent;
+		//Entity Children
+		std::vector<Entity*> children;
 	public:
 		Entity(uint32_t _ID);
 		~Entity();
@@ -39,6 +44,14 @@ namespace DERP {
 
 			return nullptr;
 		}
+
+		Entity* getParent();
+		std::vector<Entity*>& getChildren();
+
+		std::string getName();
+		void setName(std::string s);
+
+		std::unordered_map<Component*, bool>& OLD_getComponentMap();
 	};
 
 }

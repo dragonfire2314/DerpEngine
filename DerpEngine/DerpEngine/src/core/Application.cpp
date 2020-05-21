@@ -7,8 +7,6 @@
 
 namespace DERP {
 
-	GLFWwindow* window;
-
 	Application::Application()
 	{
 		printf("App Started\n");
@@ -47,11 +45,11 @@ namespace DERP {
 			renderer->Render();
 
 			// Swap buffers
-			glfwSwapBuffers(window);
+			glfwSwapBuffers((GLFWwindow*)window);
 			glfwPollEvents();
 
-		} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-			glfwWindowShouldClose(window) == 0);
+		} while (glfwGetKey((GLFWwindow*)window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+			glfwWindowShouldClose((GLFWwindow*)window) == 0);
 	}
 
 	void Application::start()
@@ -76,13 +74,13 @@ namespace DERP {
 			fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 			glfwTerminate();
 		}
-		glfwMakeContextCurrent(window); // Initialize GLEW
+		glfwMakeContextCurrent((GLFWwindow*)window); // Initialize GLEW
 		glewExperimental = true; // Needed in core profile
 		if (glewInit() != GLEW_OK) {
 			fprintf(stderr, "Failed to initialize GLEW\n");
 		}
 
 		// Ensure we can capture the escape key being pressed below
-		glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+		glfwSetInputMode((GLFWwindow*)window, GLFW_STICKY_KEYS, GL_TRUE);
 	}
 }

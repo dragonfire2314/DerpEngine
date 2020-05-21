@@ -7,6 +7,7 @@
 
 #include "Shader.h"
 #include "VertexBufferManger.h"
+#include "TextureManagerGL.h"
 
 #include "../../core/ecs/ComponentManager.h"
 #include "../../core/ecs/components/Transform.h"
@@ -19,6 +20,9 @@ namespace DERP {
 	private:
 		Shader shader;
 		VertexBufferManger VBManager;
+		TextureManagerGL textureManagerGL;
+
+		GLuint VertexArrayID;
 
 		glm::mat4 mvp;
 		glm::mat4 Projection;
@@ -27,6 +31,13 @@ namespace DERP {
 		void Render();
 		void ClearScreen();
 		void SetUp();
+
+		void RenderMainCamera();
+		void RenderNonMainCameras();
+
+		void updateMesh(uint32_t entityID);
+		void updateShader(uint32_t entityID);
+		void updateTexture(uint32_t entityID);
 	};
 
 }

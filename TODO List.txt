@@ -1,0 +1,12 @@
+# Stuff that is planned to be added
+
+## Major Needs
+-Entity parent system, i forgot to add this
+-Texture importing and adding to a material
+-Switch Loader to assimp
+
+## Minor Needs
+-Lighting
+
+## Future Goals
+-Editor software for creating game scenes

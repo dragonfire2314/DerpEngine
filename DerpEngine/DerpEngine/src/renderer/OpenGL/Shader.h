@@ -15,6 +15,8 @@ namespace DERP {
 	public:
 		void loadShaders();
 		unsigned int getShader(uint32_t entityID);
+
+		void updateShader(uint32_t entityID);
 	};
 
 }

@@ -16,8 +16,8 @@ namespace DERP {
 		return (size_t*)(data[entityID]);
 	}
 
-	std::unordered_map<uint32_t, Material*>* ComponentMaterial::getDataMap()
+	std::unordered_map<uint32_t, Material*> ComponentMaterial::getDataMap()
 	{
-		return &data;
+		return data;
 	}
 }

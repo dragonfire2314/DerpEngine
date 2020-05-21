@@ -11,6 +11,13 @@ namespace DERP {
 	class DERP_API MeshManager
 	{
 	private:
+		//Assimp Stuff
+
+		std::unordered_map<uint32_t, std::vector<objl::Mesh*>> newMeshes;
+
+		//End Assimp
+
+
 		uint32_t counter = 0;
 
 		//Mesh map
@@ -24,6 +31,11 @@ namespace DERP {
 		int loadMeshes(std::string filePath);
 
 		objl::Mesh* getMesh(uint32_t fileID, uint32_t meshID);
+		objl::Material* getMaterial(uint32_t fileID, uint32_t meshID);
+
+		std::vector<objl::Mesh*>* getMeshes(uint32_t fileID);
+
+		std::unordered_map<uint32_t, std::vector<objl::Mesh*>> getAllData();
 
 		//Debug
 		void debug_print_mesh(uint32_t key);

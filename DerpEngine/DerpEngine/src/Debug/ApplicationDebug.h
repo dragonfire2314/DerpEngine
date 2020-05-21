@@ -6,7 +6,6 @@ namespace DERP {
 	class DERP_API ApplicationDebug : public Application
 	{
 	private:
-
 	public:
 
 		ApplicationDebug();
@@ -15,6 +14,7 @@ namespace DERP {
 		//Starts the application and takes control of the program
 		//Main game loop
 		void Run();
+		void debugStart();
 	};
 
 }

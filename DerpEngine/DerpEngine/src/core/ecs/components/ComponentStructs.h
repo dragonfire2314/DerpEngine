@@ -10,6 +10,7 @@
 
 namespace DERP {
 
+
 	class DERP_API Transform
 	{
 	public:
@@ -27,7 +28,7 @@ namespace DERP {
 		Mesh(objl::Mesh* _mesh);
 		Mesh();
 
-		objl::Mesh* mesh;
+		objl::Mesh* mesh = nullptr;
 	};
 
 	class DERP_API Material 
@@ -36,14 +37,30 @@ namespace DERP {
 		uint32_t ShaderID;
 
 		//Shader
-		std::string vertexShader = "Teal";
-		std::string pixelShader;
+		std::string vertexShader = "defaultVertexShader.glsl";
+		std::string pixelShader = "defaultPixelShader.glsl";
 
 		//Material
 		objl::Material* mat;
 
 		//Functions
 		void setShader(std::string _vertexShader, std::string _pixleShader);
+	};
+
+	//Texture Data structure
+	struct TextureData 
+	{
+		unsigned char* data;
+		int width;
+		int height;
+	};
+
+	class Camera 
+	{
+	public:
+		glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
+		glm::vec3 frount = glm::vec3(0.0f, 0.0f, -1.0f);
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	};
 
 }

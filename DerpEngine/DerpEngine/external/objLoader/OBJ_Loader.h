@@ -92,6 +92,7 @@ namespace objl {
 		std::string map_Ka;
 		// Diffuse Texture Map
 		std::string map_Kd;
+		uint32_t map_Kd_ID;
 		// Specular Texture Map
 		std::string map_Ks;
 		// Specular Hightlight Map

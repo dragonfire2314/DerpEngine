@@ -1,4 +1,6 @@
+#pragma once
 #include "core.h"
+
 #include "ecs/ComponentManager.h"
 
 #include "../renderer/RenderAPI.h"
@@ -10,8 +12,10 @@ namespace DERP {
 	class DERP_API Application
 	{
 	private:
-		RenderAPI *renderer;
 	protected:
+		void* window;
+		RenderAPI* renderer;
+
 		inline ComponentScript* getCS() { return ComponentScript::getInstance(); }
 		void start();
 	public:
