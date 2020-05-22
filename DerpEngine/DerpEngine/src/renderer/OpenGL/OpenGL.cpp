@@ -38,11 +38,11 @@ namespace DERP {
 			//Render
 			//MVP generation
 			// Model matrix : an identity matrix (model will be at the origin)
-			View = glm::lookAt(
-				((Transform*)ComponentTransform::getInstance()->getData(ComponentCamera::getInstance()->getMainCamera()))->position,
-				glm::vec3(0, 0, 0),
-				glm::vec3(0, 1, 0)
-			);
+			Transform* camT = ComponentManager::getInstance()->getComponent<Transform>(
+				ComponentTransform::getInstance(),
+				EntityManager::getInstance().getEntity(ComponentCamera::getInstance()->getMainCamera()));
+			glm::vec3 euler = glm::eulerAngles(camT->rotation) * 180.0f / 3.14159f;
+			View = glm::lookAt(camT->position, camT->position + euler, glm::vec3(0, 1, 0));
 
 			Transform* t = ComponentManager::getInstance()->
 				getComponent<Transform>(ComponentTransform::getInstance(), EntityManager::getInstance().getEntity(x.first));
