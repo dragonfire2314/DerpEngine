@@ -1,2 +1,2 @@
 # DerpEngine
-A graphics framework for c++ projects that need simple easy to use graphics.
+A basic in development game engine, written by Tanner Kern for fun.
