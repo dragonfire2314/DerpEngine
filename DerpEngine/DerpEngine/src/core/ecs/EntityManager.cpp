@@ -1,84 +1,74 @@
 #include "EntityManager.h"
 
-namespace DERP {
+#include "ComponentManager.h"
 
-	EntityManager::EntityManager() 
+namespace DERP 
+{
+	uint32_t EntityManager::counter = 0;
+	std::unordered_map<uint32_t, uint32_t> EntityManager::idToEntity;
+	std::vector<Entity> EntityManager::entitys;
+
+	void EntityManager::Init()
 	{
-		counter = 0;
+		//Root Entity
+		CreateEntity(-2);
 	}
 
-	EntityManager::~EntityManager() 
+	uint32_t EntityManager::CreateEntity()
 	{
-
+		return CreateEntity(0);
 	}
-
-	Entity* DERP::EntityManager::getEntity(uint32_t ID)
+	uint32_t EntityManager::CreateEntity(uint32_t entityID)
 	{
-		return entityMap[ID];
-	}
-
-	//TODO - Entity ID reusal
-	Entity* EntityManager::createEntity()
-	{
-		//Create a new entity on heap
-		Entity* newEntity = new Entity(counter);
-		//Inster pointer into the map
-		entityMap.insert({ counter, newEntity });
-		//Increament entity ID counter
-		counter++;
-
-
-		//Assign entity to the root
-		root.push_back(newEntity);
-		//Give the entiy a nullptr for parnet since its parent is root
-		newEntity->parent = nullptr;
-
-
-		//Return the enity made
-		return newEntity;
-	}
-
-	Entity* EntityManager::createEntity(Entity* parent)
-	{
-		//Create a new entity on heap
-		Entity* newEntity = new Entity(counter);
-		//Inster pointer into the map
-		entityMap.insert({ counter, newEntity });
-		//Increament entity ID counter
-		counter++;
-
-		//Assign parent
-		newEntity->parent = parent;
-		//Add child to parent object
-		parent->children.push_back(newEntity);
-
-		//Return the enity made
-		return newEntity;
-	}
-
-	std::vector<Entity*>& EntityManager::getRoot()
-	{
-		return root;
-	}
-
-	void EntityManager::removeFromRoot(Entity* e)
-	{
-		
-	}
-
-	void EntityManager::removeEntity(Entity* e)
-	{
-		//Remove from vector
-		std::vector<Entity*>::iterator toErease;
-		toErease = std::find(root.begin(), root.end(), e);
-		if (toErease != root.end())
+		if (entityID == -2)
 		{
-			root.erase(toErease);
-		}
-		//Remove from map
-		entityMap.erase(e->getID());
-		//Delete
-		delete e;
-	}
+			//Create root entity
+			printf("Entity Created Root: %i\n", 0);
 
+			Entity ent;
+			ent.ID = 0;
+			ent.parent = nullptr;
+
+			entitys.push_back(ent);
+
+			idToEntity.insert({ 0 , 0 });
+
+			counter++;
+			return 0;
+		}
+		else 
+		{
+			printf("Entity Created %i\n", counter);
+
+			Entity ent;
+			ent.ID = counter;
+			ent.parent = getEntity(entityID);
+
+			entitys.push_back(ent);
+
+			//Add to parents children list
+			getEntity(entityID)->childern.push_back(ent.ID);
+
+			idToEntity.insert({ counter , counter });
+
+			counter++;
+			return counter - 1;
+		}
+	}
+	Entity* EntityManager::getEntity(uint32_t entityID)
+	{
+		return &entitys[idToEntity[entityID]];
+	}
+	bool EntityManager::isComponent(uint32_t entityID, uint32_t componentID)
+	{
+		return entitys[idToEntity[entityID]].components[componentID];
+	}
+	void EntityManager::addComponent(uint32_t entityID, uint32_t componentID)
+	{
+		entitys[idToEntity[entityID]].components[componentID] = 1;
+	}
+	std::bitset<UINT8_MAX> EntityManager::getSignature(uint32_t entityID)
+	{
+		return getEntity(entityID)->components;
+	}
 }

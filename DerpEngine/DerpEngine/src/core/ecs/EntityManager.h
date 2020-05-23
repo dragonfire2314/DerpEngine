@@ -1,46 +1,30 @@
 #pragma once
-#include "../core.h"
-
-#include "Entity.h"
 
 #include <unordered_map>
+#include <vector>
 
-namespace DERP {
+#include "../core.h"
+#include "Entity.h"
 
-	class EntityManager
+namespace DERP 
+{
+	class DERP_API EntityManager 
 	{
 	private:
-		uint32_t counter = 0;
-
-		std::unordered_map<uint32_t, Entity*> entityMap;
-
-		//Stores the root entity's children
-		//Look thourgh children to find other entitys in the tree
-		std::vector<Entity*> root;
+		static uint32_t counter;
+		static std::vector<Entity> entitys;
+		//Key - EntityID
+		//Value - Index to array
+		static std::unordered_map<uint32_t, uint32_t> idToEntity;
 	public:
-		//Basic singleton method
-		DERP_API static EntityManager& getInstance()
-		{
-			static EntityManager instance;
-			return instance;
-		}
+		static void Init();
+		static uint32_t CreateEntity();
+		static uint32_t CreateEntity(uint32_t entityID);
+		static Entity* getEntity(uint32_t entityID);
 
-		//C++ 11 something?
-		EntityManager (EntityManager const&) = delete;
-		void operator=(EntityManager const&) = delete;
+		static bool isComponent(uint32_t entityID, uint32_t componentID);
+		static void addComponent(uint32_t entityID, uint32_t componentID);
 
-		EntityManager();
-		~EntityManager();
-
-		Entity* getEntity(uint32_t ID);
-
-		DERP_API Entity* createEntity();
-		DERP_API Entity* createEntity(Entity* parent);
-
-		DERP_API std::vector<Entity*>& getRoot();
-		DERP_API void removeFromRoot(Entity* e);
-
-		DERP_API void removeEntity(Entity* e);
+		static std::bitset<UINT8_MAX> getSignature(uint32_t entityID);
 	};
-
 }

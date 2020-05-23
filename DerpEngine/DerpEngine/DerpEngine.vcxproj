@@ -172,6 +172,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>DERP_WINDOWS;DERP_STATIC;</PreprocessorDefinitions>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glew32s.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -180,6 +181,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">
     <ClCompile>
       <PreprocessorDefinitions>DERP_WINDOWS;DERP_STATIC;</PreprocessorDefinitions>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glew32s.lib;glfw3.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -193,27 +195,21 @@
     <ClCompile Include="external\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="external\objLoader\OBJ_Loader.cpp" />
-    <ClCompile Include="src\core\ecs\components\ComponentCamera.cpp" />
+    <ClCompile Include="src\core\Application.cpp" />
+    <ClCompile Include="src\core\ecs\ComponentManager.cpp" />
+    <ClCompile Include="src\core\ecs\Components.cpp" />
+    <ClCompile Include="src\core\ecs\EntityManager.cpp" />
+    <ClCompile Include="src\core\ecs\SystemManager.cpp" />
+    <ClCompile Include="src\core\ecs\systems\System.cpp" />
+    <ClCompile Include="src\core\input\Input.cpp" />
+    <ClCompile Include="src\core\MeshManager.cpp" />
     <ClCompile Include="src\core\TextureManager.cpp" />
     <ClCompile Include="src\Debug\ApplicationEditor.cpp" />
-    <ClCompile Include="src\renderer\OpenGL\Shader.cpp" />
-    <ClCompile Include="src\core\ecs\components\ComponentMaterial.cpp" />
-    <ClCompile Include="src\core\ecs\components\ComponentMesh.cpp" />
-    <ClCompile Include="src\core\MeshManager.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGL.cpp" />
+    <ClCompile Include="src\renderer\OpenGL\Shader.cpp" />
     <ClCompile Include="src\renderer\OpenGL\TextureManagerGL.cpp" />
-    <ClCompile Include="src\renderer\RenderAPI.cpp" />
-    <ClCompile Include="src\core\ecs\components\ComponentStructs.cpp" />
-    <ClCompile Include="src\Debug\ApplicationDebug.cpp" />
-    <ClCompile Include="src\core\ecs\components\ComponentScript.cpp" />
-    <ClCompile Include="src\core\ecs\components\Script.cpp" />
-    <ClCompile Include="src\core\ecs\EntityManager.cpp" />
-    <ClCompile Include="src\core\ecs\ComponentManager.cpp" />
-    <ClCompile Include="src\core\ecs\Component.cpp" />
-    <ClCompile Include="src\core\ecs\Entity.cpp" />
-    <ClCompile Include="src\core\Application.cpp" />
-    <ClCompile Include="src\core\ecs\components\Transform.cpp" />
     <ClCompile Include="src\renderer\OpenGL\VertexBufferManger.cpp" />
+    <ClCompile Include="src\renderer\RenderAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\imgui\imconfig.h" />
@@ -225,29 +221,26 @@
     <ClInclude Include="external\imgui\imstb_textedit.h" />
     <ClInclude Include="external\imgui\imstb_truetype.h" />
     <ClInclude Include="external\stb\stb_image.h" />
-    <ClInclude Include="src\core\ecs\components\ComponentCamera.h" />
-    <ClInclude Include="src\core\TextureManager.h" />
-    <ClInclude Include="src\Debug\ApplicationEditor.h" />
-    <ClInclude Include="src\renderer\OpenGL\Shader.h" />
-    <ClInclude Include="src\core\ecs\components\ComponentMaterial.h" />
-    <ClInclude Include="src\core\ecs\components\ComponentMesh.h" />
-    <ClInclude Include="src\core\MeshManager.h" />
-    <ClInclude Include="src\renderer\OpenGL\OpenGL.h" />
-    <ClInclude Include="src\renderer\OpenGL\TextureManagerGL.h" />
-    <ClInclude Include="src\renderer\RenderAPI.h" />
-    <ClInclude Include="src\Debug\ApplicationDebug.h" />
-    <ClInclude Include="src\core\ecs\components\ComponentScript.h" />
-    <ClInclude Include="src\core\ecs\components\Script.h" />
-    <ClInclude Include="src\core\ecs\components\ComponentStructs.h" />
-    <ClInclude Include="src\core\ecs\EntityManager.h" />
-    <ClInclude Include="src\core\ecs\Components.h" />
-    <ClInclude Include="src\core\ecs\ComponentManager.h" />
-    <ClInclude Include="src\core\ecs\Component.h" />
-    <ClInclude Include="src\core\ecs\Entity.h" />
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\core\core.h" />
-    <ClInclude Include="src\core\ecs\components\Transform.h" />
+    <ClInclude Include="src\core\ecs\Component.h" />
+    <ClInclude Include="src\core\ecs\ComponentManager.h" />
+    <ClInclude Include="src\core\ecs\Components.h" />
+    <ClInclude Include="src\core\ecs\Entity.h" />
+    <ClInclude Include="src\core\ecs\EntityManager.h" />
+    <ClInclude Include="src\core\ecs\Scriptable.h" />
+    <ClInclude Include="src\core\ecs\SystemManager.h" />
+    <ClInclude Include="src\core\ecs\systems\Renderer.h" />
+    <ClInclude Include="src\core\ecs\systems\System.h" />
+    <ClInclude Include="src\core\input\Input.h" />
+    <ClInclude Include="src\core\MeshManager.h" />
+    <ClInclude Include="src\core\TextureManager.h" />
+    <ClInclude Include="src\Debug\ApplicationEditor.h" />
+    <ClInclude Include="src\renderer\OpenGL\OpenGL.h" />
+    <ClInclude Include="src\renderer\OpenGL\Shader.h" />
+    <ClInclude Include="src\renderer\OpenGL\TextureManagerGL.h" />
     <ClInclude Include="src\renderer\OpenGL\VertexBufferManger.h" />
+    <ClInclude Include="src\renderer\RenderAPI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

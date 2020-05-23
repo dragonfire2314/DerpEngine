@@ -1,18 +1,21 @@
 #include "TextureManagerGL.h"
 
 #include "../../core/TextureManager.h"
-#include "../../core/ecs/components/ComponentMaterial.h"
+#include "../../core/ecs/systems/System.h"
+#include "../../core/ecs/Components.h"
+#include "../../core/ecs/ComponentManager.h"
 
 namespace DERP {
 
 	void TextureManagerGL::LoadTextures()
 	{
-		std::unordered_map<uint32_t, Material*> data = ComponentMaterial::getInstance()->getDataMap();
 
-		for (auto x : data) 
+		for (auto x : sys_shader->Entities)
 		{
+			Material* mat = ComponentManager::GetComponent<Material>(x);
+
 			//Check if a texture exists
-			if (x.second->mat == nullptr) continue;
+			if (mat->mat == nullptr) continue;
 			TextureData texData;
 
 			GLuint texture;
@@ -25,12 +28,12 @@ namespace DERP {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 			TextureManager textureManager;
-			texData = textureManager.loadTexture(x.second->mat->map_Kd_ID);
+			texData = textureManager.loadTexture(mat->mat->map_Kd_ID);
 
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texData.width, texData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData.data);
 			//glGenerateMipmap(GL_TEXTURE_2D);
 
-			GLTextureIDs.insert({ x.first, texture });
+			GLTextureIDs.insert({ x, texture });
 		}
 	}
 
@@ -57,7 +60,7 @@ namespace DERP {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		Material* m = (Material*)ComponentMaterial::getInstance()->getData(entityID);
+		Material* m = ComponentManager::GetComponent<Material>(entityID);
 
 		TextureManager textureManager;
 		texData = textureManager.loadTexture(m->mat->map_Kd_ID);

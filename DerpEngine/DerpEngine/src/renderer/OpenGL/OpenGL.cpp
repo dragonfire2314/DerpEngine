@@ -4,8 +4,8 @@
 #include "../../../external/glm/gtc/quaternion.hpp"
 #include "../../../external/glm/gtx/quaternion.hpp"
 
-#include "../../core/ecs/components/ComponentMaterial.h"
-#include "../../core/ecs/components/ComponentCamera.h"
+#include "../../core/ecs/ComponentManager.h"
+#include "../../core/ecs/systems/System.h"
 
 #include <unordered_map>
 #include <GL/glew.h>
@@ -16,36 +16,30 @@ namespace DERP {
 
 	void OpenGL::Render()
 	{
-		RenderMainCamera();
-		RenderNonMainCameras();
+		for (auto x : sys_cameras->Entities) { //Render screen once per camera
+			//TODO - Allow cameras to choose render method (screen space, or texture)
+			//Setup veiw matrix before call
+			Transform* t = ComponentManager::GetComponent<Transform>(x);
+			glm::vec3 euler = glm::eulerAngles(t->rotation) * 180.0f / 3.14159f;
+			View = glm::lookAt(t->position, t->position + glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+
+			RenderMainCamera();
+		}
 	}
 
 	void OpenGL::RenderMainCamera() 
 	{
 		//Must render all mesh components
-		std::unordered_map<uint32_t, Mesh*> data = ComponentMesh::getInstance()->getDataMap();
 
 		//Loop though meshes
-		for (auto x : data)
+		for (auto x : sys_renderer->Entities)
 		{
-			//Check if mesh is valid i.e. has a mesh, and has a material
-			if (x.second->mesh == nullptr || !(EntityManager::getInstance().getEntity(x.first)->isComponent(ComponentMaterial::getInstance())))
-			{
-				//Can't render
-				continue;
-			}
+			Mesh* mesh = ComponentManager::GetComponent<Mesh>(x);
 
-			//Render
-			//MVP generation
-			// Model matrix : an identity matrix (model will be at the origin)
-			Transform* camT = ComponentManager::getInstance()->getComponent<Transform>(
-				ComponentTransform::getInstance(),
-				EntityManager::getInstance().getEntity(ComponentCamera::getInstance()->getMainCamera()));
-			glm::vec3 euler = glm::eulerAngles(camT->rotation) * 180.0f / 3.14159f;
-			View = glm::lookAt(camT->position, camT->position + euler, glm::vec3(0, 1, 0));
+			//Check if mesh is valid
+			if (mesh->mesh == nullptr) continue;
 
-			Transform* t = ComponentManager::getInstance()->
-				getComponent<Transform>(ComponentTransform::getInstance(), EntityManager::getInstance().getEntity(x.first));
+			Transform* t = ComponentManager::GetComponent<Transform>(x);
 
 			glm::mat4 trans = glm::mat4(1.0f);
 			trans = glm::translate(trans, t->position);
@@ -55,14 +49,14 @@ namespace DERP {
 			// Our ModelViewProjection : multiplication of our 3 matrices
 			mvp = Projection * View * trans;
 
-			GLuint MatrixID = glGetUniformLocation(shader.getShader(x.first), "MVP");
+			GLuint MatrixID = glGetUniformLocation(shader.getShader(x), "MVP");
 			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-			glUseProgram(shader.getShader(x.first));
+			glUseProgram(shader.getShader(x));
 
 			//Bind stuff
 			//Vertex Buffer
 			glEnableVertexAttribArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, VBManager.getVertexBuffer(x.first));
+			glBindBuffer(GL_ARRAY_BUFFER, VBManager->getVertexBuffer(x));
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 			//Normals
 			glEnableVertexAttribArray(1);
@@ -73,16 +67,16 @@ namespace DERP {
 			//glBindBuffer(GL_ARRAY_BUFFER, VBManager.getVertexBuffer(x.first));
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 			//Index Buffer
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBManager.getIndexBuffer(x.first));
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBManager->getIndexBuffer(x));
 			//Texture
-			glBindTexture(GL_TEXTURE_2D, textureManagerGL.getTexture(x.first));
-			glBindVertexArray(VertexArrayID);
+			//glBindTexture(GL_TEXTURE_2D, textureManagerGL.getTexture(x));
+			//glBindVertexArray(VertexArrayID);
 
 			//Draw Call
 			//glDrawArrays(GL_TRIANGLES, 0, x.second->mesh->Vertices.size());
 			glDrawElements(
 				GL_TRIANGLES,                      // mode
-				x.second->mesh->Indices.size(),    // count
+				mesh->mesh->Indices.size(),        // count
 				GL_UNSIGNED_INT,                   // type
 				(void*)0                           // element array buffer offset
 			);
@@ -108,6 +102,8 @@ namespace DERP {
 
 	void OpenGL::SetUp()
 	{
+		VBManager = new VertexBufferManger();
+
 		/*******************
 		*	Depth
 		********************/
@@ -122,7 +118,7 @@ namespace DERP {
 		//Load the shaders
 		shader.loadShaders();
 		//Load the vertexBuffers
-		VBManager.makeVertexBuffers();
+		VBManager->makeVertexBuffers();
 
 
 		/*******************
@@ -154,7 +150,7 @@ namespace DERP {
 
 	void OpenGL::updateMesh(uint32_t entityID)
 	{
-		VBManager.updateVetexBuffer(entityID);
+		VBManager->updateVetexBuffer(entityID);
 	}
 
 	void OpenGL::updateShader(uint32_t entityID)

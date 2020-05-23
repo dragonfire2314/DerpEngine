@@ -7,7 +7,7 @@ void addEntity(std::string name);
 void removeEntity();
 
 //Stuff for scene window
-std::vector<Entity*> v;
+std::vector<uint32_t> v;
 
 ImGuiTreeNodeFlags base_flags =
 ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_OpenOnArrow |
@@ -21,27 +21,27 @@ int node_clicked = -1;
 void traverseTree(Entity* node)
 {
     ImGuiTreeNodeFlags node_flags = base_flags;
-    const bool is_selected = ((node->getID()) == selectionID);
+    const bool is_selected = ((node->ID) == selectionID);
     if (is_selected)
         node_flags |= ImGuiTreeNodeFlags_Selected;
 
-    std::vector<Entity*> childs = node->getChildren();
+    std::vector<uint32_t> childs = node->childern;
 
     if (childs.empty()) //Has no childern 
     {
         node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-        ImGui::TreeNodeEx((void*)(intptr_t)node->getID(), node_flags, node->getName().c_str());
+        ImGui::TreeNodeEx((void*)(intptr_t)node->ID, node_flags, "name");
         if (ImGui::IsItemClicked()) {
-            node_clicked = node->getID();
-            selectionID = node->getID();
+            node_clicked = node->ID;
+            selectionID = node->ID;
         }
     }
     else //Has children
     {
-        bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)(node->getID()), node_flags, node->getName().c_str());
+        bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)(node->ID), node_flags, "name");
         if (ImGui::IsItemClicked()) {
-            node_clicked = (node->getID());
-            selectionID = node->getID();
+            node_clicked = (node->ID);
+            selectionID = node->ID;
         }
 
         if (node_open) {
@@ -52,7 +52,7 @@ void traverseTree(Entity* node)
             }
 
             for (auto y : childs) {
-                traverseTree(y);
+                traverseTree(EntityManager::getEntity(y));
             }
 
             ImGui::TreePop();
@@ -62,7 +62,7 @@ void traverseTree(Entity* node)
 
 void sceneWindow() 
 {
-    v = EntityManager::getInstance().getRoot();
+    v = EntityManager::getEntity(-2)->childern;
 
     //Scene Window
     ImGui::Begin("Scene");
@@ -135,28 +135,30 @@ void sceneWindow()
     //Dig through node tree
     for (auto x : v)
     {
+        Entity* e = EntityManager::getEntity(x);
+
         ImGuiTreeNodeFlags node_flags = base_flags;
-        const bool is_selected = ((x->getID()) == selectionID);
+        const bool is_selected = ((e->ID) == selectionID);
         if (is_selected)
             node_flags |= ImGuiTreeNodeFlags_Selected;
 
-        std::vector<Entity*> childs = x->getChildren();
+        std::vector<uint32_t> childs = e->childern;
 
         if (childs.empty()) //Has no childern 
         {
             node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-            ImGui::TreeNodeEx((void*)(intptr_t)x->getID(), node_flags, x->getName().c_str());
+            ImGui::TreeNodeEx((void*)(intptr_t)e->ID, node_flags, "Name");
             if (ImGui::IsItemClicked()) {
-                node_clicked = x->getID();
-                selectionID = x->getID();
+                node_clicked = e->ID;
+                selectionID = e->ID;
             }
         }
         else //Has children
         {
-            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)(x->getID()), node_flags, x->getName().c_str());
+            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)(e->ID), node_flags, "Name");
             if (ImGui::IsItemClicked()) {
-                node_clicked = (x->getID());
-                selectionID = x->getID();
+                node_clicked = (e->ID);
+                selectionID = e->ID;
             }
 
             if (node_open) {
@@ -167,7 +169,7 @@ void sceneWindow()
                 }
 
                 for (auto y : childs) {
-                    traverseTree(y);
+                    traverseTree(EntityManager::getEntity(y));
                 }
 
                 ImGui::TreePop();
@@ -195,15 +197,17 @@ void sceneWindow()
 void addEntity(std::string name) 
 {
     if (selectionID == -1) {
-        EntityManager::getInstance().createEntity()->setName(name);
+        //EntityManager::getInstance().createEntity()->setName(name);
+        EntityManager::CreateEntity();
     }
     else {
-        EntityManager::getInstance().createEntity(EntityManager::getInstance().getEntity(selectionID))->setName(name);
+        //EntityManager::getInstance().createEntity(EntityManager::getInstance().getEntity(selectionID))->setName(name);
+        EntityManager::CreateEntity(selectionID);
     }
 }
 
 void removeEntity() 
 {
     //Remove Entity that is selected
-    EntityManager::getInstance().removeEntity(EntityManager::getInstance().getEntity(selectionID));
+    //EntityManager::getInstance().removeEntity(EntityManager::getInstance().getEntity(selectionID));
 }

@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../../core/ecs/components/ComponentMesh.h"
-#include "../../core/ecs/components/ComponentStructs.h"
-
 #include <unordered_map>
 #include <vector>
 
 #include <GL/glew.h>
+
+#include "../../core/ecs/Components.h"
 
 namespace DERP {
 
@@ -19,8 +18,6 @@ namespace DERP {
 		//Key - entityID
 		//Value - indexBufferID
 		std::unordered_map<uint32_t, GLuint> indexBuffers;
-
-		std::unordered_map<uint32_t, Mesh*> oldData;
 	public:
 		void makeVertexBuffers();
 		GLuint getVertexBuffer(uint32_t entityID);

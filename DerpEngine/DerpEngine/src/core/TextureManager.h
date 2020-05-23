@@ -1,10 +1,16 @@
 #pragma once
 
-#include "ecs/components/ComponentStructs.h"
-
 #include <unordered_map>
 
 namespace DERP {
+
+	//Texture Data structure
+	struct TextureData
+	{
+		unsigned char* data;
+		int width;
+		int height;
+	};
 
 	/*
 	

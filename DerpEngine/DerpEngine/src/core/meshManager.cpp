@@ -5,6 +5,8 @@
 #include <assimp/cimport.h>
 #include <assimp/material.h>
 
+#include <assert.h>
+
 #include <iostream>
 
 #include "TextureManager.h"

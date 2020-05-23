@@ -1,26 +1,11 @@
 #include "ComponentManager.h"
 
-namespace DERP {
+namespace DERP 
+{
+	std::unordered_map<const char*, uint8_t> ComponentManager::nameToID;
+	std::unordered_map<const char*, ComponentBase*> ComponentManager::nameToComponent;
+	uint32_t ComponentManager::componentID = 0;
 
-	ComponentManager::ComponentManager() 
-	{
-		printf("Component Manager Start\n");
-	}
-
-	ComponentManager::~ComponentManager() 
-	{
-
-	}
-
-	void ComponentManager::addComponent(Component* comp, Entity* e)
-	{
-		comp->addComponent(e->getID());
-		e->addComponent(comp);
-	}
-
-	void ComponentManager::addScript(Script* script, Entity* e)
-	{
-		ComponentScript::getInstance()->addScript(e->getID(), script);
-	}
-
+	ComponentManager::ComponentManager() {}
+	ComponentManager::~ComponentManager() {}
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core.h"
-#include "ecs/components/ComponentStructs.h"
 
 #include "../../external/objLoader/OBJ_Loader.h"
 #include <unordered_map>

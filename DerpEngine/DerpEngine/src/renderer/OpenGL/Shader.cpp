@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-#include "../../core/ecs/components/ComponentMaterial.h"
+#include "../../core/ecs/Components.h"
 #include "../../core/ecs/ComponentManager.h"
 
 #include "../../core/ecs/EntityManager.h"
@@ -10,6 +10,8 @@
 #include <fstream>
 #include <vector>
 
+#include "../../core/ecs/systems/System.h"
+
 namespace DERP
 {
 	void Shader::loadShaders()
@@ -17,21 +19,20 @@ namespace DERP
 		//Look through all materials and compile shaders
 		//TODO - Dont recompile shaders when the same files are being used
 
-		std::unordered_map<uint32_t, Material*> data = ComponentMaterial::getInstance()->getDataMap();
-
-		for (auto x : data) 
+		for (auto x : sys_shader->Entities)
 		{
+			Material* mat = ComponentManager::GetComponent<Material>(x);
+
 			//Compile every shader
 			//Store it in a map
-			programs.insert({ x.first, compileShaders(x.second->vertexShader.c_str(), x.second->pixelShader.c_str()) });
-			
+			programs.insert({ x, compileShaders(mat->vertexShader.c_str(), mat->pixelShader.c_str()) });
 		}
 
 	}
 
 	void Shader::updateShader(uint32_t entityID) 
 	{
-		Material* m = EntityManager::getInstance().getEntity(entityID)->getComponent<Material>(ComponentMaterial::getInstance());
+		Material* m = ComponentManager::GetComponent<Material>(entityID);
 
 		//Check if shder exisits
 		if (programs.find(entityID) == programs.end()) {

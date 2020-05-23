@@ -69,29 +69,13 @@ void Update()
 
 }
 
-void testCode() 
-{
-    //Creating entites
-    Entity* ent = EntityManager::getInstance().createEntity();
-    ent->setName("This Trans");
-
-    
-
-    componentManager.addComponent(ComponentTransform::getInstance(), ent);
-
-    //componentManager.addComponent(ComponentMesh::getInstance(), ent);
-    //Mesh* m = ent->getComponent<Mesh>(ComponentMesh::getInstance());
-    //m->mesh = meshManage.getMesh(0, 0);
-
-    //componentManager.addComponent(ComponentMaterial::getInstance(), ent);
-    //Material* mat = ent->getComponent<Material>(ComponentMaterial::getInstance());
-    //mat->setShader("vertex.v", "pixel.p");
-    //mat->mat = meshManage.getMaterial(0, 0);
-}
-
 int main() 
 {
-    testCode();
+    ComponentManager cm;
+    SystemManager sm;
+
+    app.Init();
+    EntityManager::Init();
 
 	app.setUpdate(Update);
 

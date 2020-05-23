@@ -1,25 +1,41 @@
 #pragma once
-#include "../core.h"
 
-#include <stdint.h>
+#include <vector>
+#include <unordered_map>
 
-namespace DERP {
-
-	class DERP_API Component
+namespace DERP 
+{
+	class ComponentBase 
 	{
 	private:
-		
+
 	public:
-		Component();
-		~Component();
 
-		virtual uint32_t addComponent(uint32_t entityID) { return 0; }
-		virtual void updateComponent() {}
-		virtual void startComponent() {}
-
-		virtual size_t* getData(uint32_t entityID) { return nullptr; }
 	};
 
+	template <typename T>
+	class Component : public ComponentBase 
+	{
+	private:
+		std::vector<T> componentArray;
+		//Key - EntityID
+		//Value - Index to array
+		std::unordered_map<uint32_t, uint32_t> entityToComponent;
+	public:
+		void addData(uint32_t entityID, T component)
+		{
+			componentArray.push_back(component);
+			entityToComponent.insert({ entityID, componentArray.size() - 1 });
+		}
+
+		T* getData(uint32_t entityID)
+		{
+			return &componentArray[entityToComponent[entityID]];
+		}
+
+		std::vector<T> getArray() 
+		{
+			return componentArray;
+		}
+	};
 }
-
-

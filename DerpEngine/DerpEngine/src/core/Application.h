@@ -4,6 +4,7 @@
 #include "ecs/ComponentManager.h"
 
 #include "../renderer/RenderAPI.h"
+#include "input/Input.h"
 
 #include <stdio.h>
 
@@ -16,17 +17,20 @@ namespace DERP {
 		void* window;
 		RenderAPI* renderer;
 
-		inline ComponentScript* getCS() { return ComponentScript::getInstance(); }
+		Input input;
+
 		void start();
+		ComponentManager componentManager;
+		SystemManager systemManager;
 	public:
 
 		Application();
 		~Application();
 
-		
-
 		//Starts the application and takes control of the program
 		//Main game loop
 		virtual void Run();
+
+		void Init();
 	};
 }

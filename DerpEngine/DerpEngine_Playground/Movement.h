@@ -12,7 +12,7 @@
 
 using namespace DERP;
 
-class Movement : public Script
+class Movement : public Scriptable
 {
 private:
 
@@ -32,13 +32,11 @@ public:
 
 		std::srand(std::time(nullptr));
 
-		printf("Script start was called!!!!!!!!!!!!!!!!!!!\n");
+		printf("Script start was called!\n");
 
-		t = getComponent<Transform>(ComponentTransform::getInstance());
+		t = getComponent<Transform>();
 
-		t->position = glm::vec3(0, 0, -2);
-
-		//t->rotation = glm::angleAxis(glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		//t->position = glm::vec3(0, 0.5, -2);
 	}
 
 	float counter = 0;
@@ -46,24 +44,14 @@ public:
 
 	void Update() 
 	{
-		//t->position = 
-		//	glm::vec3(t->position.x + ((std::rand() % 100) / 100.0f), 1, 0);
-
 		auto t1 = Time::now();
 		fsec fs = t1 - t0;
 		ms d = std::chrono::duration_cast<ms>(fs);
-
-		//t->rotation = glm::angleAxis((float)glm::sin(glm::radians((float)d.count())) * 0.05f, glm::vec3(0.0f, 0.0f, 1.0f));
 
 		counter += 0.5f;
 		counter2 += 0.3f;
 
 		t->rotation = glm::angleAxis(glm::radians(counter), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::angleAxis(glm::radians(counter2), glm::vec3(1.0f, 0.0f, 0.0f));
-
-		//printf("Test Position %f, %f, %f\n",
-		//	t->position.x,
-		//	t->position.y,
-		//	t->position.z);
 	}
 };
 

@@ -13,12 +13,13 @@ ComponentManager componentManager;
 
 void ComponentsWindow() 
 {
-    if (!(EntityManager::getInstance().getEntity(selectionID) == nullptr))
+    if (!(EntityManager::getEntity(selectionID) == nullptr))
     {
         ImGui::Begin("Components");
 
         //Entity
-        ImGui::Text("%s", EntityManager::getInstance().getEntity(selectionID)->getName().c_str());
+        //ImGui::Text("%s", EntityManager::getInstance().getEntity(selectionID)->getName().c_str());
+        ImGui::Text("%s", "name");
         ImGui::Separator();
 
         //Green Add
@@ -34,17 +35,17 @@ void ComponentsWindow()
             ImGui::Text("Select Component");
             ImGui::Separator();
             if (ImGui::Selectable("Transform")) {
-                if (!EntityManager::getInstance().getEntity(selectionID)->getComponent<Transform>(ComponentTransform::getInstance()))
-                    componentManager.addComponent(ComponentTransform::getInstance(), EntityManager::getInstance().getEntity(selectionID));
+                if (!ComponentManager::IsComponent<Transform>(selectionID))
+                    ComponentManager::AddComponent<Transform>(selectionID);
             }
             if (ImGui::Selectable("Mesh")) {
-                if (!EntityManager::getInstance().getEntity(selectionID)->getComponent<Mesh>(ComponentMesh::getInstance())) {
-                    componentManager.addComponent(ComponentMesh::getInstance(), EntityManager::getInstance().getEntity(selectionID));
+                if (!ComponentManager::IsComponent<Mesh>(selectionID)) {
+                    ComponentManager::AddComponent<Mesh>(selectionID);
                 }
             }
             if (ImGui::Selectable("Material")) {
-                if (!EntityManager::getInstance().getEntity(selectionID)->getComponent<Material>(ComponentMaterial::getInstance())) {
-                    componentManager.addComponent(ComponentMaterial::getInstance(), EntityManager::getInstance().getEntity(selectionID));
+                if (!ComponentManager::IsComponent<Material>(selectionID)) {
+                    ComponentManager::AddComponent<Material>(selectionID);
                 }
             }
             
@@ -56,22 +57,17 @@ void ComponentsWindow()
         ImGui::Separator();
         
 
-        std::unordered_map<Component*, bool> data = EntityManager::getInstance().getEntity(selectionID)->OLD_getComponentMap();
+        //std::unordered_map<Component*, bool> data = EntityManager::getInstance().getEntity(selectionID)->OLD_getComponentMap();
+        
 
-        for (auto x : data) 
-        {
-            if (x.second) 
-            {
-                if (ComponentTransform::getInstance() == x.first) {
-                    TransformComponent();
-                }
-                if (ComponentMesh::getInstance() == x.first) {
-                    MeshComponent();
-                }
-                if (ComponentMaterial::getInstance() == x.first) {
-                    MaterialComponent();
-                }
-            }
+        if (ComponentManager::IsComponent<Transform>(selectionID)) {
+            TransformComponent();
+        }
+        if (ComponentManager::IsComponent<Mesh>(selectionID)) {
+            MeshComponent();
+        }
+        if (ComponentManager::IsComponent<Material>(selectionID)) {
+            MaterialComponent();
         }
 
         ImGui::End();
@@ -84,7 +80,7 @@ void TransformComponent()
     {
         const float fm = -1000000.0;
         const float fM = 1000000.0;
-        Transform* t = EntityManager::getInstance().getEntity(selectionID)->getComponent<Transform>(ComponentTransform::getInstance());
+        Transform* t = ComponentManager::GetComponent<Transform>(selectionID);
         //Position
         ImGui::Text("Position");
         ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
@@ -96,7 +92,7 @@ void TransformComponent()
         ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
         ImGui::DragScalar("PZ", ImGuiDataType_Float, &t->position.z, 0.005f, &fm, &fM, "%f", 1.0f);
         //Rotation
-        glm::vec3 euler = glm::eulerAngles(t->rotation) * 180.0f / 3.14159f;
+        /*glm::vec3 euler = glm::eulerAngles(t->rotation) * 180.0f / 3.14159f;
         ImGui::Text("Rotation");
         ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
         ImGui::DragScalar("RX", ImGuiDataType_Float, &euler.x, 0.200f, &fm, &fM, "%f", 1.0f);
@@ -107,7 +103,7 @@ void TransformComponent()
         ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
         ImGui::DragScalar("RZ", ImGuiDataType_Float, &euler.z, 0.200f, &fm, &fM, "%f", 1.0f);
         euler = euler * 3.14159f / 180.0f;
-        t->rotation = glm::quat(euler);
+        t->rotation = glm::quat(euler);*/
         //Scale
         ImGui::Text("Scale");
         ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
@@ -137,7 +133,7 @@ void MeshComponent()
 {
     if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_None)) {
 
-        Mesh* m = EntityManager::getInstance().getEntity(selectionID)->getComponent<Mesh>(ComponentMesh::getInstance());
+        Mesh* m = ComponentManager::GetComponent<Mesh>(selectionID);
 
         if (m->mesh != nullptr) {
             ImGui::Text("Mesh: %s", m->mesh->MeshName.c_str());
@@ -194,7 +190,7 @@ void MaterialComponent()
 {
     if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_None)) {
 
-        Material* m = EntityManager::getInstance().getEntity(selectionID)->getComponent<Material>(ComponentMaterial::getInstance());
+        Material* m = ComponentManager::GetComponent<Material>(selectionID);
 
         //Vertex Shader
         ImGui::PushID(1);

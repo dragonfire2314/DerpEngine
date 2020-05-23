@@ -1,29 +1,65 @@
 #pragma once
 
-#include "core.h"
+#include "../core.h"
 
-#include "ComponentStructs.h"
+#include "../../../external/glm/glm.hpp"
+#include "../../../external/glm/gtx/quaternion.hpp"
+#include "../../../external/objLoader/OBJ_Loader.h"
+#include "Scriptable.h"
 
-#include <vector>
-#include <memory>
+namespace DERP 
+{
+	//All components are stored in this file
+	struct DERP_API Transform 
+	{
+		void print();
 
-/*
-This file contains all compont queue definitions and must be updated when a new component is added
+		glm::vec3 position = glm::vec3(0, 0, 0);
+		glm::quat rotation;
+		glm::vec3 scale = glm::vec3(0, 0, 0);
+	};
 
-The areas that should be updated are as follows
-	-Components enum
-	-Component stuct must be added
-	-Component vector must be added (Component Manger)
-	-Component count should be incramented
-*/
-//
-//#define COMPONENT_COUNT = 5;
-//
-////DO NOT ASSIGN VALUES TO ENTRIES, ONLY ZERO SHOULD BE ASSIGNED
-//enum DERP_API Components {
-//	TRANSFORM = 0,
-//	MESH,
-//	MATERIAL,
-//	RIGIDBODY,
-//	SCRIPT
-//};
+	struct DERP_API Script
+	{
+		Scriptable* script;
+	};
+
+	struct DERP_API RigidBody 
+	{
+		float velocity;
+		glm::vec3 dir = glm::vec3(0, 0, 0);
+	};
+
+	struct DERP_API Mesh 
+	{
+		uint32_t VertexID;
+
+		Mesh(objl::Mesh* _mesh);
+		Mesh();
+
+		objl::Mesh* mesh = nullptr;
+	};
+
+	struct DERP_API Material
+	{
+		uint32_t ShaderID;
+
+		//Shader
+		std::string vertexShader = "defaultVertexShader.glsl";
+		std::string pixelShader = "defaultPixelShader.glsl";
+
+		//Material
+		objl::Material* mat;
+
+		//Functions
+		void setShader(std::string _vertexShader, std::string _pixleShader);
+	};
+
+	struct DERP_API Camera
+	{
+		//Obsolete
+		glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
+		glm::vec3 frount = glm::vec3(0.0f, 0.0f, -1.0f);
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	};
+}

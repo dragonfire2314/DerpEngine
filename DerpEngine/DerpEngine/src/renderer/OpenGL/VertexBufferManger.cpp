@@ -1,45 +1,45 @@
 #include "VertexBufferManger.h"
 
+#include "../../core/ecs/systems/System.h"
+#include "../../core/ecs/ComponentManager.h"
+
 namespace DERP {
 
 	void VertexBufferManger::makeVertexBuffers()
 	{
 		//TODO - Reuse a vertexbuffer when the mesh was already loaded
 
-		//Get mesh list
-		std::unordered_map<uint32_t, Mesh*> data = ComponentMesh::getInstance()->getDataMap();
-
 		//Loop though meshes
-		for (auto x : data) 
+		for (auto x : sys_vertex->Entities) 
 		{
+			Mesh* m = ComponentManager::GetComponent<Mesh>(x);
+
 			//Checks if a mesh is applied
-			if (x.second->mesh == nullptr) continue;
+			if (m->mesh == nullptr) continue;
 				
 			//Generate VBO for each mesh
 			//Create an vector of data
 			GLuint vertexbuffer;
 			glGenBuffers(1, &vertexbuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-			glBufferData(GL_ARRAY_BUFFER, x.second->mesh->Vertices.size() * sizeof(objl::Vertex),
-				x.second->mesh->Vertices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, m->mesh->Vertices.size() * sizeof(objl::Vertex),
+				m->mesh->Vertices.data(), GL_STATIC_DRAW);
 			//Store in mesh of object for fast look up
-			x.second->VertexID = vertexbuffer;
+			m->VertexID = vertexbuffer;
 			//Inster to list of buffers
-			vertexBuffers.insert({ x.first, vertexbuffer });
+			vertexBuffers.insert({ x, vertexbuffer });
 			
 
 			//Generate VBO indexes
 			GLuint indexbuffer;
 			glGenBuffers(1, &indexbuffer);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, x.second->mesh->Indices.size() * sizeof(unsigned int),
-				x.second->mesh->Indices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, m->mesh->Indices.size() * sizeof(unsigned int),
+				m->mesh->Indices.data(), GL_STATIC_DRAW);
 			//Store in mesh of object for fast look up
 			//Inster to list of buffers
-			indexBuffers.insert({ x.first, indexbuffer });
+			indexBuffers.insert({ x, indexbuffer });
 		}
-
-		oldData = data;
 	}
 
 	void VertexBufferManger::updateVetexBuffer(uint32_t entityID)
@@ -56,7 +56,7 @@ namespace DERP {
 			glDeleteBuffers(1, &(indexBuffers[entityID]));
 		}
 
-		Mesh* m = (Mesh*)ComponentMesh::getInstance()->getData(entityID);
+		Mesh* m = ComponentManager::GetComponent<Mesh>(entityID);
 
 		//Create buffers for entity
 		GLuint vertexbuffer;

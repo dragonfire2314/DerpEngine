@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../core/ecs/components/ComponentStructs.h"
-
 #include <unordered_map>
 #include <GL/glew.h>
 

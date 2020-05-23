@@ -5,10 +5,16 @@
 
 #include "../renderer/OpenGL/OpenGL.h"
 
+#include "ecs/Components.h"
+#include "ecs/systems/Renderer.h"
+#include "ecs/SystemManager.h"
+#include "ecs/systems/System.h"
+
 namespace DERP {
 
 	Application::Application()
 	{
+		//New ECS startup
 		printf("App Started\n");
 
 		//Choose Renderer to use
@@ -23,8 +29,13 @@ namespace DERP {
 
 	void Application::Run()
 	{
-		//Engine setup
-		getCS()->startComponent();
+		//Run scripts Start
+		for (auto x : sys_scripts->Entities) {
+			//Assign entityID's to the scripts
+			Script* s = ComponentManager::GetComponent<Script>(x);
+			s->script->entity = x;
+			s->script->Start();
+		}
 
 		start();
 
@@ -38,8 +49,10 @@ namespace DERP {
 			renderer->ClearScreen(); 
 			//Run physics
 
-			//Run scripts
-			getCS()->updateComponent();
+			//Run scripts Update
+			for (auto x : sys_scripts->Entities) {
+				ComponentManager::GetComponent<Script>(x)->script->Update();
+			}
 
 			//Render
 			renderer->Render();
@@ -50,6 +63,66 @@ namespace DERP {
 
 		} while (glfwGetKey((GLFWwindow*)window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			glfwWindowShouldClose((GLFWwindow*)window) == 0);
+	}
+
+	void Application::Init()
+	{
+		/*
+		
+			ECS INIT
+		
+		*/
+		{
+			//ECS component init
+			componentManager.RegisterComponent<Transform>();
+			componentManager.RegisterComponent<RigidBody>();
+			componentManager.RegisterComponent<Mesh>();
+			componentManager.RegisterComponent<Material>();
+			componentManager.RegisterComponent<Camera>();
+			componentManager.RegisterComponent<Script>();
+			//ECS System init
+			sys_renderer = systemManager.RegisterSystem<Sys_Renderer>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(componentManager.GetComponentID<Material>());
+				sig.set(componentManager.GetComponentID<Mesh>());
+				systemManager.SetSignature<Sys_Renderer>(sig);
+			}
+
+			sys_shader = systemManager.RegisterSystem<Sys_Shader>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(componentManager.GetComponentID<Material>());
+				systemManager.SetSignature<Sys_Shader>(sig);
+			}
+
+			sys_vertex = systemManager.RegisterSystem<Sys_Vertex>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(componentManager.GetComponentID<Material>());
+				systemManager.SetSignature<Sys_Vertex>(sig);
+			}
+
+			sys_scripts = systemManager.RegisterSystem<Sys_Scripts>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(componentManager.GetComponentID<Script>());
+				systemManager.SetSignature<Sys_Scripts>(sig);
+			}
+
+			sys_cameras = systemManager.RegisterSystem<Sys_Cameras>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(componentManager.GetComponentID<Camera>());
+				systemManager.SetSignature<Sys_Cameras>(sig);
+			}
+		}
+		/*
+			INPUT INIT
+		*/
+		{
+			//input.Init((GLFWwindow*)window);
+		}
 	}
 
 	void Application::start()

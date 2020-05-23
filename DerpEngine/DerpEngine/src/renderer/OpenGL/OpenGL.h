@@ -3,14 +3,14 @@
 #include "../RenderAPI.h"
 
 #include "../../../external/glm/gtc/matrix_transform.hpp"
-#include "../../core/ecs/components/ComponentMesh.h"
 
 #include "Shader.h"
 #include "VertexBufferManger.h"
 #include "TextureManagerGL.h"
 
+#include "../../core/ecs/Components.h"
+
 #include "../../core/ecs/ComponentManager.h"
-#include "../../core/ecs/components/Transform.h"
 #include "../../core/ecs/EntityManager.h"
 
 namespace DERP {
@@ -19,7 +19,7 @@ namespace DERP {
 	{
 	private:
 		Shader shader;
-		VertexBufferManger VBManager;
+		VertexBufferManger* VBManager;
 		TextureManagerGL textureManagerGL;
 
 		GLuint VertexArrayID;
