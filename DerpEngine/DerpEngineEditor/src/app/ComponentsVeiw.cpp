@@ -8,6 +8,8 @@
 void TransformComponent();
 void MeshComponent();
 void MaterialComponent();
+void DirectionalLightComponent();
+void PointLightComponent();
 
 ComponentManager componentManager;
 
@@ -69,8 +71,60 @@ void ComponentsWindow()
         if (ComponentManager::IsComponent<Material>(selectionID)) {
             MaterialComponent();
         }
+        if (ComponentManager::IsComponent<DirectionalLight>(selectionID)) {
+            DirectionalLightComponent();
+        }
+        if (ComponentManager::IsComponent<PointLight>(selectionID)) {
+            PointLightComponent();
+        }
 
         ImGui::End();
+    }
+}
+
+void PointLightComponent()
+{
+    if (ImGui::CollapsingHeader("Point Light", ImGuiTreeNodeFlags_None))
+    {
+        ImGui::PushID(1);
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.8f));
+        if (ImGui::SmallButton("Remove Component")) {
+
+        }
+        ImGui::PopStyleColor(3);
+        ImGui::PopID();
+    }
+}
+
+void DirectionalLightComponent()
+{
+    if (ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_None))
+    {
+        const float fm = -1000000.0;
+        const float fM = 1000000.0;
+        DirectionalLight* d = ComponentManager::GetComponent<DirectionalLight>(selectionID);
+        //Position
+        ImGui::Text("Direction");
+        ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
+        ImGui::DragScalar("PX", ImGuiDataType_Float, &d->direction.x, 0.005f, &fm, &fM, "%f", 1.0f);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
+        ImGui::DragScalar("PY", ImGuiDataType_Float, &d->direction.y, 0.005f, &fm, &fM, "%f", 1.0f);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
+        ImGui::DragScalar("PZ", ImGuiDataType_Float, &d->direction.z, 0.005f, &fm, &fM, "%f", 1.0f);
+
+        ImGui::PushID(1);
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.8f));
+        if (ImGui::SmallButton("Remove Component")) {
+
+        }
+        ImGui::PopStyleColor(3);
+        ImGui::PopID();
     }
 }
 

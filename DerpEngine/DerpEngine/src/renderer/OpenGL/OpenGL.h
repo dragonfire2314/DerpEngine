@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "VertexBufferManger.h"
 #include "TextureManagerGL.h"
+#include "Lights.h"
 
 #include "../../core/ecs/Components.h"
 
@@ -21,12 +22,16 @@ namespace DERP {
 		Shader shader;
 		VertexBufferManger* VBManager;
 		TextureManagerGL textureManagerGL;
+		Lights light;
 
 		GLuint VertexArrayID;
 
 		glm::mat4 mvp;
 		glm::mat4 Projection;
 		glm::mat4 View;
+
+		//Temp
+		glm::vec3 mainCamPos;
 	public:
 		void Render();
 		void ClearScreen();

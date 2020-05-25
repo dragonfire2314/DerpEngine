@@ -212,8 +212,10 @@
     <ClInclude Include="external\imgui\imstb_textedit.h" />
     <ClInclude Include="external\imgui\imstb_truetype.h" />
     <ClInclude Include="src\app\AssetWidow.h" />
+    <ClInclude Include="src\app\CameraMovement.h" />
     <ClInclude Include="src\app\ComponentsVeiw.h" />
     <ClInclude Include="src\app\Scene.h" />
+    <ClInclude Include="src\testScripts\RotateAroundSceen.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DerpEngine\DerpEngine.vcxproj">

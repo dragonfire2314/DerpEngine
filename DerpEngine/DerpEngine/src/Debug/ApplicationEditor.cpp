@@ -7,6 +7,11 @@
 #include "../../external/imgui/imgui_impl_glfw.h"
 #include "../../external/imgui/imgui_impl_opengl3.h"
 
+#include "../core/ecs/Components.h"
+#include "../core/ecs/systems/Renderer.h"
+#include "../core/ecs/SystemManager.h"
+#include "../core/ecs/systems/System.h"
+
 namespace DERP {
 
 	ApplicationEditor::ApplicationEditor()
@@ -21,7 +26,7 @@ namespace DERP {
 
 	void ApplicationEditor::startUp()
 	{
-		start();
+		//start();
 
 		//Loader temp shader
 		renderer->SetUp();
@@ -31,8 +36,22 @@ namespace DERP {
 
 	void ApplicationEditor::Run()
 	{
+		//Run scripts Start
+		for (auto x : sys_scripts->Entities) {
+			//Assign entityID's to the scripts
+			Script* s = ComponentManager::GetComponent<Script>(x);
+			s->script->entity = x;
+			s->script->Start();
+		}
+
+		float lastFrameTime = 0.0f;
 		//Engine loop
 		do {
+			//Time keeping
+			float currentTime = glfwGetTime();
+			time.deltaTime = currentTime - lastFrameTime;
+			lastFrameTime = currentTime;
+
 			//Clear screen
 			renderer->ClearScreen();
 			//Run physics
@@ -53,6 +72,11 @@ namespace DERP {
 
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+			//Run scripts Update
+			for (auto x : sys_scripts->Entities) {
+				ComponentManager::GetComponent<Script>(x)->script->Update();
+			}
 
 			// Swap buffers
 			glfwSwapBuffers((GLFWwindow*)window);

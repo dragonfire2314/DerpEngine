@@ -20,8 +20,11 @@ namespace DERP {
 			//TODO - Allow cameras to choose render method (screen space, or texture)
 			//Setup veiw matrix before call
 			Transform* t = ComponentManager::GetComponent<Transform>(x);
-			glm::vec3 euler = glm::eulerAngles(t->rotation) * 180.0f / 3.14159f;
-			View = glm::lookAt(t->position, t->position + glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+			glm::vec3 forward = t->rotation * glm::vec3(0, 0, -1);
+			//glm::vec3 euler = glm::eulerAngles(t->rotation) * 180.0f / 3.14159f;
+			View = glm::lookAt(t->position, t->position + forward, glm::vec3(0, 1, 0));
+
+			mainCamPos = t->position;
 
 			RenderMainCamera();
 		}
@@ -34,23 +37,37 @@ namespace DERP {
 		//Loop though meshes
 		for (auto x : sys_renderer->Entities)
 		{
+			printf("Entity: %s\n", EntityManager::getEntity(x)->name.c_str());
+
 			Mesh* mesh = ComponentManager::GetComponent<Mesh>(x);
+			Material* mat = ComponentManager::GetComponent<Material>(x);
 
 			//Check if mesh is valid
 			if (mesh->mesh == nullptr) continue;
 
-			Transform* t = ComponentManager::GetComponent<Transform>(x);
+ 			Transform* t = ComponentManager::GetComponent<Transform>(x);
 
 			glm::mat4 trans = glm::mat4(1.0f);
 			trans = glm::translate(trans, t->position);
 			trans = trans * glm::toMat4(t->rotation);
 			trans = glm::scale(trans, glm::vec3(1.0f, 1.0f, 1.0f));
 
-			// Our ModelViewProjection : multiplication of our 3 matrices
-			mvp = Projection * View * trans;
+			// Our ModelViewProjection
+			GLuint ModelID =      glGetUniformLocation(shader.getShader(x), "Model");
+			GLuint ViewID =       glGetUniformLocation(shader.getShader(x), "View");
+			GLuint ProjectionID = glGetUniformLocation(shader.getShader(x), "Projection");
 
-			GLuint MatrixID = glGetUniformLocation(shader.getShader(x), "MVP");
-			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+			glUniformMatrix4fv(ModelID, 1, GL_FALSE, &trans[0][0]);
+			glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
+			glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
+
+			//Lighting Stuff
+			//light.UpdateDirectionalLight(shader.getShader(x));
+			light.UpdatePointLight(shader.getShader(x));
+			
+			GLuint viewPosID = glGetUniformLocation(shader.getShader(x), "viewPos");
+			glUniform3f(viewPosID, mainCamPos.x, mainCamPos.y, mainCamPos.z);
+
 			glUseProgram(shader.getShader(x));
 
 			//Bind stuff
@@ -60,17 +77,15 @@ namespace DERP {
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 			//Normals
 			glEnableVertexAttribArray(1);
-			//glBindBuffer(GL_ARRAY_BUFFER, VBManager.getVertexBuffer(x.first));
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 			//Tex Coord
 			glEnableVertexAttribArray(2);
-			//glBindBuffer(GL_ARRAY_BUFFER, VBManager.getVertexBuffer(x.first));
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 			//Index Buffer
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBManager->getIndexBuffer(x));
 			//Texture
-			//glBindTexture(GL_TEXTURE_2D, textureManagerGL.getTexture(x));
-			//glBindVertexArray(VertexArrayID);
+			glBindTexture(GL_TEXTURE_2D, textureManagerGL.getTexture(x));
+			glBindVertexArray(VertexArrayID);
 
 			//Draw Call
 			//glDrawArrays(GL_TRIANGLES, 0, x.second->mesh->Vertices.size());
@@ -146,6 +161,11 @@ namespace DERP {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		//Load all textures that are needed
 		textureManagerGL.LoadTextures();
+
+		/*******************
+		*	Lighting
+		********************/
+		light.InitLights(&shader);
 	}
 
 	void OpenGL::updateMesh(uint32_t entityID)

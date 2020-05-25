@@ -37,25 +37,29 @@ namespace DERP {
 			s->script->Start();
 		}
 
-		start();
-
 		//Loader temp shader
 		renderer->SetUp();
-		//glUseProgram(renderer->LoadShader("vertex.v", "pixel.p"));
+
+		float lastFrameTime = 0.0f;
 
 		//Engine loop
 		do {
+			//Time keeping
+			float currentTime = glfwGetTime();
+			time.deltaTime = currentTime - lastFrameTime;
+			lastFrameTime = currentTime;
+
 			//Clear screen
 			renderer->ClearScreen(); 
 			//Run physics
+
+			//Render
+			renderer->Render();
 
 			//Run scripts Update
 			for (auto x : sys_scripts->Entities) {
 				ComponentManager::GetComponent<Script>(x)->script->Update();
 			}
-
-			//Render
-			renderer->Render();
 
 			// Swap buffers
 			glfwSwapBuffers((GLFWwindow*)window);
@@ -67,6 +71,12 @@ namespace DERP {
 
 	void Application::Init()
 	{
+		/*
+
+			GLFW INIT
+
+		*/
+		start();
 		/*
 		
 			ECS INIT
@@ -80,6 +90,8 @@ namespace DERP {
 			componentManager.RegisterComponent<Material>();
 			componentManager.RegisterComponent<Camera>();
 			componentManager.RegisterComponent<Script>();
+			componentManager.RegisterComponent<DirectionalLight>();
+			componentManager.RegisterComponent<PointLight>();
 			//ECS System init
 			sys_renderer = systemManager.RegisterSystem<Sys_Renderer>();
 			{
@@ -116,12 +128,26 @@ namespace DERP {
 				sig.set(componentManager.GetComponentID<Camera>());
 				systemManager.SetSignature<Sys_Cameras>(sig);
 			}
+
+			sys_dirLight = systemManager.RegisterSystem<Sys_DirLight>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(componentManager.GetComponentID<DirectionalLight>());
+				systemManager.SetSignature<Sys_DirLight>(sig);
+			}
+
+			sys_pointLight = systemManager.RegisterSystem<Sys_PointLight>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(componentManager.GetComponentID<PointLight>());
+				systemManager.SetSignature<Sys_PointLight>(sig);
+			}
 		}
 		/*
 			INPUT INIT
 		*/
 		{
-			//input.Init((GLFWwindow*)window);
+			input.Init((GLFWwindow*)window);
 		}
 	}
 
@@ -144,7 +170,7 @@ namespace DERP {
 		// (In the accompanying source code, this variable is global for simplicity)
 		window = glfwCreateWindow(1024, 768, "Derp Engine", NULL, NULL);
 		if (window == NULL) {
-			fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
+			fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible.\n");
 			glfwTerminate();
 		}
 		glfwMakeContextCurrent((GLFWwindow*)window); // Initialize GLEW

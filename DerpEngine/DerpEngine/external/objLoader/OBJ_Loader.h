@@ -72,6 +72,11 @@ namespace objl {
 	struct Material {
 		Material();
 
+		bool isDiffuseTexture = false;
+		bool isAmbientTexture = false;
+		bool isSpecularTexture = false;
+		bool isNormalTexture = false;
+
 		// Material Name
 		std::string name;
 		// Ambient Color

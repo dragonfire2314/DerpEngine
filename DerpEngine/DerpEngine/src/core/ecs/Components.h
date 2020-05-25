@@ -14,6 +14,8 @@ namespace DERP
 	{
 		void print();
 
+		glm::vec3 forward();
+
 		glm::vec3 position = glm::vec3(0, 0, 0);
 		glm::quat rotation;
 		glm::vec3 scale = glm::vec3(0, 0, 0);
@@ -61,5 +63,15 @@ namespace DERP
 		glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
 		glm::vec3 frount = glm::vec3(0.0f, 0.0f, -1.0f);
 		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	};
+
+	struct DERP_API PointLight 
+	{
+		float range;
+	};
+
+	struct DERP_API DirectionalLight 
+	{
+		glm::vec3 direction;
 	};
 }

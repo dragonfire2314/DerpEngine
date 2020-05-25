@@ -30,6 +30,7 @@ namespace DERP {
 			TextureManager textureManager;
 			texData = textureManager.loadTexture(mat->mat->map_Kd_ID);
 
+			//glBindTexture(GL_TEXTURE_2D, 0);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texData.width, texData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData.data);
 			//glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -67,6 +68,8 @@ namespace DERP {
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texData.width, texData.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData.data);
 		//glGenerateMipmap(GL_TEXTURE_2D);
+
+		//glBindTexture(GL_TEXTURE_2D, 0);
 
 		//GLTextureIDs.insert({ x.first, texture });
 		GLTextureIDs[entityID] = texture;

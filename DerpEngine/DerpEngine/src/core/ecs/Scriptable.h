@@ -5,12 +5,15 @@
 #include <stdint.h>
 
 #include "ComponentManager.h"
+#include "../input/Input.h"
+#include "../time/Time.h"
 
 namespace DERP {
 
 		class DERP_API Scriptable
 		{
 			friend class Application;
+			friend class ApplicationEditor;
 		private:
 			uint32_t entity = -1;
 		protected:
@@ -19,6 +22,8 @@ namespace DERP {
 			{
 				return ComponentManager::GetComponent<T>(entity);
 			}
+
+			Time time;
 		public:
 			Scriptable() {}
 			~Scriptable() {}

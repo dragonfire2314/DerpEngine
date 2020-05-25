@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 
 #include "ComponentManager.h"
+#include "Components.h"
 
 namespace DERP 
 {
@@ -26,6 +27,7 @@ namespace DERP
 			printf("Entity Created Root: %i\n", 0);
 
 			Entity ent;
+			ent.name = "Root Entity";
 			ent.ID = 0;
 			ent.parent = nullptr;
 
@@ -41,6 +43,7 @@ namespace DERP
 			printf("Entity Created %i\n", counter);
 
 			Entity ent;
+			ent.name = "Entity: " + std::to_string(counter);
 			ent.ID = counter;
 			ent.parent = getEntity(entityID);
 

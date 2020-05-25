@@ -124,27 +124,47 @@
 #define DERP_KEY_RIGHT_SUPER   347
 #define DERP_KEY_MENU   348
 
+
+#define DERP_CURSOR_NORMAL   0x00034001
+#define DERP_CURSOR_HIDDEN   0x00034002
+#define DERP_CURSOR_DISABLED   0x00034003
+
+
+#define DERP_MOUSE_BUTTON_1   0
+#define DERP_MOUSE_BUTTON_2   1
+#define DERP_MOUSE_BUTTON_3   2
+#define DERP_MOUSE_BUTTON_4   3
+#define DERP_MOUSE_BUTTON_5   4
+#define DERP_MOUSE_BUTTON_6   5
+#define DERP_MOUSE_BUTTON_7   6
+#define DERP_MOUSE_BUTTON_8   7
+
+
+
 namespace DERP 
 {
 	//Entirely static class used for hadling input with basic interface
 	class Input 
 	{
 		friend class Application;
-		
 	private:
-		
-
-		static uint16_t keyHeld[348];
-		static uint16_t keyUp[348];
-		static uint16_t keyDown[348];
+		void Init(void* _window);
 	public:
+		//Temp
+		static void resetMouse();
 
-		static bool getKeyUp(uint8_t key);
-		static bool getKeyDown(uint8_t key);
-		static bool getKeyHeld(uint8_t key);
 
-		static bool getMouseUp(uint8_t key);
-		static bool getMouseDown(uint8_t key);
-		static bool getMouseHeld(uint8_t key);
+		static bool getKeyUp(uint16_t key);
+		static bool getKeyDown(uint16_t key);
+		static bool getKeyHeld(uint16_t key);
+
+		static bool getMouseUp(uint16_t key);
+		static bool getMouseDown(uint16_t key);
+		static bool getMouseHeld(uint16_t key);
+
+		static float getMouseAxisX();
+		static float getMouseAxisY();
+
+		static void setCursorMode(uint32_t type);
 	};
 }

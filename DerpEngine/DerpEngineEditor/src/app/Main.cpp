@@ -8,6 +8,9 @@
 #include "ComponentsVeiw.h"
 #include "AssetWidow.h"
 
+#include "CameraMovement.h"
+#include "../testScripts/RotateAroundSceen.h"
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -76,6 +79,60 @@ int main()
 
     app.Init();
     EntityManager::Init();
+
+    //Import some shaders
+    ImportShader("pixel.glsl", "pixel.glsl");
+    ImportShader("vertex.glsl", "vertex.glsl");
+    //Import some models
+    //ImportModel("../models/Treasure_Chest/treasure_chest2.obj", "treasure_chest2.obj");
+    //ImportModel("../models/handmade/cube.obj", "cube.obj");
+    //ImportModel("../models/handmade/cubeSmall.obj", "cubeSmall.obj");
+    int temp = meshManager.loadMeshes("../models/handmade/cube.obj");
+
+    if (temp == -1)
+    {
+        printf("Bad Dir\n");
+    }
+    int temp2 = meshManager.loadMeshes("../models/Treasure_Chest/treasure_chest2.obj");
+
+    if (temp2 == -1)
+    {
+        printf("Bad Dir\n");
+    }
+
+    printf("this: %i, %i\n", temp, temp2);
+
+    //Sample
+    uint32_t ent = EntityManager::CreateEntity();
+    EntityManager::getEntity(ent)->name = "Main Object";
+    cm.AddComponent<Transform>(ent);
+    cm.AddComponent<Mesh>(ent);
+    cm.AddComponent<Material>(ent);
+    cm.GetComponent<Mesh>(ent)->mesh = meshManager.getMesh(temp2, 0);
+
+    //Create a camera
+    uint32_t cam = EntityManager::CreateEntity();
+    EntityManager::getEntity(cam)->name = "Camera";
+    ComponentManager::AddComponent<Camera>(cam);
+    ComponentManager::AddComponent<Transform>(cam);
+    Transform* cam_t = ComponentManager::GetComponent<Transform>(cam);
+    cam_t->position.z = 4;
+    cm.AddComponent<Script>(cam);
+    Script* s3 = ComponentManager::GetComponent<Script>(cam);
+    s3->script = new CameraMovement();
+
+    //Create a Point Light
+    uint32_t pLight = EntityManager::CreateEntity();
+    EntityManager::getEntity(pLight)->name = "Light";
+    cm.AddComponent<PointLight>(pLight);
+    cm.AddComponent<Transform>(pLight);
+    //cm.AddComponent<Script>(pLight);
+    //cm.GetComponent<Script>(pLight)->script = new RotateAroundScene();
+    cm.AddComponent<Mesh>(pLight);
+    cm.AddComponent<Material>(pLight);
+    cm.GetComponent<Mesh>(pLight)->mesh = meshManager.getMesh(temp, 0);
+    cm.GetComponent<Transform>(pLight)->position.x = 2;
+    
 
 	app.setUpdate(Update);
 

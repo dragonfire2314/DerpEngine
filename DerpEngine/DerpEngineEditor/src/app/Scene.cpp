@@ -30,7 +30,7 @@ void traverseTree(Entity* node)
     if (childs.empty()) //Has no childern 
     {
         node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-        ImGui::TreeNodeEx((void*)(intptr_t)node->ID, node_flags, "name");
+        ImGui::TreeNodeEx((void*)(intptr_t)node->ID, node_flags, node->name.c_str());
         if (ImGui::IsItemClicked()) {
             node_clicked = node->ID;
             selectionID = node->ID;
@@ -38,7 +38,7 @@ void traverseTree(Entity* node)
     }
     else //Has children
     {
-        bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)(node->ID), node_flags, "name");
+        bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)(node->ID), node_flags, node->name.c_str());
         if (ImGui::IsItemClicked()) {
             node_clicked = (node->ID);
             selectionID = node->ID;
@@ -147,7 +147,7 @@ void sceneWindow()
         if (childs.empty()) //Has no childern 
         {
             node_flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
-            ImGui::TreeNodeEx((void*)(intptr_t)e->ID, node_flags, "Name");
+            ImGui::TreeNodeEx((void*)(intptr_t)e->ID, node_flags, e->name.c_str());
             if (ImGui::IsItemClicked()) {
                 node_clicked = e->ID;
                 selectionID = e->ID;
@@ -155,7 +155,7 @@ void sceneWindow()
         }
         else //Has children
         {
-            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)(e->ID), node_flags, "Name");
+            bool node_open = ImGui::TreeNodeEx((void*)(intptr_t)(e->ID), node_flags, e->name.c_str());
             if (ImGui::IsItemClicked()) {
                 node_clicked = (e->ID);
                 selectionID = e->ID;
@@ -198,11 +198,13 @@ void addEntity(std::string name)
 {
     if (selectionID == -1) {
         //EntityManager::getInstance().createEntity()->setName(name);
-        EntityManager::CreateEntity();
+        uint32_t ent = EntityManager::CreateEntity();
+        EntityManager::getEntity(ent)->name = name;
     }
     else {
         //EntityManager::getInstance().createEntity(EntityManager::getInstance().getEntity(selectionID))->setName(name);
-        EntityManager::CreateEntity(selectionID);
+        uint32_t ent = EntityManager::CreateEntity(selectionID);
+        EntityManager::getEntity(ent)->name = name;
     }
 }
 

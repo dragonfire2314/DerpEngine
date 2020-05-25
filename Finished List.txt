@@ -1,0 +1,3 @@
+-Entity parent system
+-Texture importing and adding to a material
+-Switch Loader to assimp

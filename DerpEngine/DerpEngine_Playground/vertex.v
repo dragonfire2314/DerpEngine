@@ -15,4 +15,6 @@ void main(){
     Normal = temp.xyz;
 
     TextureCoords = texCoord;
+
+    //Shading
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Movement.h"
+#include "CameraMovement.h"
 
 using namespace DERP;
 
@@ -20,10 +21,17 @@ int main()
 	uint32_t e = EntityManager::CreateEntity();
 	uint32_t e2 = EntityManager::CreateEntity();
 
+	printf("e, e2 %i, %i\n", e, e2);
+
 	MeshManager meshManager;
 	int temp = meshManager.loadMeshes("../models/Treasure_Chest/treasure_chest2.obj");
-
 	if (temp == -1) 
+	{
+		printf("Bad Dir");
+	}
+
+	int temp22 = meshManager.loadMeshes("../models/Chemical_Barrel/chemicalbarrel.obj");
+	if (temp22 == -1)
 	{
 		printf("Bad Dir");
 	}
@@ -37,27 +45,38 @@ int main()
 	cm.AddComponent<Material>(e);
 	Material* mat = cm.GetComponent<Material>(e);
 	mat->mat = meshManager.getMaterial(0, 0);
+	
 	mat->setShader("vertex.v", "pixel.p");
 
-	cm.AddComponent<Script>(e);
-	Script* s = ComponentManager::GetComponent<Script>(e);
-	s->script = new Movement();
+	//cm.AddComponent<Script>(e);
+	//Script* s = ComponentManager::GetComponent<Script>(e);
+	//s->script = new Movement();
+
+
+
 
 
 	cm.AddComponent<Transform>(e2);
-	cm.GetComponent<Transform>(e2)->position.y = -1;
+	Transform* t_barrel = cm.GetComponent<Transform>(2);
+	t_barrel->position.z = -10;
 
 	cm.AddComponent<Mesh>(e2);
 	Mesh* m2 = cm.GetComponent<Mesh>(e2);
-	m2->mesh = meshManager.getMesh(0, 0);
+	m2->mesh = meshManager.getMesh(1, 0);
 
 	cm.AddComponent<Material>(e2);
 	Material* mat2 = cm.GetComponent<Material>(e2);
-	mat2->mat = meshManager.getMaterial(0, 0);
+	mat2->mat = meshManager.getMaterial(1, 0);
 
-	cm.AddComponent<Script>(e2);
-	Script* s2 = ComponentManager::GetComponent<Script>(e2);
-	s2->script = new Movement();
+	mat2->setShader("vertex.v", "pixel.p");
+
+	//cm.AddComponent<Script>(e2);
+	//Script* s2 = ComponentManager::GetComponent<Script>(e2);
+	//s2->script = new Movement();
+
+
+
+
 
 	//Camera Entity
 	uint32_t cam = EntityManager::CreateEntity();
@@ -65,6 +84,9 @@ int main()
 	ComponentManager::AddComponent<Transform>(cam);
 	Transform* cam_t = ComponentManager::GetComponent<Transform>(cam);
 	cam_t->position.z = 4;
+	cm.AddComponent<Script>(cam);
+	Script* s3 = ComponentManager::GetComponent<Script>(cam);
+	s3->script = new CameraMovement();
 
 	app.Run();
 

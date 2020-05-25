@@ -14,6 +14,11 @@ namespace DERP
 		std::cout << "End" << std::endl;
 	}
 
+	glm::vec3 Transform::forward() 
+	{
+		return glm::vec3(0, 0, 0);
+	}
+
 
 
 	//Mesh

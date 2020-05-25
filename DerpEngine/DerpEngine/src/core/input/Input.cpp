@@ -1,31 +1,77 @@
 #include "Input.h"
 
+#include <gl/glew.h>
+#include <GLFW/glfw3.h>
+
+#include <stdio.h>
+
 namespace DERP 
 {
-	uint16_t Input::keyHeld[348];
-	uint16_t Input::keyUp[348];
-	uint16_t Input::keyDown[348];
+	GLFWwindow* window;
 
-	//void Input::Init(GLFWwindow* window)
-	//{
-	//	//Generate key call back
-	//	glfwSetKeyCallback(window, key_callback);
-	//	//Make sure arrays are cleared - TODO
-	//}
+    bool firstMouse = true;
+    float lastX = 400, lastY = 300;
+    float yaw = 0, pitch = 0, roll = 0;
 
-	//void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-	//{
-	//	if (action == GLFW_PRESS) 
-	//	{
-	//		keyDown[8] = 0;
-	//	}
-	//}
+	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+	{
+        if (firstMouse)
+        {
+            lastX = xpos;
+            lastY = ypos;
+            firstMouse = false;
+        }
 
-	bool Input::getKeyUp(uint8_t key) { return false; }
-	bool Input::getKeyDown(uint8_t key) { return false; }
-	bool Input::getKeyHeld(uint8_t key) { return false; }
+        float xoffset = xpos - lastX;
+        float yoffset = lastY - ypos;
+        lastX = xpos;
+        lastY = ypos;
 
-	bool Input::getMouseUp(uint8_t key) { return false; }
-	bool Input::getMouseDown(uint8_t key) { return false; }
-	bool Input::getMouseHeld(uint8_t key) { return false; }
+        float sensitivity = 0.1f;
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
+
+        yaw += xoffset;
+        pitch += yoffset;
+	}
+
+	void Input::Init(void* _window)
+	{
+		window = (GLFWwindow*)_window;
+		glfwSetCursorPosCallback(window, cursor_position_callback);
+	}
+
+    //Temp
+    void Input::resetMouse() { firstMouse = true; }
+
+	bool Input::getKeyUp(uint16_t key) { 
+		return false;
+	}
+	bool Input::getKeyDown(uint16_t key) { 
+		return false;
+	}
+	bool Input::getKeyHeld(uint16_t key) { 
+		return (glfwGetKey(window, key) == GLFW_PRESS);
+	}
+
+	bool Input::getMouseUp(uint16_t key) { return false; }
+	bool Input::getMouseDown(uint16_t key) { return false; }
+	bool Input::getMouseHeld(uint16_t key) { 
+        return (glfwGetMouseButton(window, key) == GLFW_PRESS);
+    }
+
+    float Input::getMouseAxisX()
+    {
+        return yaw;
+    }
+
+    float Input::getMouseAxisY()
+    {
+        return pitch;
+    }
+
+    void Input::setCursorMode(uint32_t type)
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, type);
+    }
 }

@@ -204,7 +204,9 @@
     <ClCompile Include="src\core\input\Input.cpp" />
     <ClCompile Include="src\core\MeshManager.cpp" />
     <ClCompile Include="src\core\TextureManager.cpp" />
+    <ClCompile Include="src\core\time\Time.cpp" />
     <ClCompile Include="src\Debug\ApplicationEditor.cpp" />
+    <ClCompile Include="src\renderer\OpenGL\Lights.cpp" />
     <ClCompile Include="src\renderer\OpenGL\OpenGL.cpp" />
     <ClCompile Include="src\renderer\OpenGL\Shader.cpp" />
     <ClCompile Include="src\renderer\OpenGL\TextureManagerGL.cpp" />
@@ -235,7 +237,9 @@
     <ClInclude Include="src\core\input\Input.h" />
     <ClInclude Include="src\core\MeshManager.h" />
     <ClInclude Include="src\core\TextureManager.h" />
+    <ClInclude Include="src\core\time\Time.h" />
     <ClInclude Include="src\Debug\ApplicationEditor.h" />
+    <ClInclude Include="src\renderer\OpenGL\Lights.h" />
     <ClInclude Include="src\renderer\OpenGL\OpenGL.h" />
     <ClInclude Include="src\renderer\OpenGL\Shader.h" />
     <ClInclude Include="src\renderer\OpenGL\TextureManagerGL.h" />

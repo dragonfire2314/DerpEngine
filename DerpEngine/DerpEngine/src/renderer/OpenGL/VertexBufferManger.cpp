@@ -2,6 +2,7 @@
 
 #include "../../core/ecs/systems/System.h"
 #include "../../core/ecs/ComponentManager.h"
+#include "../../core/ecs/EntityManager.h"
 
 namespace DERP {
 
@@ -44,6 +45,8 @@ namespace DERP {
 
 	void VertexBufferManger::updateVetexBuffer(uint32_t entityID)
 	{
+		printf("Buffer Change Entity: %s\n", EntityManager::getEntity(entityID)->name.c_str());
+
 		//Check for vertex buffer
 		if (vertexBuffers.find(entityID) == vertexBuffers.end()) {
 			//Create a new one

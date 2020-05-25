@@ -8,4 +8,6 @@ namespace DERP {
 	Sys_Vertex* sys_vertex;
 	Sys_Scripts* sys_scripts;
 	Sys_Cameras* sys_cameras;
+	Sys_DirLight* sys_dirLight;
+	Sys_PointLight* sys_pointLight;
 }

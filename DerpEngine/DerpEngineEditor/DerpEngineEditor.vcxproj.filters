@@ -101,5 +101,11 @@
     <ClInclude Include="src\app\AssetWidow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\app\CameraMovement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\testScripts\RotateAroundSceen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

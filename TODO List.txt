@@ -1,12 +1,15 @@
 # Stuff that is planned to be added
 
 ## Major Needs
--Entity parent system, i forgot to add this
--Texture importing and adding to a material
--Switch Loader to assimp
+-Inheairt trnasform from parent entity
+-Lighting
+-Collition
 
 ## Minor Needs
--Lighting
+-Screen to world space
+-Ray casting
+-Physics system
+-Audio system
 
 ## Future Goals
 -Editor software for creating game scenes

@@ -6,6 +6,8 @@ in vec2 TextureCoords;
 
 uniform sampler2D ourTexture;
 
+uniform vec3 DirLight;
+
 void main(){
 /*
     vec3 dir = vec3(0,1,0);
@@ -17,7 +19,9 @@ void main(){
 
     //color = vec3(TextureCoords.x, TextureCoords.y, 0);
 
-    color = texture(ourTexture, TextureCoords);
+    color = DirLight;
+
+    //color = texture(ourTexture, TextureCoords);
 
 /*
     vec3 n1 = Normal + 1;

@@ -5,6 +5,7 @@
 
 #include "../renderer/RenderAPI.h"
 #include "input/Input.h"
+#include "time/Time.h"
 
 #include <stdio.h>
 
@@ -18,6 +19,7 @@ namespace DERP {
 		RenderAPI* renderer;
 
 		Input input;
+		Time time;
 
 		void start();
 		ComponentManager componentManager;

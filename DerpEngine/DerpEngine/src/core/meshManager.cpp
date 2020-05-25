@@ -87,6 +87,7 @@ namespace DERP {
 			aiString path;
 
 			aiGetMaterialTexture(material, aiTextureType_DIFFUSE, 0, &path);
+			//aiGetMaterialColor(material, );
 
 			//Build file path stuff
 			std::string temp;
@@ -106,6 +107,7 @@ namespace DERP {
 			//Save diffuse map
 			ms->MeshMaterial.map_Kd = temp;
 			ms->MeshMaterial.map_Kd_ID = textureManager.addTexture(temp);
+			ms->MeshMaterial.isDiffuseTexture = true;
 
 			std::reverse(fName.begin(), fName.end());
 			ms->MeshName = fName;
