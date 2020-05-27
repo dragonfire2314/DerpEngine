@@ -14,8 +14,15 @@
 
 namespace DERP {
 
+	unsigned int compileShaders(const char* vertex_file_path, const char* fragment_file_path);
+	GLuint shaderNum;
+
+	
+
 	void OpenGL::Render()
 	{
+		//printf("Start\n");
+
 		for (auto x : sys_cameras->Entities) { //Render screen once per camera
 			//TODO - Allow cameras to choose render method (screen space, or texture)
 			//Setup veiw matrix before call
@@ -25,6 +32,10 @@ namespace DERP {
 			View = glm::lookAt(t->position, t->position + forward, glm::vec3(0, 1, 0));
 
 			mainCamPos = t->position;
+
+			light.setCameraPosition(mainCamPos);
+
+			//t->print();
 
 			RenderMainCamera();
 		}
@@ -37,13 +48,13 @@ namespace DERP {
 		//Loop though meshes
 		for (auto x : sys_renderer->Entities)
 		{
-			printf("Entity: %s\n", EntityManager::getEntity(x)->name.c_str());
-
 			Mesh* mesh = ComponentManager::GetComponent<Mesh>(x);
 			Material* mat = ComponentManager::GetComponent<Material>(x);
 
 			//Check if mesh is valid
 			if (mesh->mesh == nullptr) continue;
+
+			//printf("Entity: %s, Mesh: %s\n", EntityManager::getEntity(x)->name.c_str(), mesh->mesh->MeshName.c_str());
 
  			Transform* t = ComponentManager::GetComponent<Transform>(x);
 
@@ -53,22 +64,35 @@ namespace DERP {
 			trans = glm::scale(trans, glm::vec3(1.0f, 1.0f, 1.0f));
 
 			// Our ModelViewProjection
-			GLuint ModelID =      glGetUniformLocation(shader.getShader(x), "Model");
-			GLuint ViewID =       glGetUniformLocation(shader.getShader(x), "View");
-			GLuint ProjectionID = glGetUniformLocation(shader.getShader(x), "Projection");
+			GLuint ModelID =      glGetUniformLocation(shaderNum, "Model");
+			GLuint ViewID =       glGetUniformLocation(shaderNum, "View");
+			GLuint ProjectionID = glGetUniformLocation(shaderNum, "Projection");
 
 			glUniformMatrix4fv(ModelID, 1, GL_FALSE, &trans[0][0]);
 			glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 			glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
 
+			//Tells the shader if it should use a texture or not (Will have to make the sytem use a differnt shader in this event)
+			GLuint isDiffuseID = glGetUniformLocation(shaderNum, "isDiffuse");
+			glUniform1i(isDiffuseID, mat->mat->isDiffuseTexture);
+
+			//Give shader a color for the objects
+			GLuint diffuseColorID = glGetUniformLocation(shaderNum, "diffuseColor");
+			glUniform3f(diffuseColorID, mat->mat->Kd.X, mat->mat->Kd.Y, mat->mat->Kd.Z);
+
 			//Lighting Stuff
 			//light.UpdateDirectionalLight(shader.getShader(x));
-			light.UpdatePointLight(shader.getShader(x));
-			
-			GLuint viewPosID = glGetUniformLocation(shader.getShader(x), "viewPos");
-			glUniform3f(viewPosID, mainCamPos.x, mainCamPos.y, mainCamPos.z);
+			light.UpdatePointLight(shaderNum);
 
-			glUseProgram(shader.getShader(x));
+
+
+			//GLuint viewPosID = glGetUniformLocation(shaderNum, "viewPos");
+			//glUniform3f(viewPosID, mainCamPos.x, mainCamPos.y, mainCamPos.z);
+
+			glUseProgram(shaderNum);
+
+			//printf("Vertex Buffer ent: %s, VBuffer %i\n", EntityManager::getEntity(x)->name.c_str(), VBManager->getVertexBuffer(x));
+			//printf("Object Pos: %f, %f, %f\n", t->position.x, t->position.y, t->position.z);
 
 			//Bind stuff
 			//Vertex Buffer
@@ -96,7 +120,7 @@ namespace DERP {
 				(void*)0                           // element array buffer offset
 			);
 			//Unbind stuff
-			glDisableVertexAttribArray(0);
+			glDisableVertexAttribArray(0); 
 			glDisableVertexAttribArray(1);
 			glDisableVertexAttribArray(2);
 		}
@@ -104,19 +128,19 @@ namespace DERP {
 
 	void OpenGL::RenderNonMainCameras() 
 	{
-		//GLuint FramebufferName = 0;
-		//glGenFramebuffers(1, &FramebufferName);
-		//glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+		
 	}
 
 	void OpenGL::ClearScreen()
 	{
-		glClearColor(0.4, 0.2, 0.4, 1.0);
+		glClearColor(0.2, 0.1, 0.2, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void OpenGL::SetUp()
 	{
+		shaderNum = compileShaders("vertex_shadow.glsl", "pixel_shadow.glsl");
+
 		VBManager = new VertexBufferManger();
 
 		/*******************
@@ -165,7 +189,7 @@ namespace DERP {
 		/*******************
 		*	Lighting
 		********************/
-		light.InitLights(&shader);
+		light.InitLights(shaderNum);
 	}
 
 	void OpenGL::updateMesh(uint32_t entityID)
@@ -176,12 +200,101 @@ namespace DERP {
 	void OpenGL::updateShader(uint32_t entityID)
 	{
 		shader.updateShader(entityID);
-		//textureManagerGL.LoadTextures();
+		////textureManagerGL.LoadTextures();
 	}
 
 	void OpenGL::updateTexture(uint32_t entityID) 
 	{
 		textureManagerGL.updateTexture(entityID);
+	}
+
+	unsigned int compileShaders(const char* vertex_file_path, const char* fragment_file_path)
+	{
+		// Create the shaders
+		GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+		GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+		// Read the Vertex Shader code from the file
+		std::string VertexShaderCode;
+		std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+		if (VertexShaderStream.is_open()) {
+			std::stringstream sstr;
+			sstr << VertexShaderStream.rdbuf();
+			VertexShaderCode = sstr.str();
+			VertexShaderStream.close();
+		}
+		else {
+			printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+			getchar();
+			return 0;
+		}
+
+		// Read the Fragment Shader code from the file
+		std::string FragmentShaderCode;
+		std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
+		if (FragmentShaderStream.is_open()) {
+			std::stringstream sstr;
+			sstr << FragmentShaderStream.rdbuf();
+			FragmentShaderCode = sstr.str();
+			FragmentShaderStream.close();
+		}
+
+		GLint Result = GL_FALSE;
+		int InfoLogLength;
+
+		// Compile Vertex Shader
+		printf("Compiling shader : %s\n", vertex_file_path);
+		char const* VertexSourcePointer = VertexShaderCode.c_str();
+		glShaderSource(VertexShaderID, 1, &VertexSourcePointer, NULL);
+		glCompileShader(VertexShaderID);
+
+		// Check Vertex Shader
+		glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+		glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		if (InfoLogLength > 0) {
+			std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
+			glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+			printf("%s\n", &VertexShaderErrorMessage[0]);
+		}
+
+		// Compile Fragment Shader
+		printf("Compiling shader : %s\n", fragment_file_path);
+		char const* FragmentSourcePointer = FragmentShaderCode.c_str();
+		glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer, NULL);
+		glCompileShader(FragmentShaderID);
+
+		// Check Fragment Shader
+		glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
+		glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		if (InfoLogLength > 0) {
+			std::vector<char> FragmentShaderErrorMessage(InfoLogLength + 1);
+			glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+			printf("%s\n", &FragmentShaderErrorMessage[0]);
+		}
+
+		// Link the program
+		printf("Linking program\n");
+		GLuint ProgramID = glCreateProgram();
+		glAttachShader(ProgramID, VertexShaderID);
+		glAttachShader(ProgramID, FragmentShaderID);
+		glLinkProgram(ProgramID);
+
+		// Check the program
+		glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+		glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		if (InfoLogLength > 0) {
+			std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
+			glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+			printf("%s\n", &ProgramErrorMessage[0]);
+		}
+
+		glDetachShader(ProgramID, VertexShaderID);
+		glDetachShader(ProgramID, FragmentShaderID);
+
+		glDeleteShader(VertexShaderID);
+		glDeleteShader(FragmentShaderID);
+
+		return (uint32_t)ProgramID;
 	}
 
 }

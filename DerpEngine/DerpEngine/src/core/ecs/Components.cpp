@@ -4,6 +4,13 @@
 
 namespace DERP
 {
+	objl::Material defualtMat;
+
+	Material::Material() 
+	{
+		mat = &defualtMat;
+	}
+
 	//All components are stored in this file
 	void Transform::print() 
 	{

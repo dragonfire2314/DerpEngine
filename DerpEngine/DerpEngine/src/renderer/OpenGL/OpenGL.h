@@ -4,7 +4,7 @@
 
 #include "../../../external/glm/gtc/matrix_transform.hpp"
 
-#include "Shader.h"
+//#include "Shader.h"
 #include "VertexBufferManger.h"
 #include "TextureManagerGL.h"
 #include "Lights.h"

@@ -7,6 +7,8 @@
 #include "../../../external/objLoader/OBJ_Loader.h"
 #include "Scriptable.h"
 
+#include <unordered_map>
+
 namespace DERP 
 {
 	//All components are stored in this file
@@ -44,6 +46,8 @@ namespace DERP
 
 	struct DERP_API Material
 	{
+		Material();
+
 		uint32_t ShaderID;
 
 		//Shader
@@ -52,6 +56,13 @@ namespace DERP
 
 		//Material
 		objl::Material* mat;
+
+		//Unitform List
+
+
+		//Material Options
+		bool caseShadows = false;
+		bool reciveShadows = false;
 
 		//Functions
 		void setShader(std::string _vertexShader, std::string _pixleShader);

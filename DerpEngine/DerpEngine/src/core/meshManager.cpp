@@ -109,14 +109,16 @@ namespace DERP {
 			ms->MeshMaterial.map_Kd_ID = textureManager.addTexture(temp);
 			ms->MeshMaterial.isDiffuseTexture = true;
 
-			std::reverse(fName.begin(), fName.end());
-			ms->MeshName = fName;
+			//std::reverse(fName.begin(), fName.end());
+			ms->MeshName = filePath;
 
 			//Add to impMeshes
 			impMeshes.push_back(ms);
 		}
 
 		newMeshes.insert({ counter, impMeshes });
+
+		printf("Model Counter: %i\n", counter);
 		
 		counter++;
 

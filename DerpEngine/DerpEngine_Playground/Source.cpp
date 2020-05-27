@@ -4,6 +4,7 @@
 
 #include "Movement.h"
 #include "CameraMovement.h"
+#include "RotateAroundScene.h"
 
 using namespace DERP;
 
@@ -17,76 +18,59 @@ int main()
 	app.Init();
 	EntityManager::Init();
 
-	//Creating entites
-	uint32_t e = EntityManager::CreateEntity();
-	uint32_t e2 = EntityManager::CreateEntity();
+    MeshManager meshManager;
 
-	printf("e, e2 %i, %i\n", e, e2);
+    int chest = meshManager.loadMeshes("../models/Treasure_Chest/treasure_chest2.obj");
+    int bar = meshManager.loadMeshes("../models/Chemical_Barrel/chemicalbarrel.obj");
+    int cube = meshManager.loadMeshes("../models/handmade/cube.obj");
+    int ico = meshManager.loadMeshes("../models/handmade/ico.obj");
+    int cone = meshManager.loadMeshes("../models/handmade/cone.obj");
+    int torus = meshManager.loadMeshes("../models/handmade/torus.obj");
+    int plane = meshManager.loadMeshes("../models/handmade/plane.obj");
 
-	MeshManager meshManager;
-	int temp = meshManager.loadMeshes("../models/Treasure_Chest/treasure_chest2.obj");
-	if (temp == -1) 
-	{
-		printf("Bad Dir");
-	}
+    //Sample
+    uint32_t ent = EntityManager::CreateEntity();
+    EntityManager::getEntity(ent)->name = "Cube";
+    cm.AddComponent<Transform>(ent);
+    cm.AddComponent<Mesh>(ent);
+    cm.AddComponent<Material>(ent);
+    cm.GetComponent<Mesh>(ent)->mesh = meshManager.getMesh(chest, 0);
+    cm.GetComponent<Transform>(ent)->position = glm::vec3(2, -2, 0);
+    cm.GetComponent<Material>(ent)->mat = meshManager.getMaterial(chest, 0);
 
-	int temp22 = meshManager.loadMeshes("../models/Chemical_Barrel/chemicalbarrel.obj");
-	if (temp22 == -1)
-	{
-		printf("Bad Dir");
-	}
+    //Sample 2
+    uint32_t ent3 = EntityManager::CreateEntity();
+    EntityManager::getEntity(ent3)->name = "Plane";
+    cm.AddComponent<Transform>(ent3);
+    cm.AddComponent<Mesh>(ent3);
+    cm.AddComponent<Material>(ent3);
+    cm.GetComponent<Mesh>(ent3)->mesh = meshManager.getMesh(plane, 0);
+    cm.GetComponent<Transform>(ent3)->position = glm::vec3(0, -2, 0);
+    cm.GetComponent<Material>(ent3)->mat->Kd = objl::Vector3(0.5, 0.1, 0.7);
 
-	cm.AddComponent<Transform>(e);
+    //Create a camera
+    uint32_t cam = EntityManager::CreateEntity();
+    EntityManager::getEntity(cam)->name = "Camera";
+    ComponentManager::AddComponent<Camera>(cam);
+    ComponentManager::AddComponent<Transform>(cam);
+    Transform* cam_t = ComponentManager::GetComponent<Transform>(cam);
+    cam_t->position = glm::vec3(-4.44764, 3.3252, 10.8293);
+    cam_t->rotation = glm::quat(glm::vec3(-0.278857, -0.310267, -0.0491606));
+    cm.AddComponent<Script>(cam);
+    Script* s3 = ComponentManager::GetComponent<Script>(cam);
+    s3->script = new CameraMovement();
 
-	cm.AddComponent<Mesh>(e);
-	Mesh* m = cm.GetComponent<Mesh>(e);
-	m->mesh = meshManager.getMesh(0, 0);
-
-	cm.AddComponent<Material>(e);
-	Material* mat = cm.GetComponent<Material>(e);
-	mat->mat = meshManager.getMaterial(0, 0);
-	
-	mat->setShader("vertex.v", "pixel.p");
-
-	//cm.AddComponent<Script>(e);
-	//Script* s = ComponentManager::GetComponent<Script>(e);
-	//s->script = new Movement();
-
-
-
-
-
-	cm.AddComponent<Transform>(e2);
-	Transform* t_barrel = cm.GetComponent<Transform>(2);
-	t_barrel->position.z = -10;
-
-	cm.AddComponent<Mesh>(e2);
-	Mesh* m2 = cm.GetComponent<Mesh>(e2);
-	m2->mesh = meshManager.getMesh(1, 0);
-
-	cm.AddComponent<Material>(e2);
-	Material* mat2 = cm.GetComponent<Material>(e2);
-	mat2->mat = meshManager.getMaterial(1, 0);
-
-	mat2->setShader("vertex.v", "pixel.p");
-
-	//cm.AddComponent<Script>(e2);
-	//Script* s2 = ComponentManager::GetComponent<Script>(e2);
-	//s2->script = new Movement();
-
-
-
-
-
-	//Camera Entity
-	uint32_t cam = EntityManager::CreateEntity();
-	ComponentManager::AddComponent<Camera>(cam);
-	ComponentManager::AddComponent<Transform>(cam);
-	Transform* cam_t = ComponentManager::GetComponent<Transform>(cam);
-	cam_t->position.z = 4;
-	cm.AddComponent<Script>(cam);
-	Script* s3 = ComponentManager::GetComponent<Script>(cam);
-	s3->script = new CameraMovement();
+    //Create a Point Light
+    uint32_t pLight = EntityManager::CreateEntity();
+    EntityManager::getEntity(pLight)->name = "face";
+    cm.AddComponent<DirectionalLight>(pLight);
+    cm.AddComponent<Transform>(pLight);
+    cm.AddComponent<Script>(pLight);
+    cm.GetComponent<Script>(pLight)->script = new RotateAroundScene();
+    cm.AddComponent<Mesh>(pLight);
+    cm.AddComponent<Material>(pLight);
+    cm.GetComponent<Mesh>(pLight)->mesh = meshManager.getMesh(ico, 0);
+    cm.GetComponent<Transform>(pLight)->position.y = 1;
 
 	app.Run();
 

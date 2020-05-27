@@ -87,28 +87,29 @@ int main()
     //ImportModel("../models/Treasure_Chest/treasure_chest2.obj", "treasure_chest2.obj");
     //ImportModel("../models/handmade/cube.obj", "cube.obj");
     //ImportModel("../models/handmade/cubeSmall.obj", "cubeSmall.obj");
-    int temp = meshManager.loadMeshes("../models/handmade/cube.obj");
-
-    if (temp == -1)
-    {
-        printf("Bad Dir\n");
-    }
-    int temp2 = meshManager.loadMeshes("../models/Treasure_Chest/treasure_chest2.obj");
-
-    if (temp2 == -1)
-    {
-        printf("Bad Dir\n");
-    }
-
-    printf("this: %i, %i\n", temp, temp2);
+    int cube = meshManager.loadMeshes("../models/handmade/cube.obj");
+    int ico = meshManager.loadMeshes("../models/handmade/ico.obj");
+    int cone = meshManager.loadMeshes("../models/handmade/cone.obj");
+    int torus = meshManager.loadMeshes("../models/handmade/torus.obj");
+    int face = meshManager.loadMeshes("../models/handmade/face.obj");
+    int chest = meshManager.loadMeshes("../models/Treasure_Chest/treasure_chest2.obj");
+    int bar = meshManager.loadMeshes("../models/Chemical_Barrel/chemicalbarrel.obj");
 
     //Sample
     uint32_t ent = EntityManager::CreateEntity();
-    EntityManager::getEntity(ent)->name = "Main Object";
+    EntityManager::getEntity(ent)->name = "Cube";
     cm.AddComponent<Transform>(ent);
     cm.AddComponent<Mesh>(ent);
     cm.AddComponent<Material>(ent);
-    cm.GetComponent<Mesh>(ent)->mesh = meshManager.getMesh(temp2, 0);
+    cm.GetComponent<Mesh>(ent)->mesh = meshManager.getMesh(cube, 0);
+
+    //Sample 2
+    uint32_t ent2 = EntityManager::CreateEntity();
+    EntityManager::getEntity(ent2)->name = "Ico";
+    cm.AddComponent<Transform>(ent2);
+    cm.AddComponent<Mesh>(ent2);
+    cm.AddComponent<Material>(ent2);
+    cm.GetComponent<Mesh>(ent2)->mesh = meshManager.getMesh(ico, 0);
 
     //Create a camera
     uint32_t cam = EntityManager::CreateEntity();
@@ -123,14 +124,14 @@ int main()
 
     //Create a Point Light
     uint32_t pLight = EntityManager::CreateEntity();
-    EntityManager::getEntity(pLight)->name = "Light";
+    EntityManager::getEntity(pLight)->name = "face";
     cm.AddComponent<PointLight>(pLight);
     cm.AddComponent<Transform>(pLight);
     //cm.AddComponent<Script>(pLight);
     //cm.GetComponent<Script>(pLight)->script = new RotateAroundScene();
     cm.AddComponent<Mesh>(pLight);
     cm.AddComponent<Material>(pLight);
-    cm.GetComponent<Mesh>(pLight)->mesh = meshManager.getMesh(temp, 0);
+    cm.GetComponent<Mesh>(pLight)->mesh = meshManager.getMesh(face, 0);
     cm.GetComponent<Transform>(pLight)->position.x = 2;
     
 

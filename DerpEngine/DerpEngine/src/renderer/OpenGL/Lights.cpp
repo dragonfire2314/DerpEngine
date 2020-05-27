@@ -8,9 +8,24 @@
 
 namespace DERP 
 {
-	void Lights::InitLights(Shader* shader)
+	void Lights::InitLights(unsigned int shaderNum)
 	{
-		shaderManager = shader;
+		//shaderManager = shader;
+
+		glGenBuffers(1, &ubo);
+		glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(DirectionalLightData), &dirLightData, GL_STATIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		unsigned int lights_index = glGetUniformBlockIndex(shaderNum, "dirLight");
+		glUniformBlockBinding(shaderNum, lights_index, 2);
+
+		glBindBufferBase(GL_UNIFORM_BUFFER, 2, ubo);
+	}
+
+	void Lights::setCameraPosition(glm::vec3 position)
+	{
+		cameraPos = glm::vec4(position, 1.0);
 	}
 
 	void Lights::UpdateDirectionalLight(uint32_t shaderID)
@@ -32,15 +47,16 @@ namespace DERP
 	void Lights::UpdatePointLight(uint32_t shaderID)
 	{
 		for (auto x : sys_dirLight->Entities)
-			{
-				Transform* l = ComponentManager::GetComponent<Transform>(x);
-				GLuint dirID = glGetUniformLocation(shaderID, "LightPos");
-				glUniform3f(dirID, l->position.x, l->position.y, l->position.z);
+		{
+			//Update light data
+			Transform* t = ComponentManager::GetComponent<Transform>(x);
 
-				printf("r: %f, g: %f, b: %f, dir: %i\n", l->position.x, l->position.y, l->position.z, dirID);
-
-				//printf("Debug");
-			}
+			glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &cameraPos[0]);
+			glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec4), sizeof(glm::vec4), &t->position[0]);
+			glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) * 2, sizeof(glm::vec4), &dirLightData.light_diffuse[0]);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		}
 	}
 
 }

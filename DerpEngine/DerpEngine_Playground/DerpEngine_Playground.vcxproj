@@ -196,6 +196,7 @@
   <ItemGroup>
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Movement.h" />
+    <ClInclude Include="RotateAroundScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DerpEngine\DerpEngine.vcxproj">
