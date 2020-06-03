@@ -46,8 +46,8 @@ namespace DERP {
 		do {
 			//Time keeping
 			float currentTime = glfwGetTime();
-			time.deltaTime = currentTime - lastFrameTime;
-			time.time = currentTime;
+			TIME::deltaTime = currentTime - lastFrameTime;
+			TIME::time = currentTime;
 			lastFrameTime = currentTime;
 
 			//Update Physics

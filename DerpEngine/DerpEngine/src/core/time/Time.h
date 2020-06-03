@@ -2,14 +2,9 @@
 
 namespace DERP 
 {
-
-	class Time 
+	namespace TIME
 	{
-	private:
-
-	public:
-		static float deltaTime;
-		static float time;
-	};
-
+		extern float deltaTime;
+		extern float time;
+	}
 }

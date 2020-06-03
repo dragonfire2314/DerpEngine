@@ -34,7 +34,7 @@ public:
 			glm::vec3 forward = t->rotation * glm::vec3(0, 0, -1);
 			glm::vec3 up = t->rotation * glm::vec3(0, 1, 0);
 
-			const float cameraSpeed = 2.5f * time.deltaTime;
+			const float cameraSpeed = 2.5f * TIME::deltaTime;
 			if (Input::getKeyHeld(DERP_KEY_W)) {
 				t->position += cameraSpeed * forward;
 			}

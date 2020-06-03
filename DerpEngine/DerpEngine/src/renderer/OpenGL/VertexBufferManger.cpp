@@ -18,7 +18,7 @@ namespace DERP {
 			//Checks if a mesh is applied
 			if (m->mesh == nullptr) continue;
 
-			printf("Vertex Buffer ent: %s, Mesh %s\n", EntityManager::getEntity(x)->name.c_str(), m->mesh->MeshName.c_str());
+			printf("Vertex Buffer ent: %s, Mesh %s\n", EM::getEntity(x)->name.c_str(), m->mesh->MeshName.c_str());
 				
 			//Generate VBO for each mesh
 			//Create an vector of data
@@ -43,8 +43,8 @@ namespace DERP {
 			//Inster to list of buffers
 			indexBuffers.insert({ x, indexbuffer });
 
-			printf("Vertex Buffer ent: %s, VBuffer %i\n", EntityManager::getEntity(x)->name.c_str(), vertexbuffer);
-			printf("Vertex Buffer ent: %s, Size %i\n", EntityManager::getEntity(x)->name.c_str(), m->mesh->Vertices.size());
+			printf("Vertex Buffer ent: %s, VBuffer %i\n", EM::getEntity(x)->name.c_str(), vertexbuffer);
+			printf("Vertex Buffer ent: %s, Size %i\n", EM::getEntity(x)->name.c_str(), m->mesh->Vertices.size());
 		}
 	}
 

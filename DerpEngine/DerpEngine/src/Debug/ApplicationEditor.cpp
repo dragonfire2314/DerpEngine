@@ -49,7 +49,7 @@ namespace DERP {
 		do {
 			//Time keeping
 			float currentTime = glfwGetTime();
-			time.deltaTime = currentTime - lastFrameTime;
+			TIME::deltaTime = currentTime - lastFrameTime;
 			lastFrameTime = currentTime;
 
 			//Clear screen

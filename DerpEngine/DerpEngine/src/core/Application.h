@@ -22,7 +22,6 @@ namespace DERP {
 		//Physics physics;
 
 		Input input;
-		Time time;
 
 		void start();
 		SystemManager systemManager;

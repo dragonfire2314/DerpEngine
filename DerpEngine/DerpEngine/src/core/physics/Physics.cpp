@@ -99,7 +99,7 @@ namespace DERP
 			if (dotWithNorm > 0) //Objects already moving apart
 				return;
 
-			float e = 0.5;
+			float e = glm::min(m.ar->e, m.br->e);
 
 			float eFixed = -(1 + e);
 
@@ -122,10 +122,10 @@ namespace DERP
 		void updatePhysics()
 		{
 			//Run 1/30 second phyics if the frame time gets too large
-			if (Time::deltaTime > (1.0f / 20.0f))
+			if (TIME::deltaTime > (1.0f / 20.0f))
 				integrate((1.0f / 30.0f));
 			else
-				integrate(Time::deltaTime);
+				integrate(TIME::deltaTime);
 
 			checkCollisions();
 		}

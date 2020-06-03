@@ -44,6 +44,7 @@ namespace DERP
 		glm::vec3 acceleration = glm::vec3(0, 0, 0);
 
 		float gravityAmount = -5;
+		float e = 0.1;
 
 		float inverseMass = 0;
 		float dampaning = 0.95;

@@ -22,8 +22,6 @@ namespace DERP {
 			{
 				return CM::GetComponent<T>(entity);
 			}
-
-			Time time;
 		public:
 			Scriptable() {}
 			~Scriptable() {}

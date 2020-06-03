@@ -29,12 +29,12 @@ namespace DERP
 			const char* typeName = typeid(T).name();
 
 			//Add to entity
-			EntityManager::addComponent(entityID, nameToID[typeName]);
+			EM::addComponent(entityID, nameToID[typeName]);
 
 			((Component<T>*)nameToComponent[typeName])->addData(entityID, component);
 
 			//Set system
-			auto signature = EntityManager::getSignature(entityID);
+			auto signature = EM::getSignature(entityID);
 			signature.set(GetComponentID<T>(), true);
 			SystemManager::EntitySignatureChanged(entityID, signature);
 		}

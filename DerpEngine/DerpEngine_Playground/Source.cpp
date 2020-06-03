@@ -16,7 +16,7 @@ int main()
 	Application app;
 
 	app.Init();
-	EntityManager::Init();
+    EM::Init();
 
     MeshManager meshManager;
 
@@ -29,8 +29,8 @@ int main()
     int plane = meshManager.loadMeshes("../models/handmade/plane.obj");
 
     //Chest
-    uint32_t ent = EntityManager::CreateEntity();
-    EntityManager::getEntity(ent)->name = "Chest";
+    uint32_t ent = EM::CreateEntity();
+    EM::getEntity(ent)->name = "Chest";
     CM::AddComponent<Transform>(ent);
     CM::AddComponent<Mesh>(ent);
     CM::AddComponent<Material>(ent);
@@ -39,21 +39,22 @@ int main()
     CM::GetComponent<Material>(ent)->mat = meshManager.getMaterial(chest, 0);
 
     //Floor
-    uint32_t ent3 = EntityManager::CreateEntity();
-    EntityManager::getEntity(ent3)->name = "Plane";
+    uint32_t ent3 = EM::CreateEntity();
+    EM::getEntity(ent3)->name = "Plane";
     CM::AddComponent<Transform>(ent3);
     CM::AddComponent<Mesh>(ent3);
     CM::AddComponent<Material>(ent3);
     CM::AddComponent<RigidBody>(ent3);
     CM::AddComponent<BoxCollider>(ent3);
+    CM::GetComponent<RigidBody>(ent3)->e = 0.4f;
     CM::GetComponent<BoxCollider>(ent3)->halfSides = glm::vec3(4, 0.01, 4);
     CM::GetComponent<Mesh>(ent3)->mesh = meshManager.getMesh(plane, 0);
     CM::GetComponent<Transform>(ent3)->position = glm::vec3(0, -2, 0);
     CM::GetComponent<Material>(ent3)->mat->Kd = objl::Vector3(0.5, 0.1, 0.7);
 
     //Create a camera
-    uint32_t cam = EntityManager::CreateEntity();
-    EntityManager::getEntity(cam)->name = "Camera";
+    uint32_t cam = EM::CreateEntity();
+    EM::getEntity(cam)->name = "Camera";
     CM::AddComponent<Camera>(cam);
     CM::AddComponent<Transform>(cam);
     Transform* cam_t = CM::GetComponent<Transform>(cam);
@@ -64,8 +65,8 @@ int main()
     s3->script = new CameraMovement();
 
     //Create a Point Light
-    uint32_t pLight = EntityManager::CreateEntity();
-    EntityManager::getEntity(pLight)->name = "Ico";
+    uint32_t pLight = EM::CreateEntity();
+    EM::getEntity(pLight)->name = "Ico";
     CM::AddComponent<DirectionalLight>(pLight);
     CM::AddComponent<Transform>(pLight);
     CM::AddComponent<Script>(pLight);
@@ -76,8 +77,8 @@ int main()
     CM:: GetComponent<Transform>(pLight)->position.y = 1;
 
     //Character
-    uint32_t character = EntityManager::CreateEntity();
-    EntityManager::getEntity(character)->name = "Player";
+    uint32_t character = EM::CreateEntity();
+    EM::getEntity(character)->name = "Player";
     CM::AddComponent<Transform>(character);
     CM::AddComponent<Mesh>(character);
     CM::AddComponent<Material>(character);
@@ -86,6 +87,7 @@ int main()
     CM::AddComponent<RigidBody>(character);
     CM::GetComponent<RigidBody>(character)->useGravity = true;
     CM::GetComponent<RigidBody>(character)->inverseMass = 0.1f;
+    CM::GetComponent<RigidBody>(character)->e = 0.4f;
     CM::GetComponent<Script>(character)->script = new PlayerControls();
     CM::GetComponent<Mesh>(character)->mesh = meshManager.getMesh(cube, 0);
     CM::GetComponent<Transform>(character)->position.y = 3;

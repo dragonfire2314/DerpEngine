@@ -2,8 +2,9 @@
 
 namespace DERP
 {
-	
-	float Time::deltaTime = 0;
-	float Time::time = 0;
-
+	namespace TIME
+	{
+		float deltaTime = 0;
+		float time = 0;
+	}
 }
