@@ -125,4 +125,40 @@ namespace DERP
 	{
 		glm::vec3 direction;
 	};
+
+	struct DERP_API AudioSource 
+	{
+		//Settings
+	private:
+		bool Loop = true;
+		bool is3D = false;
+		float volume = 1;
+		bool isPlaying = false;
+
+		std::string filePath;
+
+		bool updateOccured = true;
+
+	public:
+		//Functions
+		void play();
+		void stop();
+
+		void changeAudio(std::string _filePath);
+
+		std::string getFile();
+
+		bool getUpdateStatus();
+		void UpdateHandled();
+
+		bool getPlayingStatus();
+		float getVolume();
+		bool get3DStatus();
+		bool getLoopStatus();
+	};
+
+	struct DERP_API AudioListener 
+	{
+		
+	};
 }

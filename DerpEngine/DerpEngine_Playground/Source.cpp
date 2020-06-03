@@ -6,6 +6,7 @@
 #include "CameraMovement.h"
 #include "RotateAroundScene.h"
 #include "PlayerControls.h"
+#include "AudioTesting.h"
 
 using namespace DERP;
 
@@ -92,6 +93,21 @@ int main()
     CM::GetComponent<Mesh>(character)->mesh = meshManager.getMesh(cube, 0);
     CM::GetComponent<Transform>(character)->position.y = 3;
     CM::GetComponent<Material>(character)->mat->Kd = objl::Vector3(1, 0.5, 0.3);
+
+    uint32_t sound = EM::CreateEntity();
+    EM::getEntity(sound)->name = "Player";
+    CM::AddComponent<Transform>(sound);
+    CM::AddComponent<Mesh>(sound);
+    CM::AddComponent<Material>(sound);
+    CM::AddComponent<AudioSource>(sound);
+    CM::AddComponent<Script>(sound);
+    CM::GetComponent<Script>(sound)->script = new AudioTest();
+    CM::GetComponent<Mesh>(sound)->mesh = meshManager.getMesh(cone, 0);
+    CM::GetComponent<Material>(sound)->mat->Kd = objl::Vector3(1, 0.5, 0.3);
+    AudioSource* a = CM::GetComponent<AudioSource>(sound);
+    a->changeAudio("komikuOP.ogg");
+    a->play();
+
 
     ////Physics obj 1
     //uint32_t Phys1 = EntityManager::CreateEntity();

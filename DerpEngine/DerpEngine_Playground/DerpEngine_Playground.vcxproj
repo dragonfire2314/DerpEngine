@@ -102,8 +102,8 @@
     <LibraryPath>$(SolutionDir)/../externals/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../externals/assimp/lib;$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">
-    <IncludePath>$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/include;$(SolutionDir)/DerpEngine/external;$(SolutionDir)/../externals/assimp/include;$(SolutionDir)/../externals/glew-2.1.0/include;$(SolutionDir)/DerpEngine/src;$(ProjectDir)/external/imgui;$(ProjectDir);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/../externals/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../externals/assimp/lib;$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/lib-vc2019;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/include;$(SolutionDir)/DerpEngine/external;$(SolutionDir)/../externals/assimp/include;$(SolutionDir)/../externals/glew-2.1.0/include;$(SolutionDir)/DerpEngine/src;$(ProjectDir)/external/imgui;$(SolutionDir)/../externals/irrKlang/include;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/../externals/irrKlang/lib/Winx64-visualStudio;$(SolutionDir)/../externals/glew-2.1.0/lib/Release/x64;$(SolutionDir)/../externals/assimp/lib;$(SolutionDir)/../externals/glfw-3.3.2.bin.WIN64/lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -181,7 +181,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glew32s.lib;glfw3.lib;assimp-vc142-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;glew32s.lib;glfw3.lib;assimp-vc142-mt.lib;irrKlang.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
     <ClCompile>
@@ -194,6 +194,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioTesting.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Movement.h" />
     <ClInclude Include="PlayerControls.h" />

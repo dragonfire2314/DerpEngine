@@ -35,5 +35,8 @@
     <ClInclude Include="PlayerControls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AudioTesting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

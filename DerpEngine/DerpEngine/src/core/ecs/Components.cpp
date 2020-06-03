@@ -72,4 +72,46 @@ namespace DERP
 	{
 		type = SPHERE;
 	}
+
+	void AudioSource::play()
+	{
+		isPlaying = true;
+
+		updateOccured = true;
+	}
+
+	void AudioSource::stop()
+	{
+		isPlaying = false;
+
+		updateOccured = true;
+	}
+
+	void AudioSource::changeAudio(std::string _filePath)
+	{
+		filePath = _filePath;
+
+		updateOccured = true;
+		isPlaying = false;
+	}
+
+	std::string AudioSource::getFile() 
+	{
+		return filePath;
+	}
+
+	bool AudioSource::getUpdateStatus() 
+	{
+		return updateOccured;
+	}
+
+	void AudioSource::UpdateHandled()
+	{
+		updateOccured = false;
+	}
+
+	bool AudioSource::getPlayingStatus() { return isPlaying; }
+	float AudioSource::getVolume() { return volume; }
+	bool AudioSource::get3DStatus() { return is3D; }
+	bool AudioSource::getLoopStatus() { return Loop; }
 }

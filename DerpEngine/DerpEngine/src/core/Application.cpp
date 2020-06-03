@@ -9,6 +9,7 @@
 #include "ecs/systems/Renderer.h"
 #include "ecs/SystemManager.h"
 #include "ecs/systems/System.h"
+#include "audio/AudioManager.h"
 
 namespace DERP {
 
@@ -49,6 +50,9 @@ namespace DERP {
 			TIME::deltaTime = currentTime - lastFrameTime;
 			TIME::time = currentTime;
 			lastFrameTime = currentTime;
+
+			//Update Audio
+			AUDIO::updateAudio();
 
 			//Update Physics
 			PHYS::updatePhysics();
@@ -98,6 +102,8 @@ namespace DERP {
 			CM::RegisterComponent<PointLight>();
 			CM::RegisterComponent<BoxCollider>();
 			CM::RegisterComponent<SphereCollider>();
+			CM::RegisterComponent<AudioSource>();
+			CM::RegisterComponent<AudioListener>();
 			//ECS System init
 			sys_renderer = systemManager.RegisterSystem<Sys_Renderer>();
 			{
@@ -169,6 +175,13 @@ namespace DERP {
 				sig.set(CM::GetComponentID<SphereCollider>());
 				systemManager.SetSignature<Sys_SphereCollider>(sig);
 			}
+
+			sys_audio = systemManager.RegisterSystem<Sys_Audio>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(CM::GetComponentID<AudioSource>());
+				systemManager.SetSignature<Sys_Audio>(sig);
+			}
 		}
 		/*
 			INPUT INIT
@@ -176,6 +189,10 @@ namespace DERP {
 		{
 			input.Init((GLFWwindow*)window);
 		}
+		/*
+			AUDIO INIT
+		*/
+		AUDIO::initAudio();
 	}
 
 	void Application::start()

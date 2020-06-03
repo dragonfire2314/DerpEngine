@@ -19,6 +19,7 @@ namespace DERP {
 	class Sys_Physics : public System {};
 	class Sys_BoxCollider : public System {};
 	class Sys_SphereCollider : public System {};
+	class Sys_Audio : public System {};
 
 	extern Sys_Renderer* sys_renderer;
 	extern Sys_Shader* sys_shader;
@@ -30,4 +31,5 @@ namespace DERP {
 	extern Sys_Physics* sys_physics;
 	extern Sys_BoxCollider* sys_boxCollider;
 	extern Sys_SphereCollider* sys_sphereCollider;
+	extern Sys_Audio* sys_audio;
 }
