@@ -12,8 +12,6 @@ namespace DERP {
 
 	TextureData TextureManager::loadTexture(uint32_t textureID)
 	{
-		printf("I cant beilve that this was called, it worked, nice\n");
-
 		TextureData td;
 
 		//Check if texture ID is valid

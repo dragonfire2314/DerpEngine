@@ -28,6 +28,7 @@ int main()
     int cone = meshManager.loadMeshes("../models/handmade/cone.obj");
     int torus = meshManager.loadMeshes("../models/handmade/torus.obj");
     int plane = meshManager.loadMeshes("../models/handmade/plane.obj");
+    int testAnim = meshManager.loadMeshes("../models/anims/Swing_Dancing.fbx");
 
     //Chest
     uint32_t ent = EM::CreateEntity();
@@ -72,10 +73,10 @@ int main()
     CM::AddComponent<Transform>(pLight);
     CM::AddComponent<Script>(pLight);
     CM::GetComponent<Script>(pLight)->script = new RotateAroundScene();
-    //cm.AddComponent<Mesh>(pLight);
-    //cm.AddComponent<Material>(pLight);
-    //cm.GetComponent<Mesh>(pLight)->mesh = meshManager.getMesh(ico, 0);
-    CM:: GetComponent<Transform>(pLight)->position.y = 1;
+    CM::AddComponent<Mesh>(pLight);
+    CM::AddComponent<Material>(pLight);
+    CM::GetComponent<Mesh>(pLight)->mesh = meshManager.getMesh(ico, 0);
+    CM::GetComponent<Transform>(pLight)->position.y = 1;
 
     //Character
     uint32_t character = EM::CreateEntity();
@@ -102,11 +103,40 @@ int main()
     CM::AddComponent<AudioSource>(sound);
     CM::AddComponent<Script>(sound);
     CM::GetComponent<Script>(sound)->script = new AudioTest();
-    CM::GetComponent<Mesh>(sound)->mesh = meshManager.getMesh(cone, 0);
+    //CM::GetComponent<Mesh>(sound)->mesh = meshManager.getMesh(cone, 0);
     CM::GetComponent<Material>(sound)->mat->Kd = objl::Vector3(1, 0.5, 0.3);
     AudioSource* a = CM::GetComponent<AudioSource>(sound);
     a->changeAudio("komikuOP.ogg");
-    a->play();
+    //a->play();
+
+    //Player child
+    uint32_t charChild = EM::CreateEntity(character);
+    EM::getEntity(charChild)->name = "Player Child";
+    CM::AddComponent<Transform>(charChild);
+    CM::AddComponent<Mesh>(charChild);
+    CM::AddComponent<Material>(charChild);
+    CM::GetComponent<Mesh>(charChild)->mesh = meshManager.getMesh(cone, 0);
+    CM::GetComponent<Material>(charChild)->mat->Kd = objl::Vector3(1, 0.5, 0.3);
+    CM::GetComponent<Transform>(charChild)->position = glm::vec3(0, 2, 0);
+
+    //Player child
+    uint32_t charChildChild = EM::CreateEntity(charChild);
+    EM::getEntity(charChildChild)->name = "Player Child Child";
+    CM::AddComponent<Transform>(charChildChild);
+    CM::AddComponent<Mesh>(charChildChild);
+    CM::AddComponent<Material>(charChildChild);
+    CM::GetComponent<Mesh>(charChildChild)->mesh = meshManager.getMesh(cone, 0);
+    CM::GetComponent<Material>(charChildChild)->mat->Kd = objl::Vector3(1, 0.5, 0.3);
+    CM::GetComponent<Transform>(charChildChild)->position = glm::vec3(0, 2, 0);
+
+    //Anim test
+    //uint32_t anim = EM::CreateEntity();
+    //EM::getEntity(anim)->name = "anim";
+    //CM::AddComponent<Transform>(anim);
+    //CM::AddComponent<Mesh>(anim);
+    //CM::AddComponent<Material>(anim);
+    //CM::GetComponent<Mesh>(anim)->mesh = meshManager.getMesh(testAnim, 0);
+    //CM::GetComponent<Material>(anim)->mat->Kd = objl::Vector3(0.8, 0.3, 0.6);
 
 
     ////Physics obj 1

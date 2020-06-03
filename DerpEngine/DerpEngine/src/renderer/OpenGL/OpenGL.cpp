@@ -54,14 +54,30 @@ namespace DERP {
 			//Check if mesh is valid
 			if (mesh->mesh == nullptr) continue;
 
-			//printf("Entity: %s, Mesh: %s\n", EntityManager::getEntity(x)->name.c_str(), mesh->mesh->MeshName.c_str());
-
+			//Move child
  			Transform* t = CM::GetComponent<Transform>(x);
 
 			glm::mat4 trans = glm::mat4(1.0f);
 			trans = glm::translate(trans, t->position);
 			trans = trans * glm::toMat4(t->rotation);
-			trans = glm::scale(trans, glm::vec3(1.0f, 1.0f, 1.0f));
+			trans = glm::scale(trans, t->scale);
+
+			//Makes sure childern move wiht parents
+			{
+				Entity* entityTemp = EM::getEntity(x)->parent;
+				while (entityTemp != nullptr) {
+					uint32_t p = entityTemp->ID;
+					Transform* pt = CM::GetComponent<Transform>(p);
+
+					trans = glm::translate(trans, pt->position);
+					trans = trans * glm::toMat4(pt->rotation);
+					trans = glm::scale(trans, pt->scale);
+
+					entityTemp = EM::getEntity(entityTemp->ID);
+					if (entityTemp == nullptr) break;
+					else entityTemp = entityTemp->parent;
+				}
+			}
 
 			// Our ModelViewProjection
 			GLuint ModelID =      glGetUniformLocation(shaderNum, "Model");
@@ -84,15 +100,10 @@ namespace DERP {
 			//light.UpdateDirectionalLight(shader.getShader(x));
 			light.UpdatePointLight(shaderNum);
 
-
-
 			//GLuint viewPosID = glGetUniformLocation(shaderNum, "viewPos");
 			//glUniform3f(viewPosID, mainCamPos.x, mainCamPos.y, mainCamPos.z);
 
 			glUseProgram(shaderNum);
-
-			//printf("Vertex Buffer ent: %s, VBuffer %i\n", EntityManager::getEntity(x)->name.c_str(), VBManager->getVertexBuffer(x));
-			//printf("Object Pos: %f, %f, %f\n", t->position.x, t->position.y, t->position.z);
 
 			//Bind stuff
 			//Vertex Buffer

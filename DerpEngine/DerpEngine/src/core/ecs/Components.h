@@ -17,10 +17,12 @@ namespace DERP
 		void print();
 
 		glm::vec3 forward();
+		glm::vec3 up();
+		glm::vec3 right();
 
 		glm::vec3 position = glm::vec3(0, 0, 0);
 		glm::quat rotation;
-		glm::vec3 scale = glm::vec3(0, 0, 0);
+		glm::vec3 scale = glm::vec3(1, 1, 1);
 	};
 
 	struct DERP_API Script

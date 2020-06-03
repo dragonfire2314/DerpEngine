@@ -64,7 +64,10 @@ namespace DERP
 		}
 		Entity* getEntity(uint32_t entityID)
 		{
-			return &entitys[idToEntity[entityID]];
+			if (idToEntity.count(entityID))
+				return &entitys[idToEntity[entityID]];
+			else
+				return nullptr;
 		}
 		bool isComponent(uint32_t entityID, uint32_t componentID)
 		{

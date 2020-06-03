@@ -21,12 +21,11 @@ namespace DERP
 		std::cout << "End" << std::endl;
 	}
 
-	glm::vec3 Transform::forward() 
-	{
-		return glm::vec3(0, 0, 0);
-	}
+	glm::vec3 Transform::forward() { return rotation * glm::vec3(0, 0, -1); }
 
+	glm::vec3 Transform::up() { return rotation* glm::vec3(0, 1, 0); }
 
+	glm::vec3 Transform::right() { return rotation * glm::vec3(1, 0, 0); }
 
 	//Mesh
 	Mesh::Mesh(objl::Mesh* _mesh)

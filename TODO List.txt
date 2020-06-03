@@ -4,6 +4,7 @@
 -Inheairt trnasform from parent entity
 -Lighting
 -Collision
+-Particals
 
 ## Minor Needs
 -Screen to world space
