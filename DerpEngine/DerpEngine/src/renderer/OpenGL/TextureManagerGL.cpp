@@ -12,7 +12,7 @@ namespace DERP {
 
 		for (auto x : sys_shader->Entities)
 		{
-			Material* mat = ComponentManager::GetComponent<Material>(x);
+			Material* mat = CM::GetComponent<Material>(x);
 
 			//Check if a texture exists
 			if (mat->mat == nullptr) continue;
@@ -61,7 +61,7 @@ namespace DERP {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		Material* m = ComponentManager::GetComponent<Material>(entityID);
+		Material* m = CM::GetComponent<Material>(entityID);
 
 		TextureManager textureManager;
 		texData = textureManager.loadTexture(m->mat->map_Kd_ID);

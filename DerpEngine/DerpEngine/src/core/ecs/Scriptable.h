@@ -20,7 +20,7 @@ namespace DERP {
 			template <typename T>
 			T* getComponent()
 			{
-				return ComponentManager::GetComponent<T>(entity);
+				return CM::GetComponent<T>(entity);
 			}
 
 			Time time;

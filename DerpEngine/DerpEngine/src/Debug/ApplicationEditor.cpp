@@ -39,7 +39,7 @@ namespace DERP {
 		//Run scripts Start
 		for (auto x : sys_scripts->Entities) {
 			//Assign entityID's to the scripts
-			Script* s = ComponentManager::GetComponent<Script>(x);
+			Script* s = CM::GetComponent<Script>(x);
 			s->script->entity = x;
 			s->script->Start();
 		}
@@ -75,7 +75,7 @@ namespace DERP {
 
 			//Run scripts Update
 			for (auto x : sys_scripts->Entities) {
-				ComponentManager::GetComponent<Script>(x)->script->Update();
+				CM::GetComponent<Script>(x)->script->Update();
 			}
 
 			// Swap buffers

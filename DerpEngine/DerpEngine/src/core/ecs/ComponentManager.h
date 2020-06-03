@@ -12,19 +12,19 @@
 
 namespace DERP
 {
-	class DERP_API ComponentManager
+	namespace CM 
 	{
-	private:
 		//Key - Component name
 		//Value - Component ID
-		static std::unordered_map<const char*, uint8_t> nameToID;
+		extern std::unordered_map<const char*, uint8_t> nameToID;
 		//Key - Component name
 		//Value - ComponentArray
-		static std::unordered_map<const char*, ComponentBase*> nameToComponent;
-		static uint32_t componentID;
+		extern std::unordered_map<const char*, ComponentBase*> nameToComponent;
+		extern uint32_t componentID;
 
+		///Do Not call directly
 		template<typename T>
-		static void setComponentData(uint32_t entityID, T component)
+		void setComponentData(uint32_t entityID, T component)
 		{
 			const char* typeName = typeid(T).name();
 
@@ -39,19 +39,17 @@ namespace DERP
 			SystemManager::EntitySignatureChanged(entityID, signature);
 		}
 
+		///Do Not call directly
 		template<typename T>
-		static T* getComponentData(uint32_t entityID)
+		T* getComponentData(uint32_t entityID)
 		{
 			const char* typeName = typeid(T).name();
 
 			return ((Component<T>*)nameToComponent[typeName])->getData(entityID);
 		}
-	public:
-		ComponentManager();
-		~ComponentManager();
 
 		template<typename T>
-		static void RegisterComponent()
+		void RegisterComponent()
 		{
 			const char* typeName = typeid(T).name();
 
@@ -67,7 +65,7 @@ namespace DERP
 		}
 
 		template<typename T>
-		static void AddComponent(uint32_t entityID, T component)
+		void AddComponent(uint32_t entityID, T component)
 		{
 			printf("Component Added, Ent\n");
 
@@ -75,7 +73,7 @@ namespace DERP
 		}
 
 		template<typename T>
-		static void AddComponent(uint32_t entityID)
+		void AddComponent(uint32_t entityID)
 		{
 			printf("Component Added, Ent: %i\n", entityID);
 
@@ -83,13 +81,13 @@ namespace DERP
 		}
 
 		template<typename T>
-		static T* GetComponent(uint32_t entityID)
+		T* GetComponent(uint32_t entityID)
 		{
 			return getComponentData<T>(entityID);
 		}
 
 		template<typename T>
-		static uint8_t GetComponentID()
+		uint8_t GetComponentID()
 		{
 			const char* typeName = typeid(T).name();
 
@@ -97,7 +95,7 @@ namespace DERP
 		}
 
 		template<typename T>
-		static bool IsComponent(uint32_t entityID)
+		bool IsComponent(uint32_t entityID)
 		{
 			const char* typeName = typeid(T).name();
 
@@ -106,12 +104,12 @@ namespace DERP
 		}
 
 		template<typename T>
-		static std::vector<T> getComponentArray()
+		std::vector<T> getComponentArray()
 		{
 			const char* typeName = typeid(T).name();
 
 			//Add to entity
 			return ((Component<T>*)nameToComponent[typeName])->getArray();
 		}
-	};
+	}
 }

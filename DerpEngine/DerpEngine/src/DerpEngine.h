@@ -17,6 +17,9 @@
 #include "core/ecs/EntityManager.h"
 #include "core/ecs/Components.h"
 
+//Temp
+#include "renderer/OpenGL/Shape.h"
+
 //Debug Includes
 
 

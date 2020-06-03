@@ -68,6 +68,7 @@ namespace DERP
 	}
 	void EntityManager::addComponent(uint32_t entityID, uint32_t componentID)
 	{
+		//TODO - assert that only one of each compoent exists on a entity
 		entitys[idToEntity[entityID]].components[componentID] = 1;
 	}
 	std::bitset<UINT8_MAX> EntityManager::getSignature(uint32_t entityID)

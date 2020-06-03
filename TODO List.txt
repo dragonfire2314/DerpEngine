@@ -3,7 +3,7 @@
 ## Major Needs
 -Inheairt trnasform from parent entity
 -Lighting
--Collition
+-Collision
 
 ## Minor Needs
 -Screen to world space

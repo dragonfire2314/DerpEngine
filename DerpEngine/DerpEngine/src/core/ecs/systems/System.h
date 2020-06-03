@@ -16,6 +16,9 @@ namespace DERP {
 	class Sys_Cameras : public System {};
 	class Sys_DirLight : public System {};
 	class Sys_PointLight : public System {};
+	class Sys_Physics : public System {};
+	class Sys_BoxCollider : public System {};
+	class Sys_SphereCollider : public System {};
 
 	extern Sys_Renderer* sys_renderer;
 	extern Sys_Shader* sys_shader;
@@ -24,4 +27,7 @@ namespace DERP {
 	extern Sys_Cameras* sys_cameras;
 	extern Sys_DirLight* sys_dirLight;
 	extern Sys_PointLight* sys_pointLight;
+	extern Sys_Physics* sys_physics;
+	extern Sys_BoxCollider* sys_boxCollider;
+	extern Sys_SphereCollider* sys_sphereCollider;
 }

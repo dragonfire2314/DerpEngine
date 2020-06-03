@@ -13,7 +13,7 @@ namespace DERP {
 		//Loop though meshes
 		for (auto x : sys_vertex->Entities) 
 		{
-			Mesh* m = ComponentManager::GetComponent<Mesh>(x);
+			Mesh* m = CM::GetComponent<Mesh>(x);
 
 			//Checks if a mesh is applied
 			if (m->mesh == nullptr) continue;
@@ -64,7 +64,7 @@ namespace DERP {
 			glDeleteBuffers(1, &(indexBuffers[entityID]));
 		}
 
-		Mesh* m = ComponentManager::GetComponent<Mesh>(entityID);
+		Mesh* m = CM::GetComponent<Mesh>(entityID);
 
 		//Create buffers for entity
 		GLuint vertexbuffer;

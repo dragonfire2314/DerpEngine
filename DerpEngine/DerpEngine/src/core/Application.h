@@ -6,6 +6,7 @@
 #include "../renderer/RenderAPI.h"
 #include "input/Input.h"
 #include "time/Time.h"
+#include "physics/Physics.h"
 
 #include <stdio.h>
 
@@ -18,11 +19,12 @@ namespace DERP {
 		void* window;
 		RenderAPI* renderer;
 
+		//Physics physics;
+
 		Input input;
 		Time time;
 
 		void start();
-		ComponentManager componentManager;
 		SystemManager systemManager;
 	public:
 

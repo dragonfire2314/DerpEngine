@@ -7,6 +7,8 @@
 #include "../../core/ecs/ComponentManager.h"
 #include "../../core/ecs/systems/System.h"
 
+#include "Shape.h"
+
 #include <unordered_map>
 #include <GL/glew.h>
 
@@ -17,8 +19,6 @@ namespace DERP {
 	unsigned int compileShaders(const char* vertex_file_path, const char* fragment_file_path);
 	GLuint shaderNum;
 
-	
-
 	void OpenGL::Render()
 	{
 		//printf("Start\n");
@@ -26,7 +26,7 @@ namespace DERP {
 		for (auto x : sys_cameras->Entities) { //Render screen once per camera
 			//TODO - Allow cameras to choose render method (screen space, or texture)
 			//Setup veiw matrix before call
-			Transform* t = ComponentManager::GetComponent<Transform>(x);
+			Transform* t = CM::GetComponent<Transform>(x);
 			glm::vec3 forward = t->rotation * glm::vec3(0, 0, -1);
 			//glm::vec3 euler = glm::eulerAngles(t->rotation) * 180.0f / 3.14159f;
 			View = glm::lookAt(t->position, t->position + forward, glm::vec3(0, 1, 0));
@@ -48,15 +48,15 @@ namespace DERP {
 		//Loop though meshes
 		for (auto x : sys_renderer->Entities)
 		{
-			Mesh* mesh = ComponentManager::GetComponent<Mesh>(x);
-			Material* mat = ComponentManager::GetComponent<Material>(x);
+			Mesh* mesh = CM::GetComponent<Mesh>(x);
+			Material* mat = CM::GetComponent<Material>(x);
 
 			//Check if mesh is valid
 			if (mesh->mesh == nullptr) continue;
 
 			//printf("Entity: %s, Mesh: %s\n", EntityManager::getEntity(x)->name.c_str(), mesh->mesh->MeshName.c_str());
 
- 			Transform* t = ComponentManager::GetComponent<Transform>(x);
+ 			Transform* t = CM::GetComponent<Transform>(x);
 
 			glm::mat4 trans = glm::mat4(1.0f);
 			trans = glm::translate(trans, t->position);
@@ -123,6 +123,8 @@ namespace DERP {
 			glDisableVertexAttribArray(0); 
 			glDisableVertexAttribArray(1);
 			glDisableVertexAttribArray(2);
+
+			//Draw Shapes on top of everyting
 		}
 	}
 

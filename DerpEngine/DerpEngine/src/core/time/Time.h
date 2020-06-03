@@ -9,6 +9,7 @@ namespace DERP
 
 	public:
 		static float deltaTime;
+		static float time;
 	};
 
 }

@@ -32,7 +32,7 @@ namespace DERP {
 		//Run scripts Start
 		for (auto x : sys_scripts->Entities) {
 			//Assign entityID's to the scripts
-			Script* s = ComponentManager::GetComponent<Script>(x);
+			Script* s = CM::GetComponent<Script>(x);
 			s->script->entity = x;
 			s->script->Start();
 		}
@@ -47,7 +47,11 @@ namespace DERP {
 			//Time keeping
 			float currentTime = glfwGetTime();
 			time.deltaTime = currentTime - lastFrameTime;
+			time.time = currentTime;
 			lastFrameTime = currentTime;
+
+			//Update Physics
+			PHYS::updatePhysics();
 
 			//Clear screen
 			renderer->ClearScreen(); 
@@ -58,7 +62,7 @@ namespace DERP {
 
 			//Run scripts Update
 			for (auto x : sys_scripts->Entities) {
-				ComponentManager::GetComponent<Script>(x)->script->Update();
+				CM::GetComponent<Script>(x)->script->Update();
 			}
 
 			// Swap buffers
@@ -84,63 +88,86 @@ namespace DERP {
 		*/
 		{
 			//ECS component init
-			componentManager.RegisterComponent<Transform>();
-			componentManager.RegisterComponent<RigidBody>();
-			componentManager.RegisterComponent<Mesh>();
-			componentManager.RegisterComponent<Material>();
-			componentManager.RegisterComponent<Camera>();
-			componentManager.RegisterComponent<Script>();
-			componentManager.RegisterComponent<DirectionalLight>();
-			componentManager.RegisterComponent<PointLight>();
+			CM::RegisterComponent<Transform>();
+			CM::RegisterComponent<RigidBody>();
+			CM::RegisterComponent<Mesh>();
+			CM::RegisterComponent<Material>();
+			CM::RegisterComponent<Camera>();
+			CM::RegisterComponent<Script>();
+			CM::RegisterComponent<DirectionalLight>();
+			CM::RegisterComponent<PointLight>();
+			CM::RegisterComponent<BoxCollider>();
+			CM::RegisterComponent<SphereCollider>();
 			//ECS System init
 			sys_renderer = systemManager.RegisterSystem<Sys_Renderer>();
 			{
 				std::bitset<UINT8_MAX> sig;
-				sig.set(componentManager.GetComponentID<Material>());
-				sig.set(componentManager.GetComponentID<Mesh>());
+				sig.set(CM::GetComponentID<Material>());
+				sig.set(CM::GetComponentID<Mesh>());
 				systemManager.SetSignature<Sys_Renderer>(sig);
 			}
 
 			sys_shader = systemManager.RegisterSystem<Sys_Shader>();
 			{
 				std::bitset<UINT8_MAX> sig;
-				sig.set(componentManager.GetComponentID<Material>());
+				sig.set(CM::GetComponentID<Material>());
 				systemManager.SetSignature<Sys_Shader>(sig);
 			}
 
 			sys_vertex = systemManager.RegisterSystem<Sys_Vertex>();
 			{
 				std::bitset<UINT8_MAX> sig;
-				sig.set(componentManager.GetComponentID<Material>());
+				sig.set(CM::GetComponentID<Material>());
 				systemManager.SetSignature<Sys_Vertex>(sig);
 			}
 
 			sys_scripts = systemManager.RegisterSystem<Sys_Scripts>();
 			{
 				std::bitset<UINT8_MAX> sig;
-				sig.set(componentManager.GetComponentID<Script>());
+				sig.set(CM::GetComponentID<Script>());
 				systemManager.SetSignature<Sys_Scripts>(sig);
 			}
 
 			sys_cameras = systemManager.RegisterSystem<Sys_Cameras>();
 			{
 				std::bitset<UINT8_MAX> sig;
-				sig.set(componentManager.GetComponentID<Camera>());
+				sig.set(CM::GetComponentID<Camera>());
 				systemManager.SetSignature<Sys_Cameras>(sig);
+			}
+
+			sys_physics = systemManager.RegisterSystem<Sys_Physics>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(CM::GetComponentID<RigidBody>());
+				systemManager.SetSignature<Sys_Physics>(sig);
 			}
 
 			sys_dirLight = systemManager.RegisterSystem<Sys_DirLight>();
 			{
 				std::bitset<UINT8_MAX> sig;
-				sig.set(componentManager.GetComponentID<DirectionalLight>());
+				sig.set(CM::GetComponentID<DirectionalLight>());
 				systemManager.SetSignature<Sys_DirLight>(sig);
 			}
 
 			sys_pointLight = systemManager.RegisterSystem<Sys_PointLight>();
 			{
 				std::bitset<UINT8_MAX> sig;
-				sig.set(componentManager.GetComponentID<PointLight>());
+				sig.set(CM::GetComponentID<PointLight>());
 				systemManager.SetSignature<Sys_PointLight>(sig);
+			}
+
+			sys_boxCollider = systemManager.RegisterSystem<Sys_BoxCollider>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(CM::GetComponentID<BoxCollider>());
+				systemManager.SetSignature<Sys_BoxCollider>(sig);
+			}
+
+			sys_sphereCollider = systemManager.RegisterSystem<Sys_SphereCollider>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(CM::GetComponentID<SphereCollider>());
+				systemManager.SetSignature<Sys_SphereCollider>(sig);
 			}
 		}
 		/*

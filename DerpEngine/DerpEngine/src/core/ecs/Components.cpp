@@ -8,7 +8,7 @@ namespace DERP
 
 	Material::Material() 
 	{
-		mat = &defualtMat;
+		mat = new objl::Material();
 	}
 
 	//All components are stored in this file
@@ -61,5 +61,15 @@ namespace DERP
 	{
 		vertexShader = _vertexShader;
 		pixelShader = _pixleShader;
+	}
+
+	BoxCollider::BoxCollider()
+	{
+		type = BOX;
+	}
+
+	SphereCollider::SphereCollider()
+	{
+		type = SPHERE;
 	}
 }

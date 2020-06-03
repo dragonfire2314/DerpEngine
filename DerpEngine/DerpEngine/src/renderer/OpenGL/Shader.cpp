@@ -21,7 +21,7 @@ namespace DERP
 
 		for (auto x : sys_shader->Entities)
 		{
-			Material* mat = ComponentManager::GetComponent<Material>(x);
+			Material* mat = CM::GetComponent<Material>(x);
 
 			//Compile every shader
 			//Store it in a map
@@ -32,7 +32,7 @@ namespace DERP
 
 	void Shader::updateShader(uint32_t entityID) 
 	{
-		Material* m = ComponentManager::GetComponent<Material>(entityID);
+		Material* m = CM::GetComponent<Material>(entityID);
 
 		//Check if shder exisits
 		if (programs.find(entityID) == programs.end()) {

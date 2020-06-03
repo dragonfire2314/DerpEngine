@@ -10,4 +10,7 @@ namespace DERP {
 	Sys_Cameras* sys_cameras;
 	Sys_DirLight* sys_dirLight;
 	Sys_PointLight* sys_pointLight;
+	Sys_Physics* sys_physics;
+	Sys_BoxCollider* sys_boxCollider;
+	Sys_SphereCollider* sys_sphereCollider;
 }

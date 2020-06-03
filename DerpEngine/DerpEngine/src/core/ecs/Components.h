@@ -28,10 +28,49 @@ namespace DERP
 		Scriptable* script;
 	};
 
+	struct Force 
+	{
+		glm::vec3 force = glm::vec3(0, 0, 0);
+	};
+
 	struct DERP_API RigidBody 
 	{
-		float velocity;
-		glm::vec3 dir = glm::vec3(0, 0, 0);
+		//Settings
+		bool useGravity = false;
+		bool useComplexPhysics = false;
+
+		//Simple partical physics
+		glm::vec3 velocity = glm::vec3(0, 0, 0);
+		glm::vec3 acceleration = glm::vec3(0, 0, 0);
+
+		float gravityAmount = -5;
+
+		float inverseMass = 0;
+		float dampaning = 0.95;
+
+		std::vector<Force> forces;
+
+		//Complex rigidbody rotation physics
+		glm::vec4 angularVelocity;
+	};
+
+	enum ColliderType { NONE, BOX, SPHERE };
+	struct DERP_API Collider 
+	{
+		ColliderType type = NONE;
+		bool isTrigger = false;
+	};
+
+	struct DERP_API BoxCollider : public Collider
+	{
+		BoxCollider();
+		glm::vec3 halfSides = glm::vec3(0.5, 0.5, 0.5);
+	};
+
+	struct DERP_API SphereCollider : public Collider
+	{
+		SphereCollider();
+		float radius = 1;
 	};
 
 	struct DERP_API Mesh 

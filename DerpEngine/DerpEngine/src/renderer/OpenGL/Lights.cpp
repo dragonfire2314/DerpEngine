@@ -49,7 +49,7 @@ namespace DERP
 		for (auto x : sys_dirLight->Entities)
 		{
 			//Update light data
-			Transform* t = ComponentManager::GetComponent<Transform>(x);
+			Transform* t = CM::GetComponent<Transform>(x);
 
 			glBindBuffer(GL_UNIFORM_BUFFER, ubo);
 			glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::vec4), &cameraPos[0]);
