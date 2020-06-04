@@ -14,6 +14,8 @@
 // Math.h - STD math Library
 #include <math.h>
 
+#include "../glm/glm.hpp"
+
 namespace objl {
 
 	struct Vector2 {
@@ -68,6 +70,11 @@ namespace objl {
 
 		// Texture Coordinate Vector
 		Vector2 TextureCoordinate;
+
+		//Bone ID's
+		glm::vec4 BoneID = glm::vec4(-1, -1, -1, -1);
+		//Bone Weights
+		glm::vec4 BoneWeights = glm::vec4(-1, -1, -1, -1); //Should change to zero
 	};
 	struct Material {
 		Material();

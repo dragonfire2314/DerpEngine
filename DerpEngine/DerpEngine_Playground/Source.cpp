@@ -30,6 +30,8 @@ int main()
     int plane = meshManager.loadMeshes("../models/handmade/plane.obj");
     int testAnim = meshManager.loadMeshes("../models/anims/Swing_Dancing.fbx");
 
+    int AnimationInport = loadAnimationFromFile("../models/anims/Swing_Dancing.fbx");
+
     //Chest
     uint32_t ent = EM::CreateEntity();
     EM::getEntity(ent)->name = "Chest";
@@ -130,13 +132,13 @@ int main()
     CM::GetComponent<Transform>(charChildChild)->position = glm::vec3(0, 2, 0);
 
     //Anim test
-    //uint32_t anim = EM::CreateEntity();
-    //EM::getEntity(anim)->name = "anim";
-    //CM::AddComponent<Transform>(anim);
-    //CM::AddComponent<Mesh>(anim);
-    //CM::AddComponent<Material>(anim);
-    //CM::GetComponent<Mesh>(anim)->mesh = meshManager.getMesh(testAnim, 0);
-    //CM::GetComponent<Material>(anim)->mat->Kd = objl::Vector3(0.8, 0.3, 0.6);
+    uint32_t anim = EM::CreateEntity();
+    EM::getEntity(anim)->name = "anim";
+    CM::AddComponent<Transform>(anim);
+    CM::AddComponent<Mesh>(anim);
+    CM::AddComponent<Material>(anim);
+    CM::GetComponent<Mesh>(anim)->mesh = meshManager.getMesh(testAnim, 0);
+    CM::GetComponent<Material>(anim)->mat->Kd = objl::Vector3(0.8, 0.3, 0.6);
 
 
     ////Physics obj 1

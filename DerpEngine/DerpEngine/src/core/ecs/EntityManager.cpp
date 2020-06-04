@@ -40,6 +40,10 @@ namespace DERP
 				idToEntity.insert({ 0 , 0 });
 
 				counter++;
+
+				//Give the root a transform AKA center of world space
+				CM::AddComponent<Transform>(0);
+
 				return 0;
 			}
 			else

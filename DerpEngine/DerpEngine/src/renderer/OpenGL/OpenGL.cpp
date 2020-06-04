@@ -35,107 +35,102 @@ namespace DERP {
 
 			light.setCameraPosition(mainCamPos);
 
-			//t->print();
-
-			RenderMainCamera();
+			Entity* rootEntity = EM::getEntity(0);
+			RenderMainCamera(rootEntity);
 		}
 	}
 
-	void OpenGL::RenderMainCamera() 
+	//Recursively renders objects in entity tree
+	void OpenGL::RenderMainCamera(Entity* baseEntity)
 	{
 		//Must render all mesh components
 
-		//Loop though meshes
-		for (auto x : sys_renderer->Entities)
+		//Loop though entities
+		for (auto x : baseEntity->childern)
 		{
-			Mesh* mesh = CM::GetComponent<Mesh>(x);
-			Material* mat = CM::GetComponent<Material>(x);
+			if (CM::IsComponent<Mesh>(x) && CM::IsComponent<Material>(x)) {
+				Mesh* mesh = CM::GetComponent<Mesh>(x);
+				Material* mat = CM::GetComponent<Material>(x);
 
-			//Check if mesh is valid
-			if (mesh->mesh == nullptr) continue;
+				//Check if mesh is valid
+				if (mesh->mesh == nullptr) continue;
 
-			//Move child
- 			Transform* t = CM::GetComponent<Transform>(x);
+				//Generate to world matrix
+				Transform* t = CM::GetComponent<Transform>(x);
+				Transform* parentT = CM::GetComponent<Transform>(baseEntity->ID);
 
-			glm::mat4 trans = glm::mat4(1.0f);
-			trans = glm::translate(trans, t->position);
-			trans = trans * glm::toMat4(t->rotation);
-			trans = glm::scale(trans, t->scale);
+				//Apply transforms to the parents matrix
+				glm::mat4 trans = parentT->toWorld;
+				trans = glm::translate(trans, t->position);
+				trans = trans * glm::toMat4(t->rotation);
+				trans = glm::scale(trans, t->scale);
+				//Multiply with parents to world matrix
+				//Store new toWorld matrix in entity trnasform
+				t->toWorld = trans;// * parentT->toWorld;  //Can probably change this later to be B * A instead of A * B if the trans starts at 1
 
-			//Makes sure childern move wiht parents
-			{
-				Entity* entityTemp = EM::getEntity(x)->parent;
-				while (entityTemp != nullptr) {
-					uint32_t p = entityTemp->ID;
-					Transform* pt = CM::GetComponent<Transform>(p);
+				//Render code
+				{
 
-					trans = glm::translate(trans, pt->position);
-					trans = trans * glm::toMat4(pt->rotation);
-					trans = glm::scale(trans, pt->scale);
+					// Our ModelViewProjection
+					GLuint ModelID = glGetUniformLocation(shaderNum, "Model");
+					GLuint ViewID = glGetUniformLocation(shaderNum, "View");
+					GLuint ProjectionID = glGetUniformLocation(shaderNum, "Projection");
 
-					entityTemp = EM::getEntity(entityTemp->ID);
-					if (entityTemp == nullptr) break;
-					else entityTemp = entityTemp->parent;
+					glUniformMatrix4fv(ModelID, 1, GL_FALSE, &trans[0][0]);
+					glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
+					glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
+
+					//Tells the shader if it should use a texture or not (Will have to make the sytem use a differnt shader in this event)
+					GLuint isDiffuseID = glGetUniformLocation(shaderNum, "isDiffuse");
+					glUniform1i(isDiffuseID, mat->mat->isDiffuseTexture);
+
+					//Give shader a color for the objects
+					GLuint diffuseColorID = glGetUniformLocation(shaderNum, "diffuseColor");
+					glUniform3f(diffuseColorID, mat->mat->Kd.X, mat->mat->Kd.Y, mat->mat->Kd.Z);
+
+					//Lighting Stuff
+					//light.UpdateDirectionalLight(shader.getShader(x));
+					light.UpdatePointLight(shaderNum);
+
+					//GLuint viewPosID = glGetUniformLocation(shaderNum, "viewPos");
+					//glUniform3f(viewPosID, mainCamPos.x, mainCamPos.y, mainCamPos.z);
+
+					glUseProgram(shaderNum);
+
+					//Bind stuff
+					//Vertex Buffer
+					glEnableVertexAttribArray(0);
+					glBindBuffer(GL_ARRAY_BUFFER, VBManager->getVertexBuffer(x));
+					glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)0);
+					//Normals
+					glEnableVertexAttribArray(1);
+					glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(3 * sizeof(float)));
+					//Tex Coord
+					glEnableVertexAttribArray(2);
+					glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(6 * sizeof(float)));
+					//Index Buffer
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBManager->getIndexBuffer(x));
+					//Texture
+					glBindTexture(GL_TEXTURE_2D, textureManagerGL.getTexture(x));
+					glBindVertexArray(VertexArrayID);
+
+					//Draw Call
+					//glDrawArrays(GL_TRIANGLES, 0, x.second->mesh->Vertices.size());
+					glDrawElements(
+						GL_TRIANGLES,                      // mode
+						mesh->mesh->Indices.size(),        // count
+						GL_UNSIGNED_INT,                   // type
+						(void*)0                           // element array buffer offset
+					);
+					//Unbind stuff
+					glDisableVertexAttribArray(0);
+					glDisableVertexAttribArray(1);
+					glDisableVertexAttribArray(2);
+
 				}
 			}
 
-			// Our ModelViewProjection
-			GLuint ModelID =      glGetUniformLocation(shaderNum, "Model");
-			GLuint ViewID =       glGetUniformLocation(shaderNum, "View");
-			GLuint ProjectionID = glGetUniformLocation(shaderNum, "Projection");
-
-			glUniformMatrix4fv(ModelID, 1, GL_FALSE, &trans[0][0]);
-			glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
-			glUniformMatrix4fv(ProjectionID, 1, GL_FALSE, &Projection[0][0]);
-
-			//Tells the shader if it should use a texture or not (Will have to make the sytem use a differnt shader in this event)
-			GLuint isDiffuseID = glGetUniformLocation(shaderNum, "isDiffuse");
-			glUniform1i(isDiffuseID, mat->mat->isDiffuseTexture);
-
-			//Give shader a color for the objects
-			GLuint diffuseColorID = glGetUniformLocation(shaderNum, "diffuseColor");
-			glUniform3f(diffuseColorID, mat->mat->Kd.X, mat->mat->Kd.Y, mat->mat->Kd.Z);
-
-			//Lighting Stuff
-			//light.UpdateDirectionalLight(shader.getShader(x));
-			light.UpdatePointLight(shaderNum);
-
-			//GLuint viewPosID = glGetUniformLocation(shaderNum, "viewPos");
-			//glUniform3f(viewPosID, mainCamPos.x, mainCamPos.y, mainCamPos.z);
-
-			glUseProgram(shaderNum);
-
-			//Bind stuff
-			//Vertex Buffer
-			glEnableVertexAttribArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, VBManager->getVertexBuffer(x));
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-			//Normals
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-			//Tex Coord
-			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-			//Index Buffer
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBManager->getIndexBuffer(x));
-			//Texture
-			glBindTexture(GL_TEXTURE_2D, textureManagerGL.getTexture(x));
-			glBindVertexArray(VertexArrayID);
-
-			//Draw Call
-			//glDrawArrays(GL_TRIANGLES, 0, x.second->mesh->Vertices.size());
-			glDrawElements(
-				GL_TRIANGLES,                      // mode
-				mesh->mesh->Indices.size(),        // count
-				GL_UNSIGNED_INT,                   // type
-				(void*)0                           // element array buffer offset
-			);
-			//Unbind stuff
-			glDisableVertexAttribArray(0); 
-			glDisableVertexAttribArray(1);
-			glDisableVertexAttribArray(2);
-
-			//Draw Shapes on top of everyting
+			RenderMainCamera(EM::getEntity(x));
 		}
 	}
 

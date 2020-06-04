@@ -37,7 +37,7 @@ namespace DERP {
 		void ClearScreen();
 		void SetUp();
 
-		void RenderMainCamera();
+		void RenderMainCamera(Entity* baseEntity);
 		void RenderNonMainCameras();
 
 		void updateMesh(uint32_t entityID);

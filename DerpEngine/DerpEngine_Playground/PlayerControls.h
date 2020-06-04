@@ -28,7 +28,7 @@ public:
 
 		t = getComponent<Transform>();
 
-		//t->rotation = glm::angleAxis(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		t->rotation = glm::angleAxis(45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 	}
 
 	void Update()

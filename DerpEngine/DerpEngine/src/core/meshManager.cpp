@@ -9,6 +9,11 @@
 
 #include <iostream>
 
+
+#include "../../external/glm/glm.hpp"
+
+
+#include "Animation/AnimationDataTypes.h"
 #include "TextureManager.h"
 
 namespace DERP {
@@ -45,6 +50,9 @@ namespace DERP {
 			//Create Verts
 			std::vector<objl::Vertex> verts;
 			verts.reserve(mesh->mNumVertices);
+
+			//Create bones
+			std::vector<Bone> bones;
 
 			//Add verts in the mesh
 			for (int vi = 0; vi < mesh->mNumVertices; vi++) 

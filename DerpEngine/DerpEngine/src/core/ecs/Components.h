@@ -23,6 +23,8 @@ namespace DERP
 		glm::vec3 position = glm::vec3(0, 0, 0);
 		glm::quat rotation;
 		glm::vec3 scale = glm::vec3(1, 1, 1);
+
+		glm::mat4 toWorld = glm::mat4(1.0f);
 	};
 
 	struct DERP_API Script

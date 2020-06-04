@@ -100,7 +100,7 @@ namespace DERP
 			const char* typeName = typeid(T).name();
 
 			//Add to entity
-			return EntityManager::isComponent(entityID, nameToID[typeName]);
+			return EM::isComponent(entityID, nameToID[typeName]);
 		}
 
 		template<typename T>
