@@ -189,13 +189,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="external\imgui\imgui.cpp" />
-    <ClCompile Include="external\imgui\imgui_demo.cpp" />
     <ClCompile Include="external\imgui\imgui_draw.cpp" />
     <ClCompile Include="external\imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="external\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="external\objLoader\OBJ_Loader.cpp" />
-    <ClCompile Include="src\core\Animation\AnimationManager.cpp" />
+    <ClCompile Include="src\core\Animation\AnimationTest.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\audio\AudioManager.cpp" />
     <ClCompile Include="src\core\ecs\ComponentManager.cpp" />
@@ -228,7 +227,7 @@
     <ClInclude Include="external\imgui\imstb_truetype.h" />
     <ClInclude Include="external\stb\stb_image.h" />
     <ClInclude Include="src\core\Animation\AnimationDataTypes.h" />
-    <ClInclude Include="src\core\Animation\AnimationManager.h" />
+    <ClInclude Include="src\core\Animation\AnimationTest.h" />
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\core\audio\AudioManager.h" />
     <ClInclude Include="src\core\core.h" />

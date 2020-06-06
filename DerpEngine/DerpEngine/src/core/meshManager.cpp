@@ -9,14 +9,51 @@
 
 #include <iostream>
 
-
+#include <GL/glew.h>
 #include "../../external/glm/glm.hpp"
 
 
 #include "Animation/AnimationDataTypes.h"
+#include "Animation/AnimationTest.h"
 #include "TextureManager.h"
 
 namespace DERP {
+
+	//Helper Function
+	inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4* from)
+	{
+		glm::mat4 to;
+
+		to[0][0] = (GLfloat)from->a1; to[0][1] = (GLfloat)from->b1;  to[0][2] = (GLfloat)from->c1; to[0][3] = (GLfloat)from->d1;
+		to[1][0] = (GLfloat)from->a2; to[1][1] = (GLfloat)from->b2;  to[1][2] = (GLfloat)from->c2; to[1][3] = (GLfloat)from->d2;
+		to[2][0] = (GLfloat)from->a3; to[2][1] = (GLfloat)from->b3;  to[2][2] = (GLfloat)from->c3; to[2][3] = (GLfloat)from->d3;
+		to[3][0] = (GLfloat)from->a4; to[3][1] = (GLfloat)from->b4;  to[3][2] = (GLfloat)from->c4; to[3][3] = (GLfloat)from->d4;
+
+		return to;
+	}
+
+	inline glm::vec3 aiVector3dToGlm(const aiVector3D* from)
+	{
+		glm::vec3 to;
+
+		to.x = from->x;
+		to.y = from->y;
+		to.z = from->z;
+
+		return to;
+	}
+
+	inline glm::quat aiQuaternionToGlm(const aiQuaternion* from)
+	{
+		glm::quat to;
+
+		to.x = from->x;
+		to.y = from->y;
+		to.z = from->z;
+		to.w = from->w;
+
+		return to;
+	}
 
 	MeshManager::MeshManager() 
 	{
@@ -53,6 +90,7 @@ namespace DERP {
 
 			//Create bones
 			std::vector<Bone> bones;
+			std::unordered_map<std::string, uint32_t> boneMap;
 
 			//Add verts in the mesh
 			for (int vi = 0; vi < mesh->mNumVertices; vi++) 
@@ -74,6 +112,47 @@ namespace DERP {
 				verts.push_back(v);
 			}
 
+			if (mesh->HasBones())
+			{
+				//bones.reserve(mesh->mNumBones);
+				//for (int bi = 0; bi < mesh->mNumBones; bi++)
+				//{
+				//	aiBone* bone = mesh->mBones[bi];
+				//	Bone d_bone;
+				//	d_bone.offset = aiMatrix4x4ToGlm(&bone->mOffsetMatrix);
+
+				//	bones.push_back(d_bone);
+
+				//	boneMap.insert({ std::string(bone->mName.C_Str()), bi });
+
+				//	//Add bone to verts
+				//	for (int vi = 0; vi < bone->mNumWeights; vi++)
+				//	{
+				//		unsigned int vID = bone->mWeights[vi].mVertexId;
+				//		float weight = bone->mWeights[vi].mWeight;
+
+				//		if (verts[vID].BoneWeights.x == 0) {
+				//			verts[vID].BoneID.x = bi;
+				//			verts[vID].BoneWeights.x = weight;
+				//		}
+				//		else if (verts[vID].BoneWeights.y == 0) {
+				//			verts[vID].BoneID.y = bi;
+				//			verts[vID].BoneWeights.y = weight;
+				//		}
+				//		else if (verts[vID].BoneWeights.z == 0) {
+				//			verts[vID].BoneID.z = bi;
+				//			verts[vID].BoneWeights.z = weight;
+				//		}
+				//		else if (verts[vID].BoneWeights.w == 0) {
+				//			verts[vID].BoneID.w = bi;BN
+				//			verts[vID].BoneWeights.w = weight;
+				//		}
+				//		else
+				//			printf("ERROR: Out of bone ID spots");
+				//	}
+				//}
+			}
+
 			//Indices
 			std::vector<unsigned int> ind;
 			ind.reserve((size_t)mesh->mNumFaces * 3);
@@ -89,6 +168,8 @@ namespace DERP {
 
 			//Create this mesh
 			objl::Mesh* ms = new objl::Mesh(verts, ind);
+			ms->bones = bones;
+			ms->boneNameToID = boneMap;
 
 			//Give the mesh a texture
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -164,7 +245,7 @@ namespace DERP {
 	}
 
 	//Debug
-	void MeshManager::debug_print_mesh(uint32_t key) 
+	void MeshManager::debug_print_mesh(uint32_t key)
 	{
 		/*for (int i = 0; i < meshes[key]->LoadedMeshes.size(); i++) 
 		{

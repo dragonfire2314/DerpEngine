@@ -10,6 +10,7 @@
 #include "ecs/SystemManager.h"
 #include "ecs/systems/System.h"
 #include "audio/AudioManager.h"
+#include "Animation/AnimationTest.h"
 
 namespace DERP {
 
@@ -53,6 +54,9 @@ namespace DERP {
 
 			//Update Audio
 			AUDIO::updateAudio();
+
+			//Update Animation
+			//updateAnimations();
 
 			//Update Physics
 			PHYS::updatePhysics();
@@ -104,6 +108,7 @@ namespace DERP {
 			CM::RegisterComponent<SphereCollider>();
 			CM::RegisterComponent<AudioSource>();
 			CM::RegisterComponent<AudioListener>();
+			CM::RegisterComponent<Animator>();
 			//ECS System init
 			sys_renderer = systemManager.RegisterSystem<Sys_Renderer>();
 			{
@@ -181,6 +186,13 @@ namespace DERP {
 				std::bitset<UINT8_MAX> sig;
 				sig.set(CM::GetComponentID<AudioSource>());
 				systemManager.SetSignature<Sys_Audio>(sig);
+			}
+
+			sys_animator = systemManager.RegisterSystem<Sys_Animator>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(CM::GetComponentID<Animator>());
+				systemManager.SetSignature<Sys_Animator>(sig);
 			}
 		}
 		/*

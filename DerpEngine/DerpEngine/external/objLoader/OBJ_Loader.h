@@ -14,6 +14,9 @@
 // Math.h - STD math Library
 #include <math.h>
 
+#include <unordered_map>
+
+#include "../../src/core/Animation/AnimationDataTypes.h"
 #include "../glm/glm.hpp"
 
 namespace objl {
@@ -72,9 +75,9 @@ namespace objl {
 		Vector2 TextureCoordinate;
 
 		//Bone ID's
-		glm::vec4 BoneID = glm::vec4(-1, -1, -1, -1);
+		uint32_t BoneID[4] = {0,0,0,0};// = glm::ivec4(0, 0, 0, 0);
 		//Bone Weights
-		glm::vec4 BoneWeights = glm::vec4(-1, -1, -1, -1); //Should change to zero
+		float BoneWeights[4] = {0};// = glm::vec4(0, 0, 0, 0); //Should change to zero
 	};
 	struct Material {
 		Material();
@@ -125,6 +128,10 @@ namespace objl {
 		std::vector<Vertex> Vertices;
 		// Index List
 		std::vector<unsigned int> Indices;
+		//Bones List
+		std::vector<DERP::Bone> bones;
+		std::unordered_map<std::string, uint32_t> boneNameToID;
+		bool isAnimation = false;
 
 		// Material
 		Material MeshMaterial;

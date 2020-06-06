@@ -21,9 +21,6 @@
     <ClCompile Include="external\imgui\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="external\imgui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="external\imgui\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -96,7 +93,7 @@
     <ClCompile Include="src\core\audio\AudioManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Animation\AnimationManager.cpp">
+    <ClCompile Include="src\core\Animation\AnimationTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -206,7 +203,7 @@
     <ClInclude Include="src\core\Animation\AnimationDataTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\Animation\AnimationManager.h">
+    <ClInclude Include="src\core\Animation\AnimationTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,10 @@
 
 #include "AnimationDataTypes.h"
 
+#include "../ecs/systems/System.h"
+#include "../ecs/ComponentManager.h"
+#include "../ecs/Components.h"
+
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/cimport.h>
@@ -41,7 +45,7 @@ namespace DERP
 	uint32_t animCounter = 0;
 
 	//Helper Function
-	inline glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4* from)
+	glm::mat4 ANIM_aiMatrix4x4ToGlm(const aiMatrix4x4* from)
 	{
 		glm::mat4 to;
 
@@ -53,7 +57,7 @@ namespace DERP
 		return to;
 	}
 
-	inline glm::vec3 aiVector3dToGlm(const aiVector3D* from)
+	glm::vec3 ANIM_aiVector3dToGlm(const aiVector3D* from)
 	{
 		glm::vec3 to;
 
@@ -64,7 +68,7 @@ namespace DERP
 		return to;
 	}
 
-	inline glm::quat aiQuaternionToGlm(const aiQuaternion* from)
+	glm::quat ANIM_aiQuaternionToGlm(const aiQuaternion* from)
 	{
 		glm::quat to;
 
@@ -83,7 +87,7 @@ namespace DERP
 		nodeAnim->parent = parent;
 		//Copy data from node
 		nodeAnim->name = node->mName.C_Str();
-		nodeAnim->transformMat = aiMatrix4x4ToGlm(&node->mTransformation);
+		nodeAnim->transformMat = ANIM_aiMatrix4x4ToGlm(&node->mTransformation);
 
 		for (int y = 0; y < node->mNumChildren; y++) {
 			nodeAnim->Children.push_back(buildTree(node->mChildren[y], nodeAnim));
@@ -116,17 +120,17 @@ namespace DERP
 				//Position
 				node->position = new glm::vec3[aiNA->mNumPositionKeys];
 				for (int ip = 0; ip < aiNA->mNumPositionKeys; ip++) {
-					node->position[ip] = aiVector3dToGlm(&aiNA->mPositionKeys[0].mValue);
+					node->position[ip] = ANIM_aiVector3dToGlm(&aiNA->mPositionKeys[0].mValue);
 				}
 				//Rotation
 				node->rotation = new glm::quat[aiNA->mNumRotationKeys];
 				for (int ir = 0; ir < aiNA->mNumRotationKeys; ir++) {
-					node->rotation[ir] = aiQuaternionToGlm(&aiNA->mRotationKeys[0].mValue);
+					node->rotation[ir] = ANIM_aiQuaternionToGlm(&aiNA->mRotationKeys[0].mValue);
 				}
 				//Scale
 				node->scale = new glm::vec3[aiNA->mNumScalingKeys];
 				for (int is = 0; is < aiNA->mNumScalingKeys; is++) {
-					node->scale[is] = aiVector3dToGlm(&aiNA->mScalingKeys[0].mValue);
+					node->scale[is] = ANIM_aiVector3dToGlm(&aiNA->mScalingKeys[0].mValue);
 				}
 			}
 		}
@@ -135,44 +139,66 @@ namespace DERP
 			loadMovementData(node->Children[y], ai);
 	}
 
-	int loadAnimationFromFile(std::string path) 
+
+
+
+
+
+	aiNodeAnim* findNodeAnim(aiAnimation* anim, std::string value) 
+	{
+		for (int i = 0; i < anim->mNumChannels; i++) 
+		{
+			aiNodeAnim* node = anim->mChannels[i];
+			if (node->mNodeName.C_Str() == value)
+				return node;
+		}
+	}
+
+	void BoneUpdater(aiNode* node, uint32_t x, aiAnimation* anim)
+	{
+		//Do stuff with node
+		Mesh* mesh = CM::GetComponent<Mesh>(x);
+		uint32_t boneID = mesh->mesh->boneNameToID[std::string(node->mName.C_Str())];
+
+		if (node->mParent == nullptr) {
+
+		}
+		else {
+			mesh->mesh->bones[boneID].offset = ANIM_aiMatrix4x4ToGlm(&node->mParent->mTransformation) * ANIM_aiMatrix4x4ToGlm(&node->mTransformation);
+		}
+
+		//Go to children nodes
+		for (int y = 0; y < node->mNumChildren; y++)
+			BoneUpdater(node->mChildren[y], x, anim);
+	}
+
+	void updateAnimations() 
+	{
+		for (auto x : sys_animator->Entities) 
+		{
+			aiAnimation* anim = AI_animToAnimationMap[0];
+
+			BoneUpdater(AI_animToNodeMap[0], x, anim);
+		}
+	}
+
+	int loadAnimationFromFile(std::string path)
 	{
 		const aiScene* scene = aiImportFile(path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 
 		if (!scene) {
-			std::cerr << "Could not load file (anim) " << path << aiGetErrorString() << std::endl;
+			std::cerr << "Could not load file " << path << aiGetErrorString() << std::endl;
 			return -1;
 		}
-
-		printf("There are %i meshes in the animation import", scene->mNumMeshes);
-
 		/*
 			SLOW CODE
 		*/
-		for (int i = 0; i < scene->mNumMeshes; i++)
-		{
-			//Generate aiMesh
-			aiMesh* mesh = scene->mMeshes[i];
-			//Apply bone info to vertices
-			if (mesh->HasBones())
-			{
-				std::vector<aiBone*> boneList;
+		aiAnimation* aiAnim = scene->mAnimations[0];
+		aiNode* node = scene->mRootNode;
 
-				for (int bi = 0; bi < mesh->mNumBones; bi++)
-				{
-					aiBone* bone = mesh->mBones[bi];
-					boneList.push_back(bone);
-				}
-
-				aiAnimation* aiAnim = scene->mAnimations[0];
-				aiNode* node = scene->mRootNode;
-
-				AI_animToBoneMap.insert({ animCounter, boneList });
-				AI_animToAnimationMap.insert({ animCounter, aiAnim });
-				AI_animToNodeMap.insert({ animCounter, node });
-				animCounter++;
-			}
-		}
+		AI_animToAnimationMap.insert({ animCounter, aiAnim });
+		AI_animToNodeMap.insert({ animCounter, node });
+		animCounter++;
 
 		/*
 			PROBABLY BETTER CODE, ONLY TRY ONCE SLOW CODE WORKS
@@ -210,36 +236,6 @@ namespace DERP
 		//		animCounter++;
 		//	}
 		//}
+		return 0;
 	}
 }
-
-
-/*for (int vi = 0; vi < bone->mNumWeights; vi++)
-					{
-						unsigned int vID = bone->mWeights[vi].mVertexId;
-
-						if (verts[vID].BoneID.x == -1)
-							verts[vID].BoneID.x = bi;
-						else if (verts[vID].BoneID.y == -1)
-							verts[vID].BoneID.y = bi;
-						else if (verts[vID].BoneID.z == -1)
-							verts[vID].BoneID.z = bi;
-						else if (verts[vID].BoneID.w == -1)
-							verts[vID].BoneID.w = bi;
-						else
-							printf("ERROR: Out of bone ID spots");
-
-
-						float weight = bone->mWeights[vi].mWeight;
-
-						if (verts[vID].BoneWeights.x == -1)
-							verts[vID].BoneWeights.x = weight;
-						else if (verts[vID].BoneWeights.y == -1)
-							verts[vID].BoneWeights.y = weight;
-						else if (verts[vID].BoneWeights.z == -1)
-							verts[vID].BoneWeights.z = weight;
-						else if (verts[vID].BoneWeights.w == -1)
-							verts[vID].BoneWeights.w = weight;
-						else
-							printf("ERROR: Out of bone weight spots");
-					}*/

@@ -112,6 +112,11 @@ namespace DERP
 		void setShader(std::string _vertexShader, std::string _pixleShader);
 	};
 
+	struct DERP_API Animator 
+	{
+
+	};
+
 	struct DERP_API Camera
 	{
 		//Obsolete

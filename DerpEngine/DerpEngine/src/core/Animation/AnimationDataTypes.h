@@ -10,7 +10,6 @@ namespace DERP
 {
 	struct Bone 
 	{
-		std::string name;
 		glm::mat4 offset = glm::mat4(1.0f);
 	};
 

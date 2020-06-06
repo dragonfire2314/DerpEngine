@@ -20,6 +20,7 @@ namespace DERP {
 	class Sys_BoxCollider : public System {};
 	class Sys_SphereCollider : public System {};
 	class Sys_Audio : public System {};
+	class Sys_Animator : public System {};
 
 	extern Sys_Renderer* sys_renderer;
 	extern Sys_Shader* sys_shader;
@@ -32,4 +33,5 @@ namespace DERP {
 	extern Sys_BoxCollider* sys_boxCollider;
 	extern Sys_SphereCollider* sys_sphereCollider;
 	extern Sys_Audio* sys_audio;
+	extern Sys_Animator* sys_animator;
 }

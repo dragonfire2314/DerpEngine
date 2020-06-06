@@ -29,8 +29,7 @@ int main()
     int torus = meshManager.loadMeshes("../models/handmade/torus.obj");
     int plane = meshManager.loadMeshes("../models/handmade/plane.obj");
     int testAnim = meshManager.loadMeshes("../models/anims/Swing_Dancing.fbx");
-
-    int AnimationInport = loadAnimationFromFile("../models/anims/Swing_Dancing.fbx");
+    //int man = meshManager.loadMeshes("../models/anims/model.dae");
 
     //Chest
     uint32_t ent = EM::CreateEntity();
@@ -94,7 +93,7 @@ int main()
     CM::GetComponent<RigidBody>(character)->e = 0.4f;
     CM::GetComponent<Script>(character)->script = new PlayerControls();
     CM::GetComponent<Mesh>(character)->mesh = meshManager.getMesh(cube, 0);
-    CM::GetComponent<Transform>(character)->position.y = 3;
+    CM::GetComponent<Transform>(character)->position.y = 3;    
     CM::GetComponent<Material>(character)->mat->Kd = objl::Vector3(1, 0.5, 0.3);
 
     uint32_t sound = EM::CreateEntity();
@@ -137,12 +136,24 @@ int main()
     CM::AddComponent<Transform>(anim);
     CM::AddComponent<Mesh>(anim);
     CM::AddComponent<Material>(anim);
-    CM::GetComponent<Mesh>(anim)->mesh = meshManager.getMesh(testAnim, 0);
-    CM::GetComponent<Material>(anim)->mat->Kd = objl::Vector3(0.8, 0.3, 0.6);
+    //CM::AddComponent<Animator>(anim);
+    CM::GetComponent<Mesh>(anim)->mesh = loadAnimationAndMeshFromFile("../models/anims/Swing_Dancing.fbx");
+    //CM::GetComponent<Mesh>(anim)->mesh = loadAnimationAndMeshFromFile("../models/anims/model.dae");
+    CM::GetComponent<Mesh>(anim)->mesh->isAnimation = true;
+    CM::GetComponent<Material>(anim)->mat->Kd = objl::Vector3(0.211, 0.509, 0.729);
+    CM::GetComponent<Transform>(anim)->scale = glm::vec3(0.01, 0.01, 0.01);
+    //uint32_t animChild = EM::CreateEntity(anim);
+    //EM::getEntity(animChild)->name = "animChild";
+    //CM::AddComponent<Transform>(animChild);
+    //CM::AddComponent<Mesh>(animChild);
+    //CM::AddComponent<Material>(animChild);
+    //CM::GetComponent<Mesh>(animChild)->mesh = meshManager.getMesh(testAnim, 1);
+    //CM::GetComponent<Material>(animChild)->mat->Kd = objl::Vector3(0.541, 0.541, 0.541);
+    //CM::GetComponent<Transform>(animChild)->scale = glm::vec3(0.01, 0.01, 0.01);
 
 
     ////Physics obj 1
-    //uint32_t Phys1 = EntityManager::CreateEntity();
+    //uint Phys1 = EntityManager::CreateEntity();
     //EntityManager::getEntity(Phys1)->name = "Physics 1";
     //CM::AddComponent<Transform>(Phys1);
     //CM::AddComponent<Mesh>(Phys1);
@@ -155,7 +166,7 @@ int main()
     //CM::GetComponent<Material>(Phys1)->mat->Kd = objl::Vector3(1, 0.5, 0.3);
 
     ////Physics obj 1
-    //uint32_t Phys2 = EntityManager::CreateEntity();
+    //uint Phys2 = EntityManager::CreateEntity();
     //EntityManager::getEntity(Phys2)->name = "Physics 2";
     //CM::AddComponent<DirectionalLight>(Phys2);
     //CM::AddComponent<Transform>(Phys2);

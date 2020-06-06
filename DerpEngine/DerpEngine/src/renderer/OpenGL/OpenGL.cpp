@@ -7,6 +7,8 @@
 #include "../../core/ecs/ComponentManager.h"
 #include "../../core/ecs/systems/System.h"
 
+#include "../../core/Animation/AnimationTest.h"
+
 #include "Shape.h"
 
 #include <unordered_map>
@@ -71,6 +73,8 @@ namespace DERP {
 				//Render code
 				{
 
+					glUseProgram(shaderNum);
+
 					// Our ModelViewProjection
 					GLuint ModelID = glGetUniformLocation(shaderNum, "Model");
 					GLuint ViewID = glGetUniformLocation(shaderNum, "View");
@@ -84,6 +88,15 @@ namespace DERP {
 					GLuint isDiffuseID = glGetUniformLocation(shaderNum, "isDiffuse");
 					glUniform1i(isDiffuseID, mat->mat->isDiffuseTexture);
 
+					//Tell shader if it should use animationBones or not
+					GLuint isAnimatedID = glGetUniformLocation(shaderNum, "isAnimated");
+					glUniform1i(isAnimatedID, mesh->mesh->isAnimation);
+
+					if (mesh->mesh->isAnimation) {
+						initAnimTest(shaderNum);
+						drawAnim(shaderNum);
+					}
+
 					//Give shader a color for the objects
 					GLuint diffuseColorID = glGetUniformLocation(shaderNum, "diffuseColor");
 					glUniform3f(diffuseColorID, mat->mat->Kd.X, mat->mat->Kd.Y, mat->mat->Kd.Z);
@@ -95,7 +108,7 @@ namespace DERP {
 					//GLuint viewPosID = glGetUniformLocation(shaderNum, "viewPos");
 					//glUniform3f(viewPosID, mainCamPos.x, mainCamPos.y, mainCamPos.z);
 
-					glUseProgram(shaderNum);
+					
 
 					//Bind stuff
 					//Vertex Buffer
@@ -108,6 +121,12 @@ namespace DERP {
 					//Tex Coord
 					glEnableVertexAttribArray(2);
 					glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(6 * sizeof(float)));
+					//BoneIDs
+					glEnableVertexAttribArray(3);
+					glVertexAttribPointer(3, 4, GL_UNSIGNED_INT, GL_FALSE, 16 * sizeof(float), (void*)(8 * sizeof(float)));
+					//Bone weights
+					glEnableVertexAttribArray(4);
+					glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 16 * sizeof(float), (void*)(12 * sizeof(float)));
 					//Index Buffer
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBManager->getIndexBuffer(x));
 					//Texture
@@ -126,6 +145,8 @@ namespace DERP {
 					glDisableVertexAttribArray(0);
 					glDisableVertexAttribArray(1);
 					glDisableVertexAttribArray(2);
+					glDisableVertexAttribArray(3);
+					glDisableVertexAttribArray(4);
 
 				}
 			}
@@ -211,7 +232,7 @@ namespace DERP {
 		////textureManagerGL.LoadTextures();
 	}
 
-	void OpenGL::updateTexture(uint32_t entityID) 
+	void OpenGL::updateTexture(uint32_t entityID)
 	{
 		textureManagerGL.updateTexture(entityID);
 	}
