@@ -14,7 +14,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-
 using namespace DERP;
 
 imgui_addons::ImGuiFileBrowser file_dialog;
@@ -69,20 +68,16 @@ void Update()
     ComponentsWindow();
 
     ImGui::ShowDemoWindow();
-
 }
 
 int main() 
 {
-    ComponentManager cm;
-    SystemManager sm;
-
     app.Init();
-    EntityManager::Init();
+    EM::Init();
 
     //Import some shaders
-    ImportShader("pixel.glsl", "pixel.glsl");
-    ImportShader("vertex.glsl", "vertex.glsl");
+    //ImportShader("pixel.glsl", "pixel.glsl");
+    //ImportShader("vertex.glsl", "vertex.glsl");
     //Import some models
     //ImportModel("../models/Treasure_Chest/treasure_chest2.obj", "treasure_chest2.obj");
     //ImportModel("../models/handmade/cube.obj", "cube.obj");
@@ -91,49 +86,74 @@ int main()
     int ico = meshManager.loadMeshes("../models/handmade/ico.obj");
     int cone = meshManager.loadMeshes("../models/handmade/cone.obj");
     int torus = meshManager.loadMeshes("../models/handmade/torus.obj");
+    int plane = meshManager.loadMeshes("../models/handmade/plane.obj");
     int face = meshManager.loadMeshes("../models/handmade/face.obj");
     int chest = meshManager.loadMeshes("../models/Treasure_Chest/treasure_chest2.obj");
     int bar = meshManager.loadMeshes("../models/Chemical_Barrel/chemicalbarrel.obj");
+    int testAnim = meshManager.loadMeshes("../models/anims/Swing_Dancing.fbx");
 
-    //Sample
-    uint32_t ent = EntityManager::CreateEntity();
-    EntityManager::getEntity(ent)->name = "Cube";
-    cm.AddComponent<Transform>(ent);
-    cm.AddComponent<Mesh>(ent);
-    cm.AddComponent<Material>(ent);
-    cm.GetComponent<Mesh>(ent)->mesh = meshManager.getMesh(cube, 0);
+    Animation_Info info = loadAnimationFromFile("../models/anims/Swing_Dancing.fbx");
 
-    //Sample 2
-    uint32_t ent2 = EntityManager::CreateEntity();
-    EntityManager::getEntity(ent2)->name = "Ico";
-    cm.AddComponent<Transform>(ent2);
-    cm.AddComponent<Mesh>(ent2);
-    cm.AddComponent<Material>(ent2);
-    cm.GetComponent<Mesh>(ent2)->mesh = meshManager.getMesh(ico, 0);
+    //Chest
+    uint32_t ent = EM::CreateEntity();
+    EM::getEntity(ent)->name = "Chest";
+    CM::AddComponent<Transform>(ent);
+    CM::AddComponent<Mesh>(ent);
+    CM::AddComponent<Material>(ent);
+    CM::GetComponent<Mesh>(ent)->mesh = meshManager.getMesh(chest, 0);
+    CM::GetComponent<Transform>(ent)->position = glm::vec3(3, -2, 0);
+    CM::GetComponent<Material>(ent)->mat = meshManager.getMaterial(chest, 0);
+
+    //Floor
+    uint32_t ent3 = EM::CreateEntity();
+    EM::getEntity(ent3)->name = "Plane";
+    CM::AddComponent<Transform>(ent3);
+    CM::AddComponent<Mesh>(ent3);
+    CM::AddComponent<Material>(ent3);
+    CM::AddComponent<RigidBody>(ent3);
+    CM::AddComponent<BoxCollider>(ent3);
+    CM::GetComponent<RigidBody>(ent3)->e = 0.4f;
+    CM::GetComponent<BoxCollider>(ent3)->halfSides = glm::vec3(4, 0.01, 4);
+    CM::GetComponent<Mesh>(ent3)->mesh = meshManager.getMesh(plane, 0);
+    CM::GetComponent<Transform>(ent3)->position = glm::vec3(0, -2, 0);
+    CM::GetComponent<Material>(ent3)->mat->Kd = objl::Vector3(0.5, 0.1, 0.7);
 
     //Create a camera
-    uint32_t cam = EntityManager::CreateEntity();
-    EntityManager::getEntity(cam)->name = "Camera";
-    ComponentManager::AddComponent<Camera>(cam);
-    ComponentManager::AddComponent<Transform>(cam);
-    Transform* cam_t = ComponentManager::GetComponent<Transform>(cam);
-    cam_t->position.z = 4;
-    cm.AddComponent<Script>(cam);
-    Script* s3 = ComponentManager::GetComponent<Script>(cam);
+    uint32_t cam = EM::CreateEntity();
+    EM::getEntity(cam)->name = "Camera";
+    CM::AddComponent<Camera>(cam);
+    CM::AddComponent<Transform>(cam);
+    Transform* cam_t = CM::GetComponent<Transform>(cam);
+    cam_t->position = glm::vec3(-4.44764, 3.3252, 10.8293);
+    cam_t->rotation = glm::quat(glm::vec3(-0.278857, -0.310267, -0.0491606));
+    CM::AddComponent<Script>(cam);
+    Script* s3 = CM::GetComponent<Script>(cam);
     s3->script = new CameraMovement();
 
     //Create a Point Light
-    uint32_t pLight = EntityManager::CreateEntity();
-    EntityManager::getEntity(pLight)->name = "face";
-    cm.AddComponent<PointLight>(pLight);
-    cm.AddComponent<Transform>(pLight);
-    //cm.AddComponent<Script>(pLight);
-    //cm.GetComponent<Script>(pLight)->script = new RotateAroundScene();
-    cm.AddComponent<Mesh>(pLight);
-    cm.AddComponent<Material>(pLight);
-    cm.GetComponent<Mesh>(pLight)->mesh = meshManager.getMesh(face, 0);
-    cm.GetComponent<Transform>(pLight)->position.x = 2;
+    uint32_t pLight = EM::CreateEntity();
+    EM::getEntity(pLight)->name = "Ico";
+    CM::AddComponent<DirectionalLight>(pLight);
+    CM::AddComponent<Transform>(pLight);
+    CM::AddComponent<Script>(pLight);
+    CM::GetComponent<Script>(pLight)->script = new RotateAroundScene();
+    CM::AddComponent<Mesh>(pLight);
+    CM::AddComponent<Material>(pLight);
+    CM::GetComponent<Mesh>(pLight)->mesh = meshManager.getMesh(ico, 0);
+    CM::GetComponent<Transform>(pLight)->position.y = 1;
     
+    //Anim test
+    uint32_t anim = EM::CreateEntity();
+    EM::getEntity(anim)->name = "anim";
+    CM::AddComponent<Transform>(anim);
+    CM::AddComponent<Mesh>(anim);
+    CM::AddComponent<Material>(anim);
+    CM::AddComponent<Animator>(anim);
+    CM::GetComponent<Animator>(anim)->clipID = getAnimationClipID(info.animationGroupID, info.animationNames[0]);
+    CM::GetComponent<Mesh>(anim)->mesh = meshManager.getMesh(testAnim, 0);
+    CM::GetComponent<Mesh>(anim)->mesh->isAnimation = true;
+    CM::GetComponent<Material>(anim)->mat->Kd = objl::Vector3(0.211, 0.509, 0.729);
+    CM::GetComponent<Transform>(anim)->scale = glm::vec3(0.01, 0.01, 0.01);
 
 	app.setUpdate(Update);
 

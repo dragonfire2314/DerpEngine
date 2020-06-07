@@ -14,7 +14,6 @@
 
 
 #include "Animation/AnimationDataTypes.h"
-#include "Animation/AnimationTest.h"
 #include "TextureManager.h"
 
 namespace DERP {
@@ -81,6 +80,8 @@ namespace DERP {
 
 		for (int i = 0; i < scene->mNumMeshes; i++) 
 		{
+			objl::Mesh* ms = new objl::Mesh();
+
 			//Generate aiMesh
 			aiMesh* mesh = scene->mMeshes[i];
 
@@ -114,6 +115,43 @@ namespace DERP {
 
 			if (mesh->HasBones())
 			{
+				// load bones
+				for (uint32_t i = 0; i < mesh->mNumBones; i++)
+				{
+					uint32_t bone_index = 0;
+					std::string bone_name(mesh->mBones[i]->mName.data);
+
+					if (ms->boneMapping.find(bone_name) == ms->boneMapping.end())
+					{
+						// Allocate an index for a new bone
+						bone_index = ms->numberOfBones;
+						ms->numberOfBones++;
+						objl::BoneMatrix bi;
+						ms->boneMatrices.push_back(bi);
+						ms->boneMatrices[bone_index].offset_matrix = mesh->mBones[i]->mOffsetMatrix;
+						ms->boneMapping[bone_name] = bone_index;
+					}
+					else
+					{
+						bone_index = ms->boneMapping[bone_name];
+					}
+
+					for (uint32_t j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+					{
+						uint32_t vertex_id = mesh->mBones[i]->mWeights[j].mVertexId;
+						float weight = mesh->mBones[i]->mWeights[j].mWeight;
+
+						for (uint32_t i = 0; i < 4; i++)
+						{
+							if (verts[vertex_id].BoneWeights[i] == 0.0)
+							{
+								verts[vertex_id].BoneID[i] = bone_index;
+								verts[vertex_id].BoneWeights[i] = weight;
+								break;
+							}
+						}
+					}
+				}
 				//bones.reserve(mesh->mNumBones);
 				//for (int bi = 0; bi < mesh->mNumBones; bi++)
 				//{
@@ -167,9 +205,11 @@ namespace DERP {
 			}
 
 			//Create this mesh
-			objl::Mesh* ms = new objl::Mesh(verts, ind);
-			ms->bones = bones;
-			ms->boneNameToID = boneMap;
+			
+			ms->Vertices = verts;
+			ms->Indices = ind;
+			//ms->bones = bones;
+			//ms->boneNameToID = boneMap;
 
 			//Give the mesh a texture
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];

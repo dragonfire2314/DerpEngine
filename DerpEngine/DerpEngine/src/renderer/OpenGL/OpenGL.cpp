@@ -7,7 +7,7 @@
 #include "../../core/ecs/ComponentManager.h"
 #include "../../core/ecs/systems/System.h"
 
-#include "../../core/Animation/AnimationTest.h"
+#include "../../core/Animation/AnimationManager.h"
 
 #include "Shape.h"
 
@@ -93,8 +93,7 @@ namespace DERP {
 					glUniform1i(isAnimatedID, mesh->mesh->isAnimation);
 
 					if (mesh->mesh->isAnimation) {
-						initAnimTest(shaderNum);
-						drawAnim(shaderNum);
+						updateAnimations(shaderNum, x);
 					}
 
 					//Give shader a color for the objects

@@ -194,6 +194,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimTest.h" />
     <ClInclude Include="AudioTesting.h" />
     <ClInclude Include="CameraMovement.h" />
     <ClInclude Include="Movement.h" />

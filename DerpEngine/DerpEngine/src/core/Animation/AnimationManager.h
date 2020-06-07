@@ -6,9 +6,25 @@
 
 namespace DERP 
 {
-	int loadAnimationFromFile(std::string path);
+	struct Animation_Info 
+	{
+		uint32_t animationCount = 0;
+		//Key used to acess animations
+		uint32_t animationGroupID;
+		//Array of animation names that were imported
+		std::string* animationNames;
+	};
 
-	void getAnim(int animID);
+	Animation_Info loadAnimationFromFile(std::string path);
 
-	void updateAnimations();
+	void updateAnimations(uint32_t shader_program, uint32_t entityID);
+
+	uint32_t getAnimationClipID(uint32_t groupID, std::string name);
+
+
+	//int loadAnimationFromFile(std::string path);
+
+	//void getAnim(int animID);
+
+	//void updateAnimations();
 }

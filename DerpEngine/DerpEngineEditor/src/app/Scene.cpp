@@ -52,7 +52,7 @@ void traverseTree(Entity* node)
             }
 
             for (auto y : childs) {
-                traverseTree(EntityManager::getEntity(y));
+                traverseTree(EM::getEntity(y));
             }
 
             ImGui::TreePop();
@@ -62,7 +62,7 @@ void traverseTree(Entity* node)
 
 void sceneWindow() 
 {
-    v = EntityManager::getEntity(-2)->childern;
+    v = EM::getEntity(0)->childern;
 
     //Scene Window
     ImGui::Begin("Scene");
@@ -135,7 +135,7 @@ void sceneWindow()
     //Dig through node tree
     for (auto x : v)
     {
-        Entity* e = EntityManager::getEntity(x);
+        Entity* e = EM::getEntity(x);
 
         ImGuiTreeNodeFlags node_flags = base_flags;
         const bool is_selected = ((e->ID) == selectionID);
@@ -169,7 +169,7 @@ void sceneWindow()
                 }
 
                 for (auto y : childs) {
-                    traverseTree(EntityManager::getEntity(y));
+                    traverseTree(EM::getEntity(y));
                 }
 
                 ImGui::TreePop();
@@ -197,19 +197,19 @@ void sceneWindow()
 void addEntity(std::string name) 
 {
     if (selectionID == -1) {
-        //EntityManager::getInstance().createEntity()->setName(name);
-        uint32_t ent = EntityManager::CreateEntity();
-        EntityManager::getEntity(ent)->name = name;
+        //EM::getInstance().createEntity()->setName(name);
+        uint32_t ent = EM::CreateEntity();
+        EM::getEntity(ent)->name = name;
     }
     else {
-        //EntityManager::getInstance().createEntity(EntityManager::getInstance().getEntity(selectionID))->setName(name);
-        uint32_t ent = EntityManager::CreateEntity(selectionID);
-        EntityManager::getEntity(ent)->name = name;
+        //EM::getInstance().createEntity(EM::getInstance().getEntity(selectionID))->setName(name);
+        uint32_t ent = EM::CreateEntity(selectionID);
+        EM::getEntity(ent)->name = name;
     }
 }
 
 void removeEntity() 
 {
     //Remove Entity that is selected
-    //EntityManager::getInstance().removeEntity(EntityManager::getInstance().getEntity(selectionID));
+    //EM::getInstance().removeEntity(EM::getInstance().getEntity(selectionID));
 }

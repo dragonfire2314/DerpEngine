@@ -3,6 +3,4 @@
 
 using namespace DERP;
 
-extern ComponentManager componentManager;
-
 void ComponentsWindow();

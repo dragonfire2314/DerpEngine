@@ -10,17 +10,16 @@ void MeshComponent();
 void MaterialComponent();
 void DirectionalLightComponent();
 void PointLightComponent();
-
-ComponentManager componentManager;
+void AnimatorComponent();
 
 void ComponentsWindow() 
 {
-    if (!(EntityManager::getEntity(selectionID) == nullptr))
+    if (!(EM::getEntity(selectionID) == nullptr))
     {
         ImGui::Begin("Components");
 
         //Entity
-        //ImGui::Text("%s", EntityManager::getInstance().getEntity(selectionID)->getName().c_str());
+        //ImGui::Text("%s", EM::getInstance().getEntity(selectionID)->getName().c_str());
         ImGui::Text("%s", "name");
         ImGui::Separator();
 
@@ -37,17 +36,22 @@ void ComponentsWindow()
             ImGui::Text("Select Component");
             ImGui::Separator();
             if (ImGui::Selectable("Transform")) {
-                if (!ComponentManager::IsComponent<Transform>(selectionID))
-                    ComponentManager::AddComponent<Transform>(selectionID);
+                if (!CM::IsComponent<Transform>(selectionID))
+                    CM::AddComponent<Transform>(selectionID);
             }
             if (ImGui::Selectable("Mesh")) {
-                if (!ComponentManager::IsComponent<Mesh>(selectionID)) {
-                    ComponentManager::AddComponent<Mesh>(selectionID);
+                if (!CM::IsComponent<Mesh>(selectionID)) {
+                    CM::AddComponent<Mesh>(selectionID);
                 }
             }
             if (ImGui::Selectable("Material")) {
-                if (!ComponentManager::IsComponent<Material>(selectionID)) {
-                    ComponentManager::AddComponent<Material>(selectionID);
+                if (!CM::IsComponent<Material>(selectionID)) {
+                    CM::AddComponent<Material>(selectionID);
+                }
+            }
+            if (ImGui::Selectable("Animator")) {
+                if (!CM::IsComponent<Animator>(selectionID)) {
+                    CM::AddComponent<Animator>(selectionID);
                 }
             }
             
@@ -59,22 +63,25 @@ void ComponentsWindow()
         ImGui::Separator();
         
 
-        //std::unordered_map<Component*, bool> data = EntityManager::getInstance().getEntity(selectionID)->OLD_getComponentMap();
+        //std::unordered_map<Component*, bool> data = EM::getInstance().getEntity(selectionID)->OLD_getComponentMap();
         
 
-        if (ComponentManager::IsComponent<Transform>(selectionID)) {
+        if (CM::IsComponent<Transform>(selectionID)) {
             TransformComponent();
         }
-        if (ComponentManager::IsComponent<Mesh>(selectionID)) {
+        if (CM::IsComponent<Mesh>(selectionID)) {
             MeshComponent();
         }
-        if (ComponentManager::IsComponent<Material>(selectionID)) {
+        if (CM::IsComponent<Material>(selectionID)) {
             MaterialComponent();
         }
-        if (ComponentManager::IsComponent<DirectionalLight>(selectionID)) {
+        if (CM::IsComponent<Animator>(selectionID)) {
+            AnimatorComponent();
+        }
+        if (CM::IsComponent<DirectionalLight>(selectionID)) {
             DirectionalLightComponent();
         }
-        if (ComponentManager::IsComponent<PointLight>(selectionID)) {
+        if (CM::IsComponent<PointLight>(selectionID)) {
             PointLightComponent();
         }
 
@@ -104,7 +111,7 @@ void DirectionalLightComponent()
     {
         const float fm = -1000000.0;
         const float fM = 1000000.0;
-        DirectionalLight* d = ComponentManager::GetComponent<DirectionalLight>(selectionID);
+        DirectionalLight* d = CM::GetComponent<DirectionalLight>(selectionID);
         //Position
         ImGui::Text("Direction");
         ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
@@ -128,13 +135,45 @@ void DirectionalLightComponent()
     }
 }
 
+void AnimatorComponent()
+{
+    if (ImGui::CollapsingHeader("Animator", ImGuiTreeNodeFlags_None))
+    {
+        Animator* anim = CM::GetComponent<Animator>(selectionID);
+
+        ImGui::PushID(0);
+        ImGui::Button("Clip", ImVec2(60, 60));
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("MESH_PAYLOAD"))
+            {
+                IM_ASSERT(payload->DataSize == sizeof(AnimatorPassData));
+                AnimatorPassData payload_n = *(const AnimatorPassData*)payload->Data;
+
+                anim->clipID = payload_n.clipID;
+            }
+        }
+        ImGui::PopID();
+
+        ImGui::PushID(1);
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0 / 7.0f, 0.6f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0 / 7.0f, 0.7f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0 / 7.0f, 0.8f, 0.8f));
+        if (ImGui::SmallButton("Remove Component")) {
+
+        }
+        ImGui::PopStyleColor(3);
+        ImGui::PopID();
+    }
+}
+
 void TransformComponent() 
 {
     if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_None)) 
     {
         const float fm = -1000000.0;
         const float fM = 1000000.0;
-        Transform* t = ComponentManager::GetComponent<Transform>(selectionID);
+        Transform* t = CM::GetComponent<Transform>(selectionID);
         //Position
         ImGui::Text("Position");
         ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.23f);
@@ -187,7 +226,7 @@ void MeshComponent()
 {
     if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_None)) {
 
-        Mesh* m = ComponentManager::GetComponent<Mesh>(selectionID);
+        Mesh* m = CM::GetComponent<Mesh>(selectionID);
 
         if (m->mesh != nullptr) {
             ImGui::Text("Mesh: %s", m->mesh->MeshName.c_str());
@@ -220,7 +259,7 @@ void MeshComponent()
                 }
                 
                 m->mesh = meshManager.getMesh(payload_n.modelID, payload_n.meshID);
-                //Material* mat = EntityManager::getInstance().getEntity(selectionID)->getComponent<Material>(ComponentMaterial::getInstance());
+                //Material* mat = EM::getInstance().getEntity(selectionID)->getComponent<Material>(ComponentMaterial::getInstance());
                 //mat->mat = meshManager.getMaterial(payload_n, 0);
                 app.getRenderAPI()->updateMesh(selectionID);
                 app.getRenderAPI()->updateShader(selectionID);
@@ -244,7 +283,7 @@ void MaterialComponent()
 {
     if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_None)) {
 
-        Material* m = ComponentManager::GetComponent<Material>(selectionID);
+        Material* m = CM::GetComponent<Material>(selectionID);
 
         //Vertex Shader
         ImGui::PushID(1);

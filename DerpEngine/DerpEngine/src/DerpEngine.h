@@ -9,7 +9,7 @@
 //Core
 //#include "core/Application.h"
 #include "core/MeshManager.h"
-#include "core/Animation/AnimationTest.h"
+#include "core/Animation/AnimationManager.h"
 
 //Entity Component System
 #include "core/ecs/Component.h"

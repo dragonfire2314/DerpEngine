@@ -26,6 +26,11 @@ struct MaterialPassData {
 	std::string fileName;
 };
 
+struct AnimatorPassData {
+	uint32_t clipID;
+	std::string fileName;
+};
+
 void AssetWindow();
 
 void ImportModel(std::string path, std::string fName);

@@ -114,7 +114,10 @@ namespace DERP
 
 	struct DERP_API Animator 
 	{
+#define MAX_BONES 100
+		uint32_t clipID;
 
+		uint32_t boneLocations[MAX_BONES];
 	};
 
 	struct DERP_API Camera

@@ -3,6 +3,7 @@
 #include "../core.h"
 
 #include <stdint.h>
+#include <vector>
 
 #include "ComponentManager.h"
 #include "../input/Input.h"
@@ -21,6 +22,19 @@ namespace DERP {
 			T* getComponent()
 			{
 				return CM::GetComponent<T>(entity);
+			}
+			template <typename T>
+			std::vector<T*> getComponentInChildern() 
+			{
+				std::vector<T*> ret;
+
+				for (auto x : EM::getEntity(entity)->childern) 
+				{
+					if (CM::IsComponent<T>(x))
+						ret.push_back(CM::GetComponent<T>(x));
+				}
+
+				return ret;
 			}
 		public:
 			Scriptable() {}

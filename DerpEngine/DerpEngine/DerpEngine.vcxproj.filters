@@ -93,7 +93,7 @@
     <ClCompile Include="src\core\audio\AudioManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Animation\AnimationTest.cpp">
+    <ClCompile Include="src\core\Animation\AnimationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -203,7 +203,7 @@
     <ClInclude Include="src\core\Animation\AnimationDataTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\Animation\AnimationTest.h">
+    <ClInclude Include="src\core\Animation\AnimationManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

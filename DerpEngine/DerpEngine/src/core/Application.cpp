@@ -10,7 +10,6 @@
 #include "ecs/SystemManager.h"
 #include "ecs/systems/System.h"
 #include "audio/AudioManager.h"
-#include "Animation/AnimationTest.h"
 
 namespace DERP {
 

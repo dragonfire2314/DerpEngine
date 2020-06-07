@@ -7,6 +7,7 @@
 #include "RotateAroundScene.h"
 #include "PlayerControls.h"
 #include "AudioTesting.h"
+#include "AnimTest.h"
 
 using namespace DERP;
 
@@ -29,7 +30,11 @@ int main()
     int torus = meshManager.loadMeshes("../models/handmade/torus.obj");
     int plane = meshManager.loadMeshes("../models/handmade/plane.obj");
     int testAnim = meshManager.loadMeshes("../models/anims/Swing_Dancing.fbx");
-    //int man = meshManager.loadMeshes("../models/anims/model.dae");
+    int man = meshManager.loadMeshes("../models/anims/model.dae");
+
+    Animation_Info info = loadAnimationFromFile("../models/anims/Swing_Dancing.fbx");
+    Animation_Info Jumpinfo = loadAnimationFromFile("../models/anims/Jumping.fbx");
+    Animation_Info ManInfo = loadAnimationFromFile("../models/anims/model.dae");
 
     //Chest
     uint32_t ent = EM::CreateEntity();
@@ -136,19 +141,24 @@ int main()
     CM::AddComponent<Transform>(anim);
     CM::AddComponent<Mesh>(anim);
     CM::AddComponent<Material>(anim);
-    //CM::AddComponent<Animator>(anim);
-    CM::GetComponent<Mesh>(anim)->mesh = loadAnimationAndMeshFromFile("../models/anims/Swing_Dancing.fbx");
-    //CM::GetComponent<Mesh>(anim)->mesh = loadAnimationAndMeshFromFile("../models/anims/model.dae");
+    CM::AddComponent<Animator>(anim);
+    CM::AddComponent<Script>(anim);
+    CM::GetComponent<Script>(anim)->script = new AnimTest();
+    CM::GetComponent<Animator>(anim)->clipID = getAnimationClipID(info.animationGroupID, info.animationNames[0]);
+    CM::GetComponent<Mesh>(anim)->mesh = meshManager.getMesh(testAnim, 0);
     CM::GetComponent<Mesh>(anim)->mesh->isAnimation = true;
     CM::GetComponent<Material>(anim)->mat->Kd = objl::Vector3(0.211, 0.509, 0.729);
     CM::GetComponent<Transform>(anim)->scale = glm::vec3(0.01, 0.01, 0.01);
-    //uint32_t animChild = EM::CreateEntity(anim);
-    //EM::getEntity(animChild)->name = "animChild";
-    //CM::AddComponent<Transform>(animChild);
-    //CM::AddComponent<Mesh>(animChild);
-    //CM::AddComponent<Material>(animChild);
-    //CM::GetComponent<Mesh>(animChild)->mesh = meshManager.getMesh(testAnim, 1);
-    //CM::GetComponent<Material>(animChild)->mat->Kd = objl::Vector3(0.541, 0.541, 0.541);
+    uint32_t animChild = EM::CreateEntity(anim);
+    EM::getEntity(animChild)->name = "animChild";
+    CM::AddComponent<Transform>(animChild);
+    CM::AddComponent<Mesh>(animChild);
+    CM::AddComponent<Material>(animChild);
+    CM::AddComponent<Animator>(animChild);
+    CM::GetComponent<Animator>(animChild)->clipID = getAnimationClipID(info.animationGroupID, info.animationNames[0]);
+    CM::GetComponent<Mesh>(animChild)->mesh = meshManager.getMesh(testAnim, 1);
+    CM::GetComponent<Mesh>(animChild)->mesh->isAnimation = true;
+    CM::GetComponent<Material>(animChild)->mat->Kd = objl::Vector3(0.541, 0.541, 0.541);
     //CM::GetComponent<Transform>(animChild)->scale = glm::vec3(0.01, 0.01, 0.01);
 
 

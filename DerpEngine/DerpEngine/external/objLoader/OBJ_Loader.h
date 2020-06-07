@@ -16,6 +16,8 @@
 
 #include <unordered_map>
 
+#include <assimp/Importer.hpp>
+
 #include "../../src/core/Animation/AnimationDataTypes.h"
 #include "../glm/glm.hpp"
 
@@ -117,6 +119,11 @@ namespace objl {
 		// Bump Map
 		std::string map_bump;
 	};
+	struct BoneMatrix
+	{
+		aiMatrix4x4 offset_matrix;
+		aiMatrix4x4 final_world_transform;
+	};
 	struct Mesh {
 		// Default Constructor
 		Mesh();
@@ -129,12 +136,17 @@ namespace objl {
 		// Index List
 		std::vector<unsigned int> Indices;
 		//Bones List
-		std::vector<DERP::Bone> bones;
-		std::unordered_map<std::string, uint32_t> boneNameToID;
+		//std::vector<DERP::Bone> bones;
+		//std::unordered_map<std::string, uint32_t> boneNameToID;
 		bool isAnimation = false;
 
 		// Material
 		Material MeshMaterial;
+
+		//Bone stuff
+		std::vector<BoneMatrix> boneMatrices;
+		uint32_t numberOfBones = 0;
+		std::unordered_map<std::string, uint32_t> boneMapping; // maps a bone name and their index
 	};
 
 	class Loader
