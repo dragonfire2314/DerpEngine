@@ -7,7 +7,7 @@ namespace DERP {
 	class DERP_API ApplicationEditor : public Application
 	{
 	private:
-		void (*updateFunc)();
+		void (*updateFunc)(void*);
 	public:
 		
 
@@ -21,7 +21,13 @@ namespace DERP {
 		virtual void Start3();
 		void Run();
 
-		void setUpdate(void (*func)());
+		void setUpdate(void (*func)(void*));
+
+		uint32_t getHeight();
+		uint32_t getWidth();
+
+		void setHeight(uint32_t height);
+		void setWidth(uint32_t width);
 
 		RenderAPI* getRenderAPI();
 

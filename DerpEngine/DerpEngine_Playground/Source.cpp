@@ -17,7 +17,7 @@ int main()
 
 	Application app;
 
-	app.Init();
+	app.Init(1024, 768);
     EM::Init();
 
     MeshManager meshManager;
@@ -161,6 +161,15 @@ int main()
     CM::GetComponent<Material>(animChild)->mat->Kd = objl::Vector3(0.541, 0.541, 0.541);
     //CM::GetComponent<Transform>(animChild)->scale = glm::vec3(0.01, 0.01, 0.01);
 
+    //Particle
+    uint32_t particle = EM::CreateEntity();
+    EM::getEntity(particle)->name = "Particle";
+    CM::AddComponent<Transform>(particle);
+    CM::AddComponent<Mesh>(particle);
+    CM::AddComponent<Material>(particle);
+    CM::AddComponent<ParticleEffect>(particle);
+    CM::GetComponent<Material>(particle)->mat->Kd = objl::Vector3(1, 0.5, 0.3);
+    CM::GetComponent<Transform>(particle)->position = glm::vec3(0, 2, 0);
 
     ////Physics obj 1
     //uint Phys1 = EntityManager::CreateEntity();

@@ -30,19 +30,33 @@ namespace DERP {
 		glm::mat4 Projection;
 		glm::mat4 View;
 
+		GLuint FramebufferName;
+		GLuint renderedTexture;
+		GLuint depthrenderbuffer;
+
+		GLuint postQuadVerts;
+		GLuint postQuadInds;
+
 		//Temp
 		glm::vec3 mainCamPos;
+
+		//Functions
+		void setupFrameBuffer();
+		void renderFrameBufferToScreen();
+		void setupCameraForFrame(uint32_t camera);
 	public:
 		void Render();
 		void ClearScreen();
 		void SetUp();
+		void* RenderToTexture();
 
+		//Returns texture ID
 		void RenderMainCamera(Entity* baseEntity);
-		void RenderNonMainCameras();
 
 		void updateMesh(uint32_t entityID);
 		void updateShader(uint32_t entityID);
 		void updateTexture(uint32_t entityID);
+		void updateFrameBuffer();
 	};
 
 }

@@ -205,6 +205,7 @@
     <ClCompile Include="src\core\input\Input.cpp" />
     <ClCompile Include="src\core\MeshManager.cpp" />
     <ClCompile Include="src\core\collision\Collider.cpp" />
+    <ClCompile Include="src\core\particles\ParticleManager.cpp" />
     <ClCompile Include="src\core\physics\Physics.cpp" />
     <ClCompile Include="src\core\TextureManager.cpp" />
     <ClCompile Include="src\core\time\Time.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="src\core\input\Input.h" />
     <ClInclude Include="src\core\MeshManager.h" />
     <ClInclude Include="src\core\collision\Collider.h" />
+    <ClInclude Include="src\core\particles\ParticleManager.h" />
     <ClInclude Include="src\core\physics\Physics.h" />
     <ClInclude Include="src\core\TextureManager.h" />
     <ClInclude Include="src\core\time\Time.h" />

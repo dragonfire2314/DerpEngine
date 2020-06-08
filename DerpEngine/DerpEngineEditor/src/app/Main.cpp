@@ -18,61 +18,134 @@ using namespace DERP;
 
 imgui_addons::ImGuiFileBrowser file_dialog;
 
-void Update() 
+void Update(void* screenImage)
 {
     //Menu Bar
-    bool importModel = false, importImage = false, importShader = false;
-    if (ImGui::BeginMainMenuBar())
     {
-        if (ImGui::BeginMenu("Assets"))
+        //Menu Bar
+        bool importModel = false, importImage = false, importShader = false;
+        if (ImGui::BeginMainMenuBar())
         {
-            if (ImGui::MenuItem("Import Model", NULL))
-                importModel = true;
-            if (ImGui::MenuItem("Import Image", NULL))
-                importImage = true;
-            if (ImGui::MenuItem("Import Shader", NULL))
-                importShader = true;
+            if (ImGui::BeginMenu("Assets"))
+            {
+                if (ImGui::MenuItem("Import Model", NULL))
+                    importModel = true;
+                if (ImGui::MenuItem("Import Image", NULL))
+                    importImage = true;
+                if (ImGui::MenuItem("Import Shader", NULL))
+                    importShader = true;
 
-            ImGui::EndMenu();
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
         }
-        ImGui::EndMainMenuBar();
-    }
 
-    if (importModel)
-        ImGui::OpenPopup("Import Model");
-    if (importImage)
-        ImGui::OpenPopup("Import Image");
-    if (importShader)
-        ImGui::OpenPopup("Import Shader");
+        if (importModel)
+            ImGui::OpenPopup("Import Model");
+        if (importImage)
+            ImGui::OpenPopup("Import Image");
+        if (importShader)
+            ImGui::OpenPopup("Import Shader");
 
-    if (file_dialog.showFileDialog("Import Model", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".obj"))
-    {
-        //Import a model
-        ImportModel(file_dialog.selected_path, file_dialog.selected_fn);
+        if (file_dialog.showFileDialog("Import Model", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".obj"))
+        {
+            //Import a model
+            ImportModel(file_dialog.selected_path, file_dialog.selected_fn);
+        }
+        if (file_dialog.showFileDialog("Import Image", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".png"))
+        {
+            //Import a model
+            ImportImage(file_dialog.selected_path, file_dialog.selected_fn);
+        }
+        if (file_dialog.showFileDialog("Import Shader", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".glsl, .v, .p"))
+        {
+            //Import a model
+            ImportShader(file_dialog.selected_path, file_dialog.selected_fn);
+        }
     }
-    if (file_dialog.showFileDialog("Import Image", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".png"))
+    //Dockspace
     {
-        //Import a model
-        ImportImage(file_dialog.selected_path, file_dialog.selected_fn);
-    }
-    if (file_dialog.showFileDialog("Import Shader", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".glsl, .v, .p"))
-    {
-        //Import a model
-        ImportShader(file_dialog.selected_path, file_dialog.selected_fn);
-    }
+        static bool dockspaceOpen = true;
+        static bool opt_fullscreen_persistant = true;
+        bool opt_fullscreen = opt_fullscreen_persistant;
+        static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
+        // We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+        // because it would be confusing to have two docking targets within each others.
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+        if (opt_fullscreen)
+        {
+            ImGuiViewport* viewport = ImGui::GetMainViewport();
+            ImGui::SetNextWindowPos(viewport->GetWorkPos());
+            ImGui::SetNextWindowSize(viewport->GetWorkSize());
+            ImGui::SetNextWindowViewport(viewport->ID);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+            window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+            window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+        }
+
+        // When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background
+        // and handle the pass-thru hole, so we ask Begin() to not render a background.
+        if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+            window_flags |= ImGuiWindowFlags_NoBackground;
+
+        // Important: note that we proceed even if Begin() returns false (aka window is collapsed).
+        // This is because we want to keep our DockSpace() active. If a DockSpace() is inactive,
+        // all active windows docked into it will lose their parent and become undocked.
+        // We cannot preserve the docking relationship between an active window and an inactive docking, otherwise
+        // any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+        ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+        ImGui::PopStyleVar();
+
+        if (opt_fullscreen)
+            ImGui::PopStyleVar(2);
+
+        // DockSpace
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+        {
+            ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+            ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+        }
+    }
+    //Windows
     AssetWindow();
 
     sceneWindow();
 
     ComponentsWindow();
+    //View
+    {
+        ImGui::Begin("View");
 
-    ImGui::ShowDemoWindow();
+        ImVec2 vMax = ImGui::GetContentRegionAvail();
+
+        printf("VMAX.x, VMAX.y: %f, %f\n", vMax.x, vMax.y);
+        printf("V2AX.x, V2AX.y: %i, %i\n", (uint32_t)vMax.x, (uint32_t)vMax.y);
+
+        app.setWidth((uint32_t)vMax.x);
+        app.setHeight((uint32_t)vMax.y);
+
+        //Should only call when resolution changes
+        app.UpdateResolution();
+
+        ImVec2 uv_min = ImVec2(0.0f, 1.0f);
+        ImVec2 uv_max = ImVec2(1.0f, 0.0f);
+        uint32_t tttt = *(uint32_t*)screenImage;
+        ImGui::Image((void*)tttt, vMax, uv_min, uv_max);
+
+        ImGui::End();
+    }
+
+    ImGui::End();
 }
 
 int main() 
 {
-    app.Init();
+    app.Init(1024, 768);
     EM::Init();
 
     //Import some shaders
@@ -158,6 +231,9 @@ int main()
 	app.setUpdate(Update);
 
     app.startUp();
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	
     app.Run();
 

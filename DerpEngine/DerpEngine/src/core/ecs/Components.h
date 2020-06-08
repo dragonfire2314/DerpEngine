@@ -112,6 +112,25 @@ namespace DERP
 		void setShader(std::string _vertexShader, std::string _pixleShader);
 	};
 
+	struct DERP_API ParticleEffect
+	{
+		glm::vec3 force;
+		glm::vec3 forceDir;
+
+		float particlesPerSecond;
+		float maxParticles;
+
+		glm::vec3 ParticleHalfSzie;
+
+		uint32_t textureID;
+
+		glm::vec3 startColor;
+		glm::vec3 endColor;
+		
+		glm::vec3 startAlpha;
+		glm::vec3 endAlpha;
+	};
+
 	struct DERP_API Animator 
 	{
 #define MAX_BONES 100

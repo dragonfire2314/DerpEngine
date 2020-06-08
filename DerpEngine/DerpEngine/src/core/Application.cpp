@@ -10,6 +10,7 @@
 #include "ecs/SystemManager.h"
 #include "ecs/systems/System.h"
 #include "audio/AudioManager.h"
+#include "particles/ParticleManager.h"
 
 namespace DERP {
 
@@ -51,11 +52,17 @@ namespace DERP {
 			TIME::time = currentTime;
 			lastFrameTime = currentTime;
 
+			//Update ScreenRenderRes
+			if (shouldUpdateRes) {
+				renderer->updateFrameBuffer();
+				shouldUpdateRes = false;
+			}
+
 			//Update Audio
 			AUDIO::updateAudio();
 
-			//Update Animation
-			//updateAnimations();
+			//Update Particles
+			updateParitcles();
 
 			//Update Physics
 			PHYS::updatePhysics();
@@ -80,8 +87,10 @@ namespace DERP {
 			glfwWindowShouldClose((GLFWwindow*)window) == 0);
 	}
 
-	void Application::Init()
+	void Application::Init(uint32_t width, uint32_t height)
 	{
+		screenWidth = width;
+		screenHeight = height;
 		/*
 
 			GLFW INIT
@@ -108,6 +117,7 @@ namespace DERP {
 			CM::RegisterComponent<AudioSource>();
 			CM::RegisterComponent<AudioListener>();
 			CM::RegisterComponent<Animator>();
+			CM::RegisterComponent<ParticleEffect>();
 			//ECS System init
 			sys_renderer = systemManager.RegisterSystem<Sys_Renderer>();
 			{
@@ -193,6 +203,13 @@ namespace DERP {
 				sig.set(CM::GetComponentID<Animator>());
 				systemManager.SetSignature<Sys_Animator>(sig);
 			}
+
+			sys_particles = systemManager.RegisterSystem<Sys_Particles>();
+			{
+				std::bitset<UINT8_MAX> sig;
+				sig.set(CM::GetComponentID<ParticleEffect>());
+				systemManager.SetSignature<Sys_Particles>(sig);
+			}
 		}
 		/*
 			INPUT INIT
@@ -204,6 +221,16 @@ namespace DERP {
 			AUDIO INIT
 		*/
 		AUDIO::initAudio();
+		/*
+			RENDERER
+		*/
+		renderer->renderWidth = screenWidth;
+		renderer->renderHeight = screenHeight;
+	}
+
+	void Application::UpdateResolution()
+	{
+		shouldUpdateRes = true;
 	}
 
 	void Application::start()
@@ -223,7 +250,7 @@ namespace DERP {
 
 		// Open a window and create its OpenGL context
 		// (In the accompanying source code, this variable is global for simplicity)
-		window = glfwCreateWindow(1024, 768, "Derp Engine", NULL, NULL);
+		window = glfwCreateWindow(screenWidth, screenHeight, "Derp Engine", NULL, NULL);
 		if (window == NULL) {
 			fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible.\n");
 			glfwTerminate();

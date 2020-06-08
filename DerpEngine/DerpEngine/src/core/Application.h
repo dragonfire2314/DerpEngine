@@ -25,6 +25,11 @@ namespace DERP {
 
 		void start();
 		SystemManager systemManager;
+
+		uint32_t screenWidth;
+		uint32_t screenHeight;
+
+		bool shouldUpdateRes = true;
 	public:
 
 		Application();
@@ -34,6 +39,8 @@ namespace DERP {
 		//Main game loop
 		virtual void Run();
 
-		void Init();
+		void Init(uint32_t width, uint32_t height);
+
+		void UpdateResolution();
 	};
 }

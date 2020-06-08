@@ -15,4 +15,5 @@ namespace DERP {
 	Sys_SphereCollider* sys_sphereCollider;
 	Sys_Audio* sys_audio;
 	Sys_Animator* sys_animator;
+	Sys_Particles* sys_particles;;
 }

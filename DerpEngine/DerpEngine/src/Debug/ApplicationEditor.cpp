@@ -11,6 +11,8 @@
 #include "../core/ecs/systems/Renderer.h"
 #include "../core/ecs/SystemManager.h"
 #include "../core/ecs/systems/System.h"
+#include "../core/audio/AudioManager.h"
+#include "../core/particles/ParticleManager.h"
 
 namespace DERP {
 
@@ -50,10 +52,26 @@ namespace DERP {
 			//Time keeping
 			float currentTime = glfwGetTime();
 			TIME::deltaTime = currentTime - lastFrameTime;
+			TIME::time = currentTime;
 			lastFrameTime = currentTime;
 
+			//Update ScreenRenderRes
+			if (shouldUpdateRes) {
+				renderer->updateFrameBuffer();
+				shouldUpdateRes = false;
+			}
+
+			//Update Audio
+			AUDIO::updateAudio();
+
+			//Update Particles
+			updateParitcles();
+
+			//Update Physics
+			PHYS::updatePhysics();
+
 			//Clear screen
-			renderer->ClearScreen();
+			//renderer->ClearScreen();
 			//Run physics
 
 			ImGui_ImplOpenGL3_NewFrame();
@@ -61,14 +79,14 @@ namespace DERP {
 			ImGui::NewFrame();
 
 			Update3();
-			updateFunc();
+			updateFunc(renderer->RenderToTexture());
 
 			
 
 			//Run user callback
 
 			//Render
-			renderer->Render();
+			//renderer->Render();
 
 			ImGui::Render();
 			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -94,7 +112,7 @@ namespace DERP {
 		
 	}
 
-	void ApplicationEditor::setUpdate(void(*func)())
+	void ApplicationEditor::setUpdate(void(*func)(void*))
 	{
 		updateFunc = func;
 	}
@@ -114,4 +132,23 @@ namespace DERP {
 		ImGui_ImplOpenGL3_Init(glsl_version);
 	}
 
+	uint32_t ApplicationEditor::getHeight() 
+	{
+		return renderer->renderHeight;
+	}
+
+	uint32_t ApplicationEditor::getWidth() 
+	{
+		return renderer->renderWidth;
+	}
+
+	void ApplicationEditor::setHeight(uint32_t height) 
+	{
+		renderer->renderHeight = height;
+	}
+
+	void ApplicationEditor::setWidth(uint32_t width) 
+	{
+		renderer->renderWidth = width;
+	}
 }
